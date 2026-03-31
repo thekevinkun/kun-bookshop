@@ -1,0 +1,301 @@
+/* ── GOOGLE FONTS ── */
+
+/* Inter — main body font, clean and readable */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* Import Tailwind v4 — this single line replaces the old @tailwind base/components/utilities */
+@import "tailwindcss";
+
+/* ── DESIGN TOKENS (@theme) ── */
+/* These automatically become Tailwind utility classes.
+   e.g. --color-teal → bg-teal, text-teal, border-teal */
+
+@theme {
+  /* ── Brand Colors ── */
+  --color-navy: #0a1628; /* deepest dark — main page background */
+  --color-ocean: #1e3a5f; /* slightly lighter — card/section backgrounds */
+  --color-teal: #14b8a6; /* primary accent — buttons, links, highlights */
+  --color-dark: #0f172a; /* near-black — used for overlays */
+  --color-card: #1e293b; /* card surface background */
+
+  /* ── Text Colors ── */
+  --color-text-light: #f8fafc; /* primary text on dark backgrounds */
+  --color-text-dark: #1f2937; /* text on light backgrounds */
+  --color-text-muted: #9ca3af; /* secondary/helper text */
+
+  /* ── Status Colors ── */
+  --color-success: #10b981; /* success states — completed orders, verified */
+  --color-error: #ef4444; /* error states — failed payments, validation */
+  --color-warning: #f59e0b; /* warning states — pending, expiring soon */
+  --color-info: #3b82f6; /* info states — neutral notifications */
+
+  /* ── Background Shades ── */
+  --color-bg-dark: #0f172a; /* page-level background */
+  --color-bg-card: #1e293b; /* card-level background */
+  --color-bg-hover: #334155; /* hover state background */
+
+  /* ── Typography ── */
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* ── Border Radius ── */
+  --radius-sm: 0.375rem; /* 6px — small elements like badges */
+  --radius-md: 0.5rem; /* 8px — inputs, small cards */
+  --radius-lg: 0.75rem; /* 12px — buttons, larger cards */
+  --radius-xl: 1rem; /* 16px — modals, big sections */
+}
+
+/* ── BASE STYLES ── */
+
+*,
+*::before,
+*::after {
+  /* Consistent box sizing so padding doesn't break layouts */
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth; /* smooth scrolling for anchor links */
+  -webkit-font-smoothing: antialiased; /* sharper text rendering on macOS */
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #0f172a; /* bg-dark — main page background */
+  color: #f8fafc; /* text-light — default text color */
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── SCROLLBAR ── */
+
+/* Custom scrollbar to match our dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a; /* matches bg-dark */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(20, 184, 166, 0.3); /* teal accent, semi-transparent */
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(20, 184, 166, 0.6); /* brighter on hover */
+}
+
+/* ── TEXT SELECTION ── */
+
+::selection {
+  background: rgba(20, 184, 166, 0.3); /* teal highlight when selecting text */
+  color: #f8fafc;
+}
+
+/* ── FOCUS MANAGEMENT ── */
+
+/* Remove focus ring on mouse clicks, keep it for keyboard navigation only */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #14b8a6; /* teal outline for keyboard users */
+  outline-offset: 2px;
+}
+
+/* ── TYPOGRAPHY ── */
+
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+h3 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+h5 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+h6 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ── REUSABLE COMPONENT CLASSES ── */
+
+@layer components {
+  /* ── LAYOUT ── */
+
+  /* Standard page container with responsive horizontal padding */
+  .container-page {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+  }
+
+  /* Full-width section with generous vertical padding */
+  .section {
+    @apply py-16 sm:py-20;
+  }
+
+  /* ── CARDS ── */
+
+  /* Base card — dark surface with subtle border */
+  .card-base {
+    @apply bg-card rounded-xl p-6 shadow-lg;
+    border: 1px solid rgba(51, 65, 85, 0.5); /* slate-700 at 50% opacity */
+  }
+
+  /* Book card — lifts and glows on hover, used for book listings */
+  .book-card {
+    @apply bg-card rounded-xl p-6 shadow-lg cursor-pointer;
+    @apply hover:shadow-2xl hover:-translate-y-2;
+    @apply transition-all duration-300;
+    border: 1px solid rgba(51, 65, 85, 0.5);
+  }
+
+  .book-card:hover {
+    border-color: rgba(20, 184, 166, 0.5); /* teal border glow on hover */
+  }
+
+  /* ── BUTTONS ── */
+
+  /* Shared base for all buttons */
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-destructive {
+    @apply inline-flex items-center justify-center;
+    @apply px-6 py-3 rounded-lg font-semibold;
+    @apply transition-all duration-200;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply cursor-pointer;
+  }
+
+  /* Primary — teal fill, main CTAs like "Buy Now" and "Checkout" */
+  .btn-primary {
+    @apply bg-teal text-white;
+    @apply hover:opacity-90 active:scale-95;
+    @apply focus-visible:ring-teal;
+  }
+
+  /* Secondary — dark fill, less prominent actions */
+  .btn-secondary {
+    @apply bg-bg-hover text-white;
+    @apply hover:bg-card active:scale-95;
+    @apply focus-visible:ring-teal;
+  }
+
+  /* Ghost — transparent with border, for "Add to Wishlist" type actions */
+  .btn-ghost {
+    @apply bg-transparent text-text-light;
+    @apply border-2 border-bg-hover;
+    @apply hover:bg-bg-card hover:border-teal;
+    @apply focus-visible:ring-teal;
+  }
+
+  /* Destructive — red fill, for delete/remove actions */
+  .btn-destructive {
+    @apply bg-error text-white;
+    @apply hover:opacity-90 active:scale-95;
+    @apply focus-visible:ring-error;
+  }
+
+  /* Size variants — apply alongside btn-primary etc. */
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+  .btn-lg {
+    @apply px-8 py-4 text-lg;
+  }
+
+  /* ── INPUTS ── */
+
+  /* Standard form field style used across all forms */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg;
+    @apply bg-card text-text-light;
+    @apply placeholder:text-text-muted;
+    @apply transition-colors duration-200;
+    @apply focus:outline-none;
+    border: 1px solid #475569; /* slate-600 */
+  }
+
+  .input-field:focus {
+    border-color: #14b8a6; /* teal border on focus */
+    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2); /* soft teal glow */
+  }
+
+  /* ── BADGES ── */
+
+  /* Base badge — small status chip used on book cards */
+  .badge,
+  .badge-primary,
+  .badge-secondary {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  /* Teal badge — "New", "Featured" */
+  .badge-primary {
+    background: rgba(20, 184, 166, 0.2);
+    color: #14b8a6;
+    border: 1px solid rgba(20, 184, 166, 0.3);
+  }
+
+  /* Gray badge — "ePub", "PDF", neutral labels */
+  .badge-secondary {
+    background: rgba(51, 65, 85, 0.5);
+    color: #cbd5e1;
+    border: 1px solid rgba(51, 65, 85, 1);
+  }
+
+  /* ── GRADIENT TEXT ── */
+
+  /* Used for hero headings and brand moments */
+  .text-gradient {
+    background: linear-gradient(
+      135deg,
+      #14b8a6 0%,
+      #3b82f6 100%
+    ); /* teal → blue */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── SKELETON LOADING ── */
+
+  /* Animated placeholder while content is loading */
+  .skeleton {
+    @apply bg-bg-hover rounded-lg animate-pulse;
+  }
+
+  /* ── DIVIDER ── */
+
+  .divider {
+    @apply border-t my-6;
+    border-color: rgba(51, 65, 85, 0.5);
+  }
+}

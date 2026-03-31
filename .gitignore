@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Environment variables — NEVER commit these
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Uploads — use Cloudinary in production
+uploads/
+*.pdf
+*.epub
+
+# Build outputs
+dist/
+build/
+.vite/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+
+# Docker
+docker-compose.override.yml
