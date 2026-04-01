@@ -24,6 +24,9 @@ import compression from "compression";
 // Import our database connection function
 import connectDB from "./config/database";
 
+// Import the auth routes so we can mount them on the Express app
+import authRoutes from "./routes/auth.routes";
+
 // Import our logger so we can log server startup messages
 import { logger } from "./utils/logger";
 
@@ -68,6 +71,11 @@ app.use(
     credentials: true,
   }),
 );
+
+// Mount the auth routes at /api/auth
+// Every route inside auth.routes.ts will be prefixed with /api/auth automatically
+// e.g. router.post('/login') becomes POST /api/auth/login
+app.use("/api/auth", authRoutes);
 
 // --- HEALTH CHECK ROUTE ---
 // A simple route to confirm the server is running — used by Docker and monitoring tools

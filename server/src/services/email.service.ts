@@ -1,0 +1,167 @@
+// Import nodemailer — the library that actually sends emails via SMTP
+import nodemailer from "nodemailer";
+
+// Import handlebars — the templating engine that fills in dynamic values in our email HTML
+import handlebars from "handlebars";
+
+// Import fs and path — built-in Node modules for reading template files from disk
+import fs from "fs";
+import path from "path";
+
+// Import our logger — no console.log in this project
+import { logger } from "../utils/logger";
+
+// --- CREATE TRANSPORTER ---
+// The transporter is the configured email sender — we create it once and reuse it
+// In development we use Ethereal (a fake SMTP service that catches emails without sending them)
+// In production you'd swap this for a real provider like SendGrid, Mailgun, or Amazon SES
+const createTransporter = async () => {
+  // Check if we're in production and have real SMTP credentials
+  if (process.env.NODE_ENV === "production" && process.env.SMTP_HOST) {
+    // Use real SMTP credentials from .env for production sending
+    return nodemailer.createTransport({
+      host: process.env.SMTP_HOST, // e.g. 'smtp.sendgrid.net'
+      port: Number(process.env.SMTP_PORT) || 587, // 587 is standard for TLS
+      secure: false, // false for port 587 (uses STARTTLS), true for 465
+      auth: {
+        user: process.env.SMTP_USER, // Your SMTP username from .env
+        pass: process.env.SMTP_PASS, // Your SMTP password from .env
+      },
+    });
+  }
+
+  // In development, use Ethereal — a fake SMTP inbox you can preview at ethereal.email
+  // No emails actually get delivered, which is perfect for testing
+
+  // Create a test account on Ethereal if we don't have credentials set (only for dev)
+  const testAccount = await nodemailer.createTestAccount();
+
+  console.log("Ethereal account created:");
+  console.log(testAccount);
+
+  return nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    auth: {
+      user: testAccount.user,
+      pass: testAccount.pass,
+    },
+  });
+};
+
+// --- LOAD AND COMPILE TEMPLATE ---
+// Reads an .hbs template file from disk and compiles it with Handlebars
+// templateName: the filename without extension (e.g. 'welcome', 'verification')
+// data: the dynamic values to inject into the template (e.g. { firstName, verificationUrl })
+const compileTemplate = (
+  templateName: string,
+  data: Record<string, unknown>,
+): string => {
+  // Build the full path to the template file
+  // __dirname is the current directory (services/), then we go up and into templates/
+  const templatePath = path.join(
+    __dirname,
+    "../templates/emails",
+    `${templateName}.hbs`,
+  );
+
+  // Read the template file as a UTF-8 string
+  const templateSource = fs.readFileSync(templatePath, "utf-8");
+
+  // Handlebars.compile() turns the template string into a function
+  // We then call that function with our data to get the final HTML string
+  const template = handlebars.compile(templateSource);
+
+  // Return the final HTML with all {{ variables }} replaced with real values
+  return template(data);
+};
+
+// --- SEND EMAIL ---
+// The core function — builds the email and sends it
+// All other email functions (sendVerificationEmail, etc.) call this one
+const sendEmail = async (
+  to: string, // Recipient email address
+  subject: string, // Email subject line
+  html: string, // The compiled HTML body
+): Promise<void> => {
+  const transporter = await createTransporter();
+
+  const mailOptions = {
+    from: `"Kun Bookshop" <${process.env.EMAIL_FROM || "noreply@kunbookshop.com"}>`,
+    to,
+    subject,
+    html, // The full rendered HTML string from our Handlebars template
+  };
+
+  const info = await transporter.sendMail(mailOptions);
+
+  // In development, log the Ethereal preview URL so you can see the email in a browser
+  if (process.env.NODE_ENV !== "production") {
+    logger.info(`Email preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+  }
+};
+
+// --- SEND VERIFICATION EMAIL ---
+// Called after a user registers — sends them a link to verify their email address
+export const sendVerificationEmail = async (
+  email: string,
+  token: string, // The random verification token we stored in the User document
+): Promise<void> => {
+  // Build the full verification URL that the user clicks in their email
+  const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${token}`;
+
+  // Compile the verification template with the values this email needs
+  const html = compileTemplate("verification", {
+    verificationUrl, // The clickable link
+  });
+
+  await sendEmail(email, "Verify your Kun Bookshop account", html);
+  logger.info(`Verification email sent to: ${email}`);
+};
+
+// --- SEND WELCOME EMAIL ---
+// Called after the user successfully verifies their email
+export const sendWelcomeEmail = async (
+  email: string,
+  firstName: string, // We personalize the greeting with their first name
+): Promise<void> => {
+  const html = compileTemplate("welcome", {
+    firstName, // Used in the template as {{ firstName }}
+    shopUrl: process.env.CLIENT_URL, // Link to the homepage
+  });
+
+  await sendEmail(email, "Welcome to Kun Bookshop! 📚", html);
+  logger.info(`Welcome email sent to: ${email}`);
+};
+
+// --- SEND PASSWORD RESET EMAIL ---
+// Called when a user submits the forgot password form
+export const sendPasswordResetEmail = async (
+  email: string,
+  token: string, // The random reset token we stored in the User document
+): Promise<void> => {
+  // Build the full reset URL — user clicks this to land on the reset password page
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password/${token}`;
+
+  const html = compileTemplate("passwordReset", {
+    resetUrl,
+    expiresIn: "1 hour", // Tell the user how long they have to use this link
+  });
+
+  await sendEmail(email, "Reset your Kun Bookshop password", html);
+  logger.info(`Password reset email sent to: ${email}`);
+};
+
+// --- SEND PASSWORD CHANGED EMAIL ---
+// Called after a user successfully changes or resets their password
+// This is a security notification — if someone DIDN'T make this change, they know to act fast
+export const sendPasswordChangedEmail = async (
+  email: string,
+): Promise<void> => {
+  const html = compileTemplate("passwordChanged", {
+    supportUrl: `${process.env.CLIENT_URL}/contact`, // Link to contact support if it wasn't them
+  });
+
+  await sendEmail(email, "Your Kun Bookshop password was changed", html);
+  logger.info(`Password changed confirmation email sent to: ${email}`);
+};

@@ -1,17 +1,17 @@
-// Import React 19's new createRoot API — this is how we mount our app to the DOM
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-
-// Import our global styles — this includes Tailwind and our CSS variables
+import { QueryClientProvider } from "@tanstack/react-query";
 import "./styles/globals.css";
-
-// Import the root App component
 import App from "./App.tsx";
 
-// Find the <div id="root"> in index.html and mount our React app inside it
+// Import the QueryClient instance we configured in lib/react-query.ts
+import { queryClient } from "./lib/react-query";
+
 createRoot(document.getElementById("root")!).render(
-  // StrictMode helps catch bugs during development by running checks twice
   <StrictMode>
-    <App />
+    {/* QueryClientProvider makes the cache available to every component in the tree */}
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </StrictMode>,
 );
