@@ -27,6 +27,19 @@ import connectDB from "./config/database";
 // Import the auth routes so we can mount them on the Express app
 import authRoutes from "./routes/auth.routes";
 
+// Import the book routes here so we can mount them on the Express app
+import bookRoutes from "./routes/book.routes";
+
+// Import Apollo Server and the Express middleware adapter for Apollo
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@as-integrations/express5";
+
+// Import our GraphQL type definitions and resolvers
+import { typeDefs } from "./graphql/schema";
+import { resolvers } from "./graphql/resolvers";
+
+import { createContext } from "./graphql/context";
+
 // Import our logger so we can log server startup messages
 import { logger } from "./utils/logger";
 
@@ -77,6 +90,9 @@ app.use(
 // e.g. router.post('/login') becomes POST /api/auth/login
 app.use("/api/auth", authRoutes);
 
+// add this line after app.use('/api/auth', authRoutes)
+app.use("/api/books", bookRoutes);
+
 // --- HEALTH CHECK ROUTE ---
 // A simple route to confirm the server is running — used by Docker and monitoring tools
 app.get("/api/health", (req, res) => {
@@ -91,6 +107,18 @@ app.get("/api/health", (req, res) => {
 const startServer = async () => {
   // Connect to MongoDB first — if this fails, the app exits (see database.ts)
   await connectDB();
+
+  // Start the Apollo Server so it's ready to handle GraphQL requests
+  const apolloServer = new ApolloServer({ typeDefs, resolvers });
+  await apolloServer.start();
+
+  // Then register GraphQL middleware
+  app.use(
+    "/graphql",
+    expressMiddleware(apolloServer, {
+      context: createContext,
+    }),
+  );
 
   // Start listening for incoming requests on our chosen port
   app.listen(PORT, () => {

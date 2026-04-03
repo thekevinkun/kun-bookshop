@@ -1,7 +1,5 @@
-// Import BrowserRouter and routing components from React Router v7
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-// Import our auth pages
 import {
   LoginPage,
   RegisterPage,
@@ -9,54 +7,82 @@ import {
   ResetPasswordPage,
 } from "./routes/auth";
 
-// Import our Zustand store to check auth state for protected routes
 import { useAuthStore } from "./store/auth";
 
-// A simple wrapper that redirects to /login if the user is not authenticated
-// Wrap any route you want to protect with this component
+import HomePage from "./routes/index";
+import BooksPage from "./routes/books/index";
+import BookDetailPage from "./routes/books/[id]";
+
+import { MainLayout, AuthLayout } from "./components/layout";
+import ScrollToTop from "./components/ui/ScrollToTop";
+
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated } = useAuthStore();
 
-  // If not logged in, redirect to login page
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // If logged in, render the protected content
   return <>{children}</>;
 };
 
 const App = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
-        {/* PUBLIC ROUTES — anyone can access these */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+        {/* AUTH ROUTES (NO NAVBAR / FOOTER) */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route
+            path="/reset-password/:token"
+            element={<ResetPasswordPage />}
+          />
+        </Route>
 
-        {/* PLACEHOLDER HOME — we'll build this in Phase 3 */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              {/* Temporary home placeholder until Phase 3 */}
-              <div className="min-h-screen bg-bg-dark flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <h1 className="text-4xl font-bold text-gradient">
-                    📚 Kun Bookshop
-                  </h1>
-                  <p className="text-text-muted">
-                    Phase 2 complete — Authentication working!
-                  </p>
-                </div>
-              </div>
-            </ProtectedRoute>
-          }
-        />
+        {/* MAIN APP ROUTES (WITH NAVBAR + FOOTER) */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/books" element={<BooksPage />} />
+          <Route path="/books/:id" element={<BookDetailPage />} />
 
-        {/* CATCH ALL — redirect unknown routes to home */}
+          <Route
+            path="/library"
+            element={
+              <ProtectedRoute>
+                <div>Library — Phase 5</div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <div>Profile — Phase 5</div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <div>Cart — Phase 4</div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <div>Admin — Phase 7</div>
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+
+        {/* CATCH ALL */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

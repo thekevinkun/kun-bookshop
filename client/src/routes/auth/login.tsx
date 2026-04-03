@@ -1,46 +1,60 @@
-// Import useLocation to read the state passed from RegisterForm after signup
 import { useLocation } from "react-router-dom";
 import { LoginForm } from "../../components/forms";
 
 const LoginPage = () => {
-  // useLocation lets us read the { message } state that RegisterForm passes on redirect
   const location = useLocation();
-
-  // If the user just registered, location.state.message will have a success message
   const successMessage = location.state?.message;
 
   return (
-    // Full page centered layout — matches our dark navy background
-    <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        {/* LOGO / BRAND */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gradient">📚 Kun Bookshop</h1>
-          <p className="text-text-muted mt-2">Sign in to your account</p>
-        </div>
+    <div className="min-h-[calc(100vh-50px)] flex bg-bg-dark">
+      {/* LEFT SIDE — IMAGE */}
+      <div className="hidden lg:block lg:w-1/2 relative">
+        <img
+          src="/images/bg-login.webp"
+          alt="Login background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
 
-        {/* SUCCESS MESSAGE — shown after registration */}
-        {successMessage && (
-          <div className="mb-6 p-4 rounded-lg bg-success/10 border border-success/30">
-            <p className="text-sm text-success">{successMessage}</p>
+        {/* Optional overlay for darkening (VERY important for aesthetic) */}
+        <div className="absolute inset-0 bg-[#0a1628]/15 backdrop-blur-[0.5px]" />
+      </div>
+
+      {/* RIGHT SIDE — FORM */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md">
+          {/* LOGO / BRAND */}
+          <div className="mb-8">
+            <h1 className="text-3xl text-center font-bold text-gradient">
+              📚 Kun Bookshop
+            </h1>
+            <p className="text-text-muted text-center mt-2">
+              Welcome back — continue your reading journey
+            </p>
           </div>
-        )}
 
-        {/* FORM CARD */}
-        <div className="card-base">
-          <LoginForm />
+          {/* SUCCESS MESSAGE */}
+          {successMessage && (
+            <div className="mb-6 p-4 rounded-lg bg-success/10 border border-success/30">
+              <p className="text-sm text-success">{successMessage}</p>
+            </div>
+          )}
 
-          {/* REGISTER LINK */}
-          <div className="divider" />
-          <p className="text-center text-sm text-text-muted">
-            Don't have an account?{" "}
-            <a
-              href="/register"
-              className="text-teal hover:underline font-medium"
-            >
-              Create one
-            </a>
-          </p>
+          {/* FORM CARD */}
+          <div className="card-base">
+            <LoginForm />
+
+            <div className="divider" />
+
+            <p className="text-center text-sm text-text-muted">
+              Don't have an account?{" "}
+              <a
+                href="/register"
+                className="text-teal hover:underline font-medium"
+              >
+                Create one
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
