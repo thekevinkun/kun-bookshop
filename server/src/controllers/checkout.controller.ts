@@ -37,31 +37,37 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     // Get the logged-in user's ID from the JWT payload (attached by auth middleware)
     const userId = req.user!.userId;
 
-    // --- DUPLICATE ORDER GUARD (Security §4.3) ---
-    // Check if this user already has a pending order created in the last 10 minutes
-    // This prevents double-checkout if the user clicks the button multiple times
-    const recentPendingOrder = await Order.findOne({
-      userId,
-      paymentStatus: "pending",
-      createdAt: { $gte: new Date(Date.now() - 10 * 60 * 1000) }, // Last 10 minutes
-    });
-
-    // If a recent pending order exists, return its existing Stripe session
-    // instead of creating a brand new one
-    if (recentPendingOrder?.stripeSessionId) {
-      // Retrieve the existing Stripe session so we can return its URL
-      const existingSession = await stripe.checkout.sessions.retrieve(
-        recentPendingOrder.stripeSessionId,
-      );
-      return res.json({
-        sessionId: existingSession.id,
-        url: existingSession.url,
-      });
-    }
-
     // --- SERVER-SIDE PRICE VERIFICATION (Security §4.1) ---
     // Extract just the book IDs from the items array
     const bookIds = items.map((item: { bookId: string }) => item.bookId);
+    const bookIdsSorted = [...bookIds].sort().join(","); // Sort so order doesn't matter
+
+    // --- DUPLICATE ORDER GUARD (Security §4.3) ---
+    const recentPendingOrder = await Order.findOne({
+      userId,
+      paymentStatus: "pending",
+      createdAt: { $gte: new Date(Date.now() - 10 * 60 * 1000) },
+    });
+
+    // Only reuse the existing session if the cart contents are IDENTICAL
+    // If the user changed their cart, fall through and create a new session
+    if (recentPendingOrder?.stripeSessionId) {
+      const savedBookIdsSorted = recentPendingOrder.items
+        .map((item) => item.bookId.toString())
+        .sort()
+        .join(",");
+
+      if (savedBookIdsSorted === bookIdsSorted) {
+        const existingSession = await stripe.checkout.sessions.retrieve(
+          recentPendingOrder.stripeSessionId,
+        );
+        return res.json({
+          sessionId: existingSession.id,
+          url: existingSession.url,
+        });
+      }
+      // Cart changed — fall through to create a fresh order and session
+    }
 
     // Fetch the books from OUR database — we never trust prices from the client
     const books = await Book.find({
@@ -197,21 +203,36 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 // This is purely to show the user a confirmation screen with their order number
 export const verifySession = async (req: Request, res: Response) => {
   try {
-    // Read the session_id from the query string
     const { session_id } = req.query;
 
     if (!session_id || typeof session_id !== "string") {
       return res.status(400).json({ error: "Session ID is required" });
     }
 
-    // Find the order in our DB by the Stripe session ID
     const order = await Order.findOne({ stripeSessionId: session_id });
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    // Return just enough info for the success page to display
+    // If the order is still pending, the webhook hasn't fired yet
+    // Tell the frontend to poll again rather than showing a false success screen
+    if (order.paymentStatus === "pending") {
+      return res.status(202).json({
+        status: "pending",
+        message: "Payment is being confirmed. Please wait...",
+      });
+    }
+
+    // If payment failed, tell the frontend clearly
+    if (order.paymentStatus === "failed") {
+      return res.status(400).json({
+        status: "failed",
+        error: "Payment was not completed.",
+      });
+    }
+
+    // Only reach here if paymentStatus === 'completed'
     res.json({
       orderNumber: order.orderNumber,
       total: order.total,

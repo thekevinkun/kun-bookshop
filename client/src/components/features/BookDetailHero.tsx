@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCartStore } from "../../store/cart";
 import {
   Star,
   ArrowLeft,
@@ -33,6 +35,44 @@ const formatDate = (dateStr?: string) => {
 
 const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
   const navigate = useNavigate();
+
+  // Read cart actions and state from Zustand store
+  const { addItem, isInCart } = useCartStore();
+
+  // Check if this book is already in the cart
+  const alreadyInCart = isInCart(book._id);
+
+  // Local state for the "Added!" flash feedback on the button
+  const [justAdded, setJustAdded] = useState(false);
+
+  // Called when the user clicks "Add to Cart"
+  const handleAddToCart = () => {
+    // If not logged in, send them to login first
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    // If already in cart, open the cart drawer instead of adding again
+    // We do this by dispatching a custom event the Navbar listens to
+    if (alreadyInCart) {
+      window.dispatchEvent(new CustomEvent("open-cart"));
+      return;
+    }
+
+    // Add the book to the cart with all the info CartDrawer needs to display it
+    addItem({
+      bookId: book._id,
+      title: book.title,
+      author: book.authorName,
+      price: book.discountPrice ?? book.price, // Use sale price if available
+      coverImage: book.coverImage,
+    });
+
+    // Show "Added!" flash for 1.5 seconds then revert to normal button text
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 1500);
+  };
 
   const displayPrice = book.discountPrice ?? book.price;
   const discountPercent = book.discountPrice
@@ -137,16 +177,24 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
             <div className="flex gap-3 flex-wrap">
               <button
                 className="btn-primary flex items-center gap-2"
-                onClick={() => {
-                  if (!isAuthenticated) navigate("/login");
-                }}
+                onClick={handleAddToCart}
+                // Disable only while the "Added!" flash is showing — prevents double-add
+                disabled={justAdded}
               >
-                <ShoppingCart size={16} /> Add to Cart
+                <ShoppingCart size={16} />
+                {
+                  justAdded
+                    ? "✓ Added!" // Flash feedback after adding
+                    : alreadyInCart
+                      ? "View in Cart" // Already in cart — clicking opens the drawer
+                      : "Add to Cart" // Default state
+                }
               </button>
               <button
                 className="btn-ghost flex items-center gap-2"
                 onClick={() => {
                   if (!isAuthenticated) navigate("/login");
+                  // Wishlist logic comes in Phase 5
                 }}
               >
                 <Heart size={16} /> Wishlist

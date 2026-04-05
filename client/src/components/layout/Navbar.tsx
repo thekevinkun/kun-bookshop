@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
@@ -38,6 +38,15 @@ const Navbar = () => {
       navigate("/login");
     }
   };
+
+  // Listen for the 'open-cart' custom event fired by BookDetailHero
+  // when the user clicks "View in Cart" on a book already in their cart
+  useEffect(() => {
+    const handleOpenCart = () => setIsCartOpen(true);
+    window.addEventListener("open-cart", handleOpenCart);
+    // Clean up the listener when Navbar unmounts — prevents memory leaks
+    return () => window.removeEventListener("open-cart", handleOpenCart);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-40 w-full bg-dark/80 backdrop-blur-md border-b border-bg-hover">

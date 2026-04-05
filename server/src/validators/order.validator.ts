@@ -1,37 +1,31 @@
-// Import Zod v4 for schema validation
+// Import Zod
 import { z } from "zod";
 
-// Reusable helper from Phase 2 — Zod v4 doesn't support required_error in z.string()
-// So we use .min(1) to ensure the field is not empty
 const requiredString = (field: string) =>
   z.string().min(1, `${field} is required`);
 
-// --- CREATE CHECKOUT SESSION SCHEMA ---
-// Validates the body when the frontend calls POST /api/checkout/create-session
-// The frontend only sends book IDs — we fetch prices from the DB ourselves (Security §4.1)
+// MongoDB ObjectId is exactly 24 hex characters
+// We validate the format here so malformed IDs never reach Mongoose
+const objectIdSchema = z
+  .string()
+  .regex(/^[a-f\d]{24}$/i, "Invalid book ID format");
+
 export const createSessionSchema = z.object({
-  // Array of book IDs the user wants to buy — must have at least one
+  // Each item must have a valid 24-character MongoDB ObjectId as bookId
   items: z
     .array(
       z.object({
-        // Each item only needs a bookId — price comes from our DB, never the client
-        bookId: requiredString("Book ID"),
+        bookId: objectIdSchema,
       }),
     )
-    .min(1, "Cart cannot be empty"), // Reject empty cart submissions
+    .min(1, "Cart cannot be empty"),
 
-  // Optional coupon code — trimmed and uppercased in the controller before DB lookup
   couponCode: z.string().optional(),
 });
 
-// --- VERIFY COUPON SCHEMA ---
-// Validates the body when the frontend checks if a coupon is valid before checkout
 export const verifyCouponSchema = z.object({
-  // The coupon code the user typed in
   code: requiredString("Coupon code"),
 });
 
-// Export TypeScript types inferred from the schemas
-// These are used to type req.body in the controllers
 export type CreateSessionInput = z.infer<typeof createSessionSchema>;
 export type VerifyCouponInput = z.infer<typeof verifyCouponSchema>;

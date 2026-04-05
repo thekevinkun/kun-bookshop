@@ -1,8 +1,8 @@
 // Import React hooks we need
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Import React Router's navigation hook
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 // Import Radix Dialog — we use this as our slide-in drawer (same as Phase 3 pattern)
 import * as Dialog from "@radix-ui/react-dialog";
@@ -28,7 +28,7 @@ interface CartDrawerProps {
 
 const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   // Read cart state and actions from our Zustand store
-  const { items, removeItem, clearCart, total, itemCount } = useCartStore();
+  const { items, removeItem, total, itemCount } = useCartStore();
   // Read auth state — we need to know if user is logged in before checkout
   const { isAuthenticated } = useAuthStore();
   // Local loading state — shows spinner while Stripe session is being created
@@ -37,6 +37,21 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!isOpen && checkoutError) {
+      setCheckoutError(null);
+      setIsCheckingOut(false);
+    }
+  }, [isOpen, checkoutError]);
+
+  useEffect(() => {
+    if (checkoutError) {
+      setCheckoutError(null);
+      setIsCheckingOut(false);
+    }
+  }, [items, location.pathname]);
 
   // Called when the user clicks "Checkout"
   const handleCheckout = async () => {
@@ -52,20 +67,17 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
     setIsCheckingOut(true);
 
     try {
-      // Call our backend to create a Stripe checkout session
-      // We only send bookIds — the server fetches prices itself (Security §4.1)
       const { data } = await api.post("/checkout/create-session", {
         items: items.map((item) => ({ bookId: item.bookId })),
       });
 
-      // Clear the cart now — the webhook will fulfill the order after payment
-      clearCart();
+      // DO NOT clearCart() here — the user hasn't paid yet
+      // The cart is cleared by the success page AFTER we confirm payment
+      // If the user cancels on Stripe or the redirect fails, their cart is still intact
 
       // Redirect the user to Stripe's hosted checkout page
-      // data.url is the full Stripe checkout URL
       window.location.href = data.url;
     } catch (error: unknown) {
-      // Show the error message from the server if available
       const message =
         (error as { response?: { data?: { error?: string } } }).response?.data
           ?.error || "Checkout failed. Please try again.";
@@ -77,7 +89,16 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   return (
     // Radix Dialog.Root controls open/close state
     // onOpenChange fires when user presses Escape or clicks the overlay
-    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog.Root
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          setCheckoutError(null);
+          setIsCheckingOut(false);
+          onClose();
+        }
+      }}
+    >
       {/* Portal renders outside the DOM tree so z-index issues are impossible */}
       <Dialog.Portal>
         {/* Dark overlay behind the drawer */}
@@ -129,7 +150,11 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                   Browse our collection and add some books!
                 </p>
                 {/* Close the drawer and let them keep browsing */}
-                <Link to="/books" onClick={onClose} className="btn-primary mt-2">
+                <Link
+                  to="/books"
+                  onClick={onClose}
+                  className="btn-primary mt-2"
+                >
                   Browse Books
                 </Link>
               </div>

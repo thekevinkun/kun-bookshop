@@ -161,25 +161,54 @@ const handleCheckoutCompleted = async (
   });
 };
 
-// Handles a failed payment — updates the order so admin can see the failure
+// Handles a failed payment — looks up by session ID since paymentIntentId
+// is only populated AFTER a successful completion, not on failure
 const handlePaymentFailed = async (
   paymentIntent: Awaited<ReturnType<typeof stripe.paymentIntents.retrieve>>,
 ) => {
-  // Find the order linked to this payment intent
-  const order = await Order.findOne({
+  // A PaymentIntent can have multiple charges and sessions — we find the order
+  // by matching the stripePaymentIntentId if it was already set, OR by
+  // looking for a pending order whose session maps to this payment intent
+  let order = await Order.findOne({
     stripePaymentIntentId: paymentIntent.id,
   });
 
+  // If not found by payment intent ID, the order was created but the
+  // payment intent ID was never saved (failure happened before completion)
+  // Try to find it via Stripe — retrieve the session that owns this intent
   if (!order) {
-    // No matching order — could be a test event, just log it
+    try {
+      // List checkout sessions associated with this payment intent
+      const sessions = await stripe.checkout.sessions.list({
+        payment_intent: paymentIntent.id,
+        limit: 1,
+      });
+
+      if (sessions.data.length > 0) {
+        // Find the order by the Stripe session ID we DO have stored
+        order = await Order.findOne({
+          stripeSessionId: sessions.data[0].id,
+        });
+      }
+    } catch (err) {
+      logger.error("Failed to look up session for failed payment intent", {
+        paymentIntentId: paymentIntent.id,
+        err,
+      });
+    }
+  }
+
+  if (!order) {
     logger.warn("No order found for failed payment intent", {
       paymentIntentId: paymentIntent.id,
     });
     return;
   }
 
-  // Mark the order as failed
+  // Mark the order as failed so admin can see it
   order.paymentStatus = "failed";
+  // Now we can also save the payment intent ID for future reference
+  order.stripePaymentIntentId = paymentIntent.id;
   await order.save();
 
   logger.warn("Payment failed for order", { orderId: order._id });
