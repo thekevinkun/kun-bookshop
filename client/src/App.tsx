@@ -13,6 +13,8 @@ import HomePage from "./routes/index";
 import BooksPage from "./routes/books/index";
 import BookDetailPage from "./routes/books/[id]";
 
+import { CheckoutSuccessPage, CheckoutCancelPage } from "./routes/checkout";
+
 import { MainLayout, AuthLayout } from "./components/layout";
 import ScrollToTop from "./components/ui/ScrollToTop";
 
@@ -65,14 +67,6 @@ const App = () => {
             }
           />
           <Route
-            path="/cart"
-            element={
-              <ProtectedRoute>
-                <div>Cart — Phase 4</div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/admin"
             element={
               <ProtectedRoute>
@@ -80,6 +74,9 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+          <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
         </Route>
 
         {/* CATCH ALL */}

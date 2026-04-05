@@ -1,0 +1,223 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background-color: #f3f4f6;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+        color: white;
+        padding: 30px 20px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        margin: 8px 0 0;
+        color: #14b8a6;
+        font-size: 14px;
+      }
+      .content {
+        padding: 40px 30px;
+        color: #374151;
+        line-height: 1.6;
+      }
+      .order-number {
+        background: #f0fdfa;
+        border: 1px solid #99f6e4;
+        border-radius: 8px;
+        padding: 12px 20px;
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      .order-number span {
+        font-size: 13px;
+        color: #6b7280;
+      }
+      .order-number strong {
+        display: block;
+        font-size: 20px;
+        color: #14b8a6;
+        margin-top: 2px;
+      }
+      .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+        margin: 0 0 16px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #f3f4f6;
+      }
+      .book-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .book-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .book-cover {
+        width: 56px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .book-info {
+        flex: 1;
+      }
+      .book-title {
+        font-weight: 600;
+        color: #111827;
+        margin: 0 0 4px;
+      }
+      .book-author {
+        font-size: 13px;
+        color: #6b7280;
+        margin: 0 0 6px;
+      }
+      .book-price {
+        font-weight: 700;
+        color: #14b8a6;
+        margin: 0;
+      }
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 2px solid #f3f4f6;
+      }
+      .total-label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+      }
+      .total-amount {
+        font-size: 22px;
+        font-weight: 700;
+        color: #14b8a6;
+      }
+      .button {
+        display: inline-block;
+        background: #14b8a6;
+        color: white !important;
+        padding: 14px 32px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        margin: 24px 0 8px;
+      }
+      .button-center {
+        text-align: center;
+      }
+      .notice {
+        font-size: 13px;
+        color: #6b7280;
+        text-align: center;
+        margin-top: 8px;
+      }
+      .footer {
+        background: #f9fafb;
+        padding: 20px;
+        text-align: center;
+        font-size: 13px;
+        color: #6b7280;
+      }
+      .footer a {
+        color: #14b8a6;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>📘 Kun Bookshop</h1>
+        <p>Your order is confirmed!</p>
+      </div>
+
+      <!-- Body -->
+      <div class="content">
+        <!-- Order number badge -->
+        <div class="order-number">
+          <span>Order Number</span>
+          <strong>#{{orderNumber}}</strong>
+        </div>
+
+        <p>
+          Thank you for your purchase! Your books are now available in your
+          library and ready to read or download anytime.
+        </p>
+
+        <!-- Book list -->
+        <p class="section-title">Your Books</p>
+
+        {{#each items}}
+          <div class="book-item">
+            <img
+              src="{{this.coverImage}}"
+              alt="{{this.title}}"
+              class="book-cover"
+            />
+            <div class="book-info">
+              <p class="book-title">{{this.title}}</p>
+              <p class="book-author">by {{this.author}}</p>
+              <p class="book-price">${{this.price}}</p>
+            </div>
+          </div>
+        {{/each}}
+
+        <!-- Total -->
+        <div class="total-row">
+          <span class="total-label">Total Paid</span>
+          <span class="total-amount">${{total}}</span>
+        </div>
+
+        <!-- CTA -->
+        <div class="button-center">
+          <a href="{{libraryUrl}}" class="button">Go to My Library</a>
+          <p class="notice">
+            Your download links are available in your library at any time.
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>© 2026 Kun Bookshop. All rights reserved.</p>
+        <p>
+          <a href="{{supportUrl}}">Contact Support</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

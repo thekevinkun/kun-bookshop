@@ -1,10 +1,8 @@
 // Import express — the framework that handles all incoming HTTP requests
 import express from "express";
 
-// Import dotenv and call config() immediately — this loads our .env file into process.env
-// It must be imported FIRST before anything else reads from process.env
-import dotenv from "dotenv";
-dotenv.config();
+// Load and validate environment variables before other modules read them
+import { env } from "./config/env";
 
 // Import cors — this controls which websites are allowed to talk to our API
 import cors from "cors";
@@ -30,6 +28,10 @@ import authRoutes from "./routes/auth.routes";
 // Import the book routes here so we can mount them on the Express app
 import bookRoutes from "./routes/book.routes";
 
+// Import the checkout and webhook routes so we can mount them on the Express app
+import checkoutRoutes from "./routes/checkout.routes";
+import webhookRoutes from "./routes/webhook.routes";
+
 // Import Apollo Server and the Express middleware adapter for Apollo
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
@@ -51,6 +53,11 @@ const PORT = process.env.PORT || 5000;
 
 // --- MIDDLEWARE SETUP ---
 // Middleware runs on every request before it reaches our route handlers
+
+// IMPORTANT: Webhook route must be registered BEFORE express.json() middleware
+// so the raw body is preserved for Stripe signature verification
+// In your server.ts, make sure webhooks is above app.use(express.json(...))
+app.use("/api/webhooks", webhookRoutes);
 
 // Tell Express to parse incoming JSON request bodies (e.g., login form data)
 // Limit to 10kb to prevent attackers from sending huge payloads that could crash the server
@@ -78,7 +85,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(
   cors({
     // Only allow requests from our React frontend URL (set in .env)
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: env.CLIENT_URL,
 
     // Allow cookies to be sent with cross-origin requests (needed for our auth cookies)
     credentials: true,
@@ -92,6 +99,9 @@ app.use("/api/auth", authRoutes);
 
 // add this line after app.use('/api/auth', authRoutes)
 app.use("/api/books", bookRoutes);
+
+// Checkout route goes with the other API routes (after express.json())
+app.use("/api/checkout", checkoutRoutes);
 
 // --- HEALTH CHECK ROUTE ---
 // A simple route to confirm the server is running — used by Docker and monitoring tools

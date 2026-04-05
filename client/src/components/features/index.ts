@@ -8,6 +8,8 @@ import SimilarBooks from "./SimilarBooks";
 
 import AuthorCard from "./AuthorCard";
 
+import CartDrawer from "./CartDrawer";
+
 export {
   BookGrid,
   BookCard,
@@ -17,4 +19,5 @@ export {
   BookDetailTabs,
   SimilarBooks,
   AuthorCard,
+  CartDrawer,
 };

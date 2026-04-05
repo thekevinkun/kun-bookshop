@@ -12,13 +12,21 @@ import {
   X,
   ChevronDown,
 } from "lucide-react";
+
+import { useCartStore } from "../../store/cart";
 import { useAuthStore } from "../../store/auth";
+
+import { CartDrawer } from "../features";
+
 import api from "../../lib/api";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { itemCount } = useCartStore();
 
   const handleLogout = async () => {
     try {
@@ -69,11 +77,20 @@ const Navbar = () => {
             <>
               {/* Cart button */}
               <button
-                className="btn-ghost btn-sm"
-                onClick={() => navigate("/cart")}
-                aria-label="Shopping cart"
+                onClick={() => setIsCartOpen(true)}
+                className="relative text-text-muted hover:text-text-light transition-colors"
+                aria-label="Open cart"
               >
-                <ShoppingCart size={18} />
+                <ShoppingCart size={22} />
+                {/* Badge showing how many books are in the cart */}
+                {itemCount() > 0 && (
+                  <span
+                    className="absolute -top-2 -right-2 bg-teal text-white text-xs font-bold 
+                    w-5 h-5 rounded-full flex items-center justify-center"
+                  >
+                    {itemCount()}
+                  </span>
+                )}
               </button>
 
               {/* ---- RADIX DROPDOWN MENU ---- */}
@@ -290,6 +307,8 @@ const Navbar = () => {
           )}
         </div>
       )}
+
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </nav>
   );
 };

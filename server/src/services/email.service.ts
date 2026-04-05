@@ -165,3 +165,24 @@ export const sendPasswordChangedEmail = async (
   await sendEmail(email, "Your Kun Bookshop password was changed", html);
   logger.info(`Password changed confirmation email sent to: ${email}`);
 };
+
+// --- SEND ORDER CONFIRMATION EMAIL ---
+// Called by the webhook after a payment is confirmed
+// Sends the user a receipt with their order number and book list
+export const sendOrderConfirmation = async (
+  email: string,
+  order: any, // IOrder — using any to avoid circular import issues
+): Promise<void> => {
+  const html = compileTemplate("orderConfirmation", {
+    orderNumber: order.orderNumber,
+    items: order.items, // Array of { title, author, price, coverImage }
+    total: order.total.toFixed(2),
+    libraryUrl: `${process.env.CLIENT_URL}/library`,
+    supportUrl: `${process.env.CLIENT_URL}/contact`,
+  });
+
+  await sendEmail(email, `Order Confirmed — #${order.orderNumber} 📚`, html);
+  logger.info(`Order confirmation email sent to: ${email}`, {
+    orderNumber: order.orderNumber,
+  });
+};
