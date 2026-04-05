@@ -76,15 +76,18 @@ api.interceptors.response.use(
   async (error) => {
     // originalRequest: the request that just failed with a 401
     const originalRequest = error.config;
+    const requestUrl = originalRequest?.url ?? "";
+    const isAuthLoginRequest = requestUrl.includes("/auth/login");
 
     // Only attempt refresh if:
     // 1. The error is 401 Unauthorized
-    // 2. We haven't already tried refreshing for this exact request (_retry flag)
-    // 3. The failing request wasn't the refresh endpoint itself (prevent infinite loop)
+    // 2. The failing request wasn't the refresh endpoint itself (prevent infinite loop)
+    // 3. The failing request wasn't the login endpoint — bad credentials are not an expired session
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url?.includes("/auth/refresh")
+      !requestUrl.includes("/auth/refresh") &&
+      !isAuthLoginRequest
     ) {
       // If a refresh is already in progress, queue this request and wait
       if (isRefreshing) {

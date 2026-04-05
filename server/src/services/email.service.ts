@@ -15,11 +15,17 @@ import { logger } from "../utils/logger";
 // The transporter is the configured email sender — we create it once and reuse it
 // In development we use Ethereal (a fake SMTP service that catches emails without sending them)
 // In production you'd swap this for a real provider like SendGrid, Mailgun, or Amazon SES
+let cachedTransporter: nodemailer.Transporter | null = null;
+
 const createTransporter = async () => {
+  if (cachedTransporter) {
+    return cachedTransporter;
+  }
+
   // Check if we're in production and have real SMTP credentials
   if (process.env.NODE_ENV === "production" && process.env.SMTP_HOST) {
     // Use real SMTP credentials from .env for production sending
-    return nodemailer.createTransport({
+    cachedTransporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST, // e.g. 'smtp.sendgrid.net'
       port: Number(process.env.SMTP_PORT) || 587, // 587 is standard for TLS
       secure: false, // false for port 587 (uses STARTTLS), true for 465
@@ -28,6 +34,8 @@ const createTransporter = async () => {
         pass: process.env.SMTP_PASS, // Your SMTP password from .env
       },
     });
+
+    return cachedTransporter;
   }
 
   // In development, use Ethereal — a fake SMTP inbox you can preview at ethereal.email
@@ -36,10 +44,11 @@ const createTransporter = async () => {
   // Create a test account on Ethereal if we don't have credentials set (only for dev)
   const testAccount = await nodemailer.createTestAccount();
 
-  console.log("Ethereal account created:");
-  console.log(testAccount);
+  logger.info(
+    `Dev email is using Ethereal. Inbox: ${testAccount.user} | Open: ${testAccount.web}`,
+  );
 
-  return nodemailer.createTransport({
+  cachedTransporter = nodemailer.createTransport({
     host: "smtp.ethereal.email",
     port: 587,
     auth: {
@@ -47,6 +56,8 @@ const createTransporter = async () => {
       pass: testAccount.pass,
     },
   });
+
+  return cachedTransporter;
 };
 
 // --- LOAD AND COMPILE TEMPLATE ---
@@ -97,7 +108,10 @@ const sendEmail = async (
 
   // In development, log the Ethereal preview URL so you can see the email in a browser
   if (process.env.NODE_ENV !== "production") {
-    logger.info(`Email preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    if (previewUrl) {
+      logger.info(`Open this dev email preview: ${previewUrl}`);
+    }
   }
 };
 

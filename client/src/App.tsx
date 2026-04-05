@@ -5,6 +5,7 @@ import {
   RegisterPage,
   ForgotPasswordPage,
   ResetPasswordPage,
+  VerifyEmailPage,
 } from "./routes/auth";
 
 import { useAuthStore } from "./store/auth";
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
           <Route
             path="/reset-password/:token"
             element={<ResetPasswordPage />}

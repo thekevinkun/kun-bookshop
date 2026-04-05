@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 // Import React Router's navigation hook
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 // Import Radix Dialog — we use this as our slide-in drawer (same as Phase 3 pattern)
 import * as Dialog from "@radix-ui/react-dialog";
@@ -129,9 +129,9 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                   Browse our collection and add some books!
                 </p>
                 {/* Close the drawer and let them keep browsing */}
-                <button onClick={onClose} className="btn-primary mt-2">
+                <Link to="/books" onClick={onClose} className="btn-primary mt-2">
                   Browse Books
-                </button>
+                </Link>
               </div>
             ) : (
               // List of cart items

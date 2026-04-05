@@ -37,6 +37,8 @@ const LoginForm = () => {
     setError, // Lets us set server-side errors on specific fields
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema), // Zod handles all validation rules
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
   });
 
   // Called when the form passes validation and is submitted
@@ -50,10 +52,10 @@ const LoginForm = () => {
 
       // Redirect to the home page after successful login
       navigate("/");
-    } catch (error: any) {
+    } catch (error: unknown) {
       // The server returned an error — show it on the form
       const message =
-        error.response?.data?.error || "Login failed. Please try again.";
+        (error as { response?: { data?: { error?: string } } }).response?.data?.error || "Login failed. Please try again.";
 
       // Attach the error to the password field (most login errors relate to credentials)
       setError("password", { message });

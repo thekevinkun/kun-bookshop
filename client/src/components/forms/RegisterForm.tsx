@@ -20,6 +20,8 @@ const RegisterForm = () => {
     setError,
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
   });
 
   const onSubmit = async (data: RegisterInput) => {
@@ -35,9 +37,10 @@ const RegisterForm = () => {
             "Account created! Please check your email to verify your account.",
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       const message =
-        error.response?.data?.error || "Registration failed. Please try again.";
+        (error as { response?: { data?: { error?: string } } }).response?.data
+          ?.error || "Registration failed. Please try again.";
 
       // If the email is already taken, show the error on the email field specifically
       if (message.toLowerCase().includes("email")) {

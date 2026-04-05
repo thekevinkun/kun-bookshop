@@ -4,20 +4,61 @@ import { z } from "zod";
 const requiredString = (field: string) =>
   z.string().min(1, `${field} is required`);
 
+const emailString = () =>
+  z
+    .string()
+    .trim()
+    .toLowerCase()
+    .superRefine((value, ctx) => {
+      if (!value) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Email is required",
+        });
+        return;
+      }
+
+      if (!z.email().safeParse(value).success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Please provide a valid email address",
+        });
+      }
+    });
+
+const passwordString = (field = "Password") =>
+  z.string().superRefine((value, ctx) => {
+    if (!value) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `${field} is required`,
+      });
+      return;
+    }
+
+    if (value.length < 8) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Password must be at least 8 characters",
+      });
+      return;
+    }
+
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+      });
+    }
+  });
+
 // --- REGISTER SCHEMA ---
 export const registerSchema = z
   .object({
-    email: requiredString("Email")
-      .email("Please provide a valid email address")
-      .toLowerCase()
-      .trim(),
+    email: emailString(),
 
-    password: requiredString("Password")
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-      ),
+    password: passwordString(),
 
     confirmPassword: requiredString("Please confirm your password"),
 
@@ -32,31 +73,20 @@ export const registerSchema = z
 
 // --- LOGIN SCHEMA ---
 export const loginSchema = z.object({
-  email: requiredString("Email")
-    .email("Please provide a valid email address")
-    .toLowerCase()
-    .trim(),
+  email: emailString(),
 
   password: requiredString("Password"),
 });
 
 // --- FORGOT PASSWORD SCHEMA ---
 export const forgotPasswordSchema = z.object({
-  email: requiredString("Email")
-    .email("Please provide a valid email address")
-    .toLowerCase()
-    .trim(),
+  email: emailString(),
 });
 
 // --- RESET PASSWORD SCHEMA ---
 export const resetPasswordSchema = z
   .object({
-    password: requiredString("Password")
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-      ),
+    password: passwordString(),
 
     confirmPassword: requiredString("Please confirm your password"),
   })
@@ -70,12 +100,7 @@ export const changePasswordSchema = z
   .object({
     currentPassword: requiredString("Current password"),
 
-    newPassword: requiredString("New password")
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-      ),
+    newPassword: passwordString("New password"),
 
     confirmNewPassword: requiredString("Please confirm your new password"),
   })

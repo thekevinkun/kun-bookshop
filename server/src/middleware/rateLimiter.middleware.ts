@@ -14,16 +14,39 @@ export const globalLimiter = rateLimit({
   },
 });
 
-// --- AUTH LIMITER ---
-// Much stricter — applies only to login, register, password reset routes
-// Only counts FAILED requests (skipSuccessfulRequests: true)
-// 10 failed attempts per 15 minutes prevents brute-force attacks
-export const authLimiter = rateLimit({
+// --- LOGIN LIMITER ---
+// Strict limiter for sign-in attempts
+// Only failed attempts count so real users are not punished for successful logins
+export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15-minute window
-  max: 10, // Only 10 failed attempts allowed
+  max: 10, // Only 10 failed login attempts allowed
   skipSuccessfulRequests: true, // A successful login doesn't count against the limit
   message: {
     error: "Too many attempts. Please wait 15 minutes before trying again.",
+  },
+});
+
+// --- REGISTER LIMITER ---
+// Sign-up attempts should count whether they succeed or fail
+// This makes the limiter actually useful against registration spam
+export const registerLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15-minute window
+  max: 5, // A few account creations per IP is enough for normal use
+  message: {
+    error:
+      "Too many registration attempts. Please wait 15 minutes before trying again.",
+  },
+});
+
+// --- PASSWORD RESET REQUEST LIMITER ---
+// Limits how often someone can request reset emails from the same IP
+export const forgotPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15-minute window
+  max: 5, // Prevents inbox spam while still allowing legitimate retries
+  skipSuccessfulRequests: true, // Only failed validation/processing attempts count
+  message: {
+    error:
+      "Too many password reset attempts. Please wait 15 minutes before trying again.",
   },
 });
 

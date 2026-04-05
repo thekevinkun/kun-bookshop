@@ -124,7 +124,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // If user doesn't exist, return a vague error
     // Saying "user not found" would tell attackers which emails are registered
     if (!user) {
-      res.status(401).json({ error: "Invalid credentials." });
+      res.status(401).json({ error: "The email or password you entered is incorrect. Please try again." });
       return;
     }
 
@@ -161,7 +161,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
       // Save the incremented failure count
       await user.save();
-      res.status(401).json({ error: "Invalid credentials." });
+      res.status(401).json({ error: "The email or password you entered is incorrect. Please try again." });
+      return;
+    }
+
+    // Only allow verified users to sign in after their credentials are confirmed
+    if (!user.isVerified) {
+      res.status(403).json({
+        error: "Please verify your email before signing in.",
+      });
       return;
     }
 
@@ -208,6 +216,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // Return user info — the tokens are in cookies, not the response body
     res.json({
       message: "Logged in successfully.",
+      token: accessToken,
       user: {
         id: user._id,
         email: user.email,
@@ -359,6 +368,11 @@ export const verifyEmail = async (
     // If no user found, the token is invalid or was already used
     if (!user) {
       res.status(400).json({ error: "Invalid or expired verification link." });
+      return;
+    }
+
+    if (user.isVerified) {
+      res.json({ message: "Your email is already verified. You can sign in." });
       return;
     }
 

@@ -22,7 +22,11 @@ import {
 
 // Import our middleware
 import { authenticate } from "../middleware/auth.middleware";
-import { authLimiter } from "../middleware/rateLimiter.middleware";
+import {
+  forgotPasswordLimiter,
+  loginLimiter,
+  registerLimiter,
+} from "../middleware/rateLimiter.middleware";
 
 // Create the router instance — we'll attach all auth routes to this
 const router = Router();
@@ -67,13 +71,13 @@ import {
 // These routes do NOT require the user to be logged in
 
 // POST /api/auth/register — create a new account
-// authLimiter: max 10 failed attempts per 15 min (prevents spam registrations)
+// registerLimiter: limits account creation attempts per IP to reduce signup spam
 // validate(registerSchema): checks email format, password strength, names are present
-router.post("/register", authLimiter, validate(registerSchema), register);
+router.post("/register", registerLimiter, validate(registerSchema), register);
 
 // POST /api/auth/login — log in with email and password
-// authLimiter: max 10 failed attempts per 15 min (prevents brute force)
-router.post("/login", authLimiter, validate(loginSchema), login);
+// loginLimiter: counts failed sign-in attempts to slow brute-force attacks
+router.post("/login", loginLimiter, validate(loginSchema), login);
 
 // POST /api/auth/logout — clear auth cookies and revoke refresh token
 // No auth required — even a logged-out user should be able to hit this safely
@@ -88,10 +92,10 @@ router.post("/refresh", refreshTokens);
 router.get("/verify-email/:token", verifyEmail);
 
 // POST /api/auth/forgot-password — request a password reset email
-// authLimiter: prevents someone from spamming reset emails at a victim's address
+// forgotPasswordLimiter: slows repeated reset requests from the same IP
 router.post(
   "/forgot-password",
-  authLimiter,
+  forgotPasswordLimiter,
   validate(forgotPasswordSchema),
   forgotPassword,
 );
