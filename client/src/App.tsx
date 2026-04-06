@@ -8,8 +8,6 @@ import {
   VerifyEmailPage,
 } from "./routes/auth";
 
-import { useAuthStore } from "./store/auth";
-
 import HomePage from "./routes/index";
 import BooksPage from "./routes/books/index";
 import BookDetailPage from "./routes/books/[id]";
@@ -19,18 +17,17 @@ import { CheckoutSuccessPage, CheckoutCancelPage } from "./routes/checkout";
 import LibraryPage from "./routes/library/index";
 import ProfilePage from "./routes/profile/index";
 
+import {
+  AdminLayout,
+  AdminDashboard,
+  AdminBooks,
+  AdminUsers,
+  AdminOrders,
+} from "./routes/admin";
+
 import { MainLayout, AuthLayout } from "./components/layout";
+import ProtectedRoute from "./components/layout/ProtectedRoute";
 import ScrollToTop from "./components/ui/ScrollToTop";
-
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuthStore();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <>{children}</>;
-};
 
 const App = () => {
   return (
@@ -74,11 +71,18 @@ const App = () => {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
-                <div>Admin — Phase 7</div>
+              <ProtectedRoute requireAdmin>
+                <AdminLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            {/* /admin redirects to /admin/dashboard by default */}
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="books" element={<AdminBooks />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="orders" element={<AdminOrders />} />
+          </Route>
 
           <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
           <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />

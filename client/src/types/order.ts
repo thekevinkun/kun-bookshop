@@ -21,3 +21,18 @@ export interface CartState {
   total: () => number; // Sum of all item prices
   itemCount: () => number; // How many books are in the cart
 }
+
+// Types related to orders and the shopping cart
+export interface IOrder {
+  _id: string;
+  orderNumber: string;
+  userId: {
+    firstName: string;
+    lastName: string;
+    email?: string;
+  };
+  items: ICartItem[];
+  total: number;
+  paymentStatus: "pending" | "completed" | "failed" | "refunded";
+  createdAt: string;
+}
