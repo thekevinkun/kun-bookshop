@@ -38,6 +38,9 @@ import downloadsRoutes from "./routes/downloads.routes";
 // Import the users router to handle library and wishlist endpoints
 import usersRoutes from "./routes/users.routes";
 
+// Import the admin router — handles all /api/admin/* endpoints
+import adminRoutes from "./routes/admin.routes";
+
 // Import Apollo Server and the Express middleware adapter for Apollo
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
@@ -102,6 +105,10 @@ app.use(
 // Every route inside auth.routes.ts will be prefixed with /api/auth automatically
 // e.g. router.post('/login') becomes POST /api/auth/login
 app.use("/api/auth", authRoutes);
+
+// Mount the admin router — all paths here start with /api/admin
+// authenticate + isAdmin inside the router handles all access control
+app.use("/api/admin", adminRoutes);
 
 // add this line after app.use('/api/auth', authRoutes)
 app.use("/api/books", bookRoutes);
