@@ -2,6 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCartStore } from "../../store/cart";
 import {
+  useAddToWishlist,
+  useRemoveFromWishlist,
+  useWishlist,
+} from "../../hooks/useLibrary";
+import {
   Star,
   ArrowLeft,
   ShoppingCart,
@@ -11,6 +16,7 @@ import {
   BookOpen,
   Calendar,
 } from "lucide-react";
+
 import type { IBook } from "../../types/book";
 
 interface BookDetailHeroProps {
@@ -45,6 +51,24 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
   // Local state for the "Added!" flash feedback on the button
   const [justAdded, setJustAdded] = useState(false);
 
+  // Fetch the user's wishlist so we know if this book is already wishlisted
+  const { data: wishlist } = useWishlist();
+
+  // Check if this specific book is already in the wishlist
+  // We compare string versions of the IDs to avoid ObjectId vs string mismatch
+  const isWishlisted = wishlist?.some(
+    (b: IBook) => b._id?.toString() === book._id?.toString(),
+  );
+
+  // Mutation hooks for adding and removing from wishlist
+  const { mutate: addToWishlist, isPending: isAddingWishlist } =
+    useAddToWishlist();
+  const { mutate: removeFromWishlist, isPending: isRemovingWishlist } =
+    useRemoveFromWishlist();
+
+  // Combined pending state — true while either mutation is in flight
+  const isWishlistPending = isAddingWishlist || isRemovingWishlist;
+
   // Called when the user clicks "Add to Cart"
   const handleAddToCart = () => {
     // If not logged in, send them to login first
@@ -72,6 +96,21 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
     // Show "Added!" flash for 1.5 seconds then revert to normal button text
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
+  };
+
+  // Toggle handler — adds if not wishlisted, removes if already wishlisted
+  const handleWishlistToggle = () => {
+    if (!isAuthenticated) {
+      // If not logged in, redirect to login — same pattern as the cart button
+      navigate("/login");
+      return;
+    }
+
+    if (isWishlisted) {
+      removeFromWishlist(book._id);
+    } else {
+      addToWishlist(book._id);
+    }
   };
 
   const displayPrice = book.discountPrice ?? book.price;
@@ -190,14 +229,29 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                       : "Add to Cart" // Default state
                 }
               </button>
+              {/* Wishlist toggle button — sits below the Add to Cart button */}
               <button
-                className="btn-ghost flex items-center gap-2"
-                onClick={() => {
-                  if (!isAuthenticated) navigate("/login");
-                  // Wishlist logic comes in Phase 5
-                }}
+                onClick={handleWishlistToggle}
+                disabled={isWishlistPending}
+                className={[
+                  // Base styles — ghost button with icon
+                  "flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
+                  // Filled heart style if wishlisted, outline if not
+                  isWishlisted
+                    ? "bg-rose-500/20 border-rose-500/40 text-rose-400 hover:bg-rose-500/30" // Already wishlisted
+                    : "bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20", // Not wishlisted
+                ].join(" ")}
               >
-                <Heart size={16} /> Wishlist
+                <Heart
+                  size={16}
+                  // Fill the heart icon solid when wishlisted, outline when not
+                  className={isWishlisted ? "fill-rose-400" : ""}
+                />
+                {isWishlistPending
+                  ? "Updating..."
+                  : isWishlisted
+                    ? "Wishlisted"
+                    : "Add to Wishlist"}
               </button>
             </div>
 

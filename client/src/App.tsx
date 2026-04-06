@@ -16,6 +16,9 @@ import BookDetailPage from "./routes/books/[id]";
 
 import { CheckoutSuccessPage, CheckoutCancelPage } from "./routes/checkout";
 
+import LibraryPage from "./routes/library/index";
+import ProfilePage from "./routes/profile/index";
+
 import { MainLayout, AuthLayout } from "./components/layout";
 import ScrollToTop from "./components/ui/ScrollToTop";
 
@@ -56,7 +59,7 @@ const App = () => {
             path="/library"
             element={
               <ProtectedRoute>
-                <div>Library — Phase 5</div>
+                <LibraryPage />
               </ProtectedRoute>
             }
           />
@@ -64,7 +67,7 @@ const App = () => {
             path="/profile"
             element={
               <ProtectedRoute>
-                <div>Profile — Phase 5</div>
+                <ProfilePage />
               </ProtectedRoute>
             }
           />

@@ -28,3 +28,12 @@ export interface IOrder extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// Define the TypeScript shape of a Download document
+// This tells TypeScript what fields to expect on a Download object
+export interface IDownload extends Document {
+  userId: mongoose.Types.ObjectId; // Which user triggered the download
+  bookId: mongoose.Types.ObjectId; // Which book was downloaded
+  ipAddress: string; // The user's IP address — for abuse detection
+  downloadedAt: Date; // When the download happened
+}

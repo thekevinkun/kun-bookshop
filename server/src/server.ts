@@ -32,6 +32,12 @@ import bookRoutes from "./routes/book.routes";
 import checkoutRoutes from "./routes/checkout.routes";
 import webhookRoutes from "./routes/webhook.routes";
 
+// Import the downloads router to handle secure book download URL generation
+import downloadsRoutes from "./routes/downloads.routes";
+
+// Import the users router to handle library and wishlist endpoints
+import usersRoutes from "./routes/users.routes";
+
 // Import Apollo Server and the Express middleware adapter for Apollo
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
@@ -102,6 +108,12 @@ app.use("/api/books", bookRoutes);
 
 // Checkout route goes with the other API routes (after express.json())
 app.use("/api/checkout", checkoutRoutes);
+
+// Register the downloads routes — handles /api/downloads/book/:bookId and /api/downloads/history
+app.use("/api/downloads", downloadsRoutes);
+
+// Register the users routes — handles /api/users/library and /api/users/wishlist
+app.use("/api/users", usersRoutes);
 
 // --- HEALTH CHECK ROUTE ---
 // A simple route to confirm the server is running — used by Docker and monitoring tools

@@ -103,3 +103,9 @@ export interface IAuthor {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IDownloadRecord {
+  _id: string;
+  bookId: IBook; // Populated by the backend with the book's title and authorName
+  downloadedAt: string;
+}
