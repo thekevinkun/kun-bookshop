@@ -294,8 +294,68 @@ h6 {
 
   /* ── DIVIDER ── */
 
-  .divider {
-    @apply border-t my-6;
-    border-color: rgba(51, 65, 85, 0.5);
+.divider {
+  @apply border-t my-6;
+  border-color: rgba(51, 65, 85, 0.5);
+}
+}
+
+@keyframes cart-overlay-in {
+  from {
+    opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cart-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes cart-drawer-in {
+  from {
+    opacity: 0.96;
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes cart-drawer-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0.98;
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+.cart-overlay[data-state="open"] {
+  animation: cart-overlay-in 220ms ease-out;
+}
+
+.cart-overlay[data-state="closed"] {
+  animation: cart-overlay-out 180ms ease-in;
+}
+
+.cart-drawer {
+  will-change: transform, opacity;
+}
+
+.cart-drawer[data-state="open"] {
+  animation: cart-drawer-in 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cart-drawer[data-state="closed"] {
+  animation: cart-drawer-out 200ms cubic-bezier(0.4, 0, 1, 1);
 }

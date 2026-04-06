@@ -41,9 +41,9 @@ const Hero = ({ books }: { books: IBook[] }) => {
     >
       {/* Subtle background texture — dark radial gradient for depth */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#1e3a5f33_0%,_transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_left,_#1e3a5f33_0%,_transparent_70%)]" />
       </div>
-
+      
       <div className="container-page relative z-10 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* ---- LEFT: Book info ---- */}

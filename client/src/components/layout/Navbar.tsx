@@ -10,7 +10,6 @@ import {
   Library,
   Menu,
   X,
-  ChevronDown,
 } from "lucide-react";
 
 import { useCartStore } from "../../store/cart";
@@ -24,6 +23,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { itemCount } = useCartStore();
@@ -48,8 +48,23 @@ const Navbar = () => {
     return () => window.removeEventListener("open-cart", handleOpenCart);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 12);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <nav className="sticky top-0 z-40 w-full bg-dark/80 backdrop-blur-md border-b border-bg-hover">
+    <nav
+      className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+        isScrolled
+          ? "border-b border-teal/15 bg-navy/88 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.28)]"
+          : "bg-navy"
+      }`}
+    >
       <div className="container-page py-0 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link
@@ -87,15 +102,15 @@ const Navbar = () => {
               {/* Cart button */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative text-text-muted hover:text-text-light transition-colors"
+                className="relative inline-flex h-9 items-center justify-center pr-1 text-text-muted hover:text-text-light transition-colors cursor-pointer"
                 aria-label="Open cart"
               >
-                <ShoppingCart size={22} />
+                <ShoppingCart size={20} strokeWidth={2.1} />
                 {/* Badge showing how many books are in the cart */}
                 {itemCount() > 0 && (
                   <span
-                    className="absolute -top-2 -right-2 bg-teal text-white text-xs font-bold 
-                    w-5 h-5 rounded-full flex items-center justify-center"
+                    className="absolute -top-1 -right-1.5 min-w-4.5 h-4.5 px-1 bg-teal text-white text-[10px] font-bold 
+                    rounded-full flex items-center justify-center leading-none"
                   >
                     {itemCount()}
                   </span>
@@ -103,38 +118,31 @@ const Navbar = () => {
               </button>
 
               {/* ---- RADIX DROPDOWN MENU ---- */}
-              <DropdownMenu.Root>
+              <DropdownMenu.Root modal={false}>
                 {/* The button that opens the dropdown */}
                 <DropdownMenu.Trigger asChild>
                   <button
-                    className="flex items-center gap-2 btn-ghost btn-sm
-                      data-[state=open]:border-teal data-[state=open]:text-teal"
-                    aria-label="User menu"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10
+                      bg-white/[0.03] text-text-light transition-colors hover:border-teal/35 hover:bg-white/[0.06]
+                      focus-visible:border-teal cursor-pointer"
+                    aria-label="Open account menu"
                   >
                     {/* Avatar or initials */}
                     {user?.avatar ? (
                       <img
                         src={user.avatar}
                         alt={user.firstName}
-                        className="w-7 h-7 rounded-full object-cover"
+                        className="h-8 w-8 rounded-full object-cover"
                       />
                     ) : (
                       <div
-                        className="w-7 h-7 rounded-full bg-teal flex items-center
-                          justify-center text-white text-xs font-bold"
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-teal
+                          text-[11px] font-bold tracking-[0.08em] text-white"
                       >
                         {user?.firstName?.[0]}
                         {user?.lastName?.[0]}
                       </div>
                     )}
-                    <span className="text-sm text-text-light">
-                      {user?.firstName}
-                    </span>
-                    <ChevronDown
-                      size={14}
-                      className="text-text-muted transition-transform duration-200
-                        [[data-state=open]_&]:rotate-180"
-                    />
                   </button>
                 </DropdownMenu.Trigger>
 

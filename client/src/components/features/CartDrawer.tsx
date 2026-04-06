@@ -1,8 +1,8 @@
 // Import React hooks we need
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // Import React Router's navigation hook
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 // Import Radix Dialog — we use this as our slide-in drawer (same as Phase 3 pattern)
 import * as Dialog from "@radix-ui/react-dialog";
@@ -37,26 +37,27 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const navigate = useNavigate();
-  const location = useLocation();
 
-  useEffect(() => {
-    if (!isOpen && checkoutError) {
-      setCheckoutError(null);
-      setIsCheckingOut(false);
-    }
-  }, [isOpen, checkoutError]);
+  const clearCheckoutState = () => {
+    setCheckoutError(null);
+    setIsCheckingOut(false);
+  };
 
-  useEffect(() => {
-    if (checkoutError) {
-      setCheckoutError(null);
-      setIsCheckingOut(false);
-    }
-  }, [items, location.pathname]);
+  const handleRemoveItem = (bookId: string) => {
+    clearCheckoutState();
+    removeItem(bookId);
+  };
+
+  const handleBrowseBooks = () => {
+    clearCheckoutState();
+    onClose();
+  };
 
   // Called when the user clicks "Checkout"
   const handleCheckout = async () => {
     // If not logged in, close the drawer and send them to login
     if (!isAuthenticated) {
+      clearCheckoutState();
       onClose();
       navigate("/login");
       return;
@@ -93,8 +94,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
       open={isOpen}
       onOpenChange={(open) => {
         if (!open) {
-          setCheckoutError(null);
-          setIsCheckingOut(false);
+          clearCheckoutState();
           onClose();
         }
       }}
@@ -102,11 +102,13 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
       {/* Portal renders outside the DOM tree so z-index issues are impossible */}
       <Dialog.Portal>
         {/* Dark overlay behind the drawer */}
-        <Dialog.Overlay className="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm" />
+        <Dialog.Overlay
+          className="cart-overlay fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+        />
 
         {/* The drawer panel itself — slides in from the right */}
         <Dialog.Content
-          className="fixed right-0 top-0 h-full w-full max-w-md bg-card z-50 flex flex-col shadow-2xl"
+          className="cart-drawer fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-card shadow-2xl"
           style={{ borderLeft: "1px solid rgba(51,65,85,0.5)" }}
         >
           {/* --- HEADER --- */}
@@ -152,7 +154,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                 {/* Close the drawer and let them keep browsing */}
                 <Link
                   to="/books"
-                  onClick={onClose}
+                  onClick={handleBrowseBooks}
                   className="btn-primary mt-2"
                 >
                   Browse Books
@@ -193,7 +195,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
 
                     {/* Remove button */}
                     <button
-                      onClick={() => removeItem(item.bookId)}
+                      onClick={() => handleRemoveItem(item.bookId)}
                       className="text-text-muted hover:text-error transition-colors flex-shrink-0 mt-1"
                       aria-label={`Remove ${item.title} from cart`}
                     >
