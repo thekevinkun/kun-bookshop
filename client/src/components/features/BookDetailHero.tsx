@@ -136,9 +136,15 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
               <ArrowLeft size={15} /> Back
             </button>
 
-            <span className="badge-primary self-start text-xs uppercase tracking-widest">
-              {book.category[0]}
-            </span>
+            <div className="flex items-center gap-2">
+               <span className="badge-primary self-start text-xs uppercase tracking-widest">
+                {book.category[0]}
+              </span>
+
+              <span className="badge-primary self-start text-xs uppercase tracking-widest">
+                {book.category[1]}
+              </span>
+            </div>
 
             <h1 className="text-text-light text-4xl sm:text-5xl font-bold leading-tight">
               {book.title}
@@ -209,7 +215,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
             </div>
 
             <p className="text-text-muted text-xs">
-              🔥 {book.purchaseCount.toLocaleString()} people have bought this
+              {book.purchaseCount.toLocaleString()} people have bought this
             </p>
 
             {/* Buttons */}

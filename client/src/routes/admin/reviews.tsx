@@ -12,6 +12,7 @@ import { Star, Trash2, ShieldCheck } from "lucide-react";
 
 // Import useDebouncedValue for the search input
 import { useDebouncedValue } from "@mantine/hooks";
+import { toast } from "sonner";
 
 import type { IReview } from "../../types/book";
 
@@ -52,6 +53,13 @@ const AdminReviews = () => {
     onSuccess: () => {
       // Refresh the admin reviews list after deletion
       queryClient.invalidateQueries({ queryKey: ["admin", "reviews"] });
+      toast.success("Review deleted successfully");
+    },
+    onError: (err: unknown) => {
+      toast.error(
+        (err as { response?: { data?: { error?: string } } }).response?.data
+          ?.error ?? "Failed to delete review",
+      );
     },
   });
 

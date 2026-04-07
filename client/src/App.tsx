@@ -29,7 +29,8 @@ import {
 
 import { MainLayout, AuthLayout } from "./components/layout";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
-import ScrollToTop from "./components/ui/ScrollToTop";
+
+import { ScrollToTop } from "./components/ui";
 
 const App = () => {
   return (

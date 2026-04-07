@@ -32,7 +32,7 @@ export const authenticate = (
   // Check Authorization header FIRST — this is what our Axios interceptor sends
   // Fall back to cookie only if no header token exists
   const token =
-    req.headers.authorization?.replace("Bearer ", "") || req.cookies.token;
+    req.cookies.token || req.headers.authorization?.replace("Bearer ", "");
 
   // If there's no token at all, the user is not logged in — reject immediately
   if (!token) {

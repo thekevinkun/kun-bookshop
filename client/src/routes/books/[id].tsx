@@ -27,7 +27,7 @@ const BookDetailPage = () => {
     .filter((b: { _id: string }) => b._id !== id)
     .slice(0, 4);
 
-  // --- LOADING ---
+  // LOADING
   if (isLoading) {
     return (
       <div className="min-h-screen bg-navy">
@@ -46,7 +46,7 @@ const BookDetailPage = () => {
     );
   }
 
-  // --- NOT FOUND ---
+  // NOT FOUND
   // Show this when the API returns an error or the book simply doesn't exist
   if (isError || !book) {
     return (

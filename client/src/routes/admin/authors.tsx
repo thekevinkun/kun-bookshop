@@ -9,6 +9,7 @@ import { Plus, Pencil, Trash2, Search, User } from "lucide-react";
 
 // Import useDebouncedValue so search doesn't fire on every keystroke
 import { useDebouncedValue } from "@mantine/hooks";
+import { toast } from "sonner";
 
 // Import the AuthorForm modal component
 import { AuthorForm } from "../../components/forms";
@@ -45,8 +46,10 @@ const AdminAuthors = () => {
       )
     ) {
       deleteAuthor(author._id, {
+        onSuccess: () =>
+          toast.success(`"${author.name}" deleted successfully`),
         onError: (err: unknown) =>
-          alert(
+          toast.error(
             (err as { response?: { data?: { error?: string } } }).response?.data
               ?.error ?? "Failed to delete author",
           ),

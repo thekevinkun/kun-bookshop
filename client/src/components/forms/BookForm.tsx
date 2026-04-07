@@ -2,8 +2,11 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useAllAuthors } from "../../hooks/useAuthors";
+
+import { toast } from "sonner";
+import { AdminModal } from "../ui";
+
 import api from "../../lib/api";
-import AdminModal from "../ui/AdminModal";
 
 import type { IBook } from "../../types/book";
 
@@ -83,10 +86,14 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
 
       queryClient.invalidateQueries({ queryKey: ["books"] });
       onClose();
+      toast.success(
+        isEditing ? "Book updated successfully" : "Book added successfully",
+      );
     } catch (err: unknown) {
       setError(
         (err as { response?: { data?: { error?: string } } }).response?.data
-          ?.error ?? "Something went wrong",
+          ?.error ??
+          (isEditing ? "Failed to update book" : "Failed to add book"),
       );
     } finally {
       setLoading(false);
@@ -180,7 +187,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="input-field"
-            placeholder="Non-Fiction, Self-help"
+            placeholder="Biography, Non-Fiction, Fantasy"
           />
         </div>
 
@@ -192,7 +199,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             className="input-field"
-            placeholder="bestseller, award-winning"
+            placeholder="bestseller, newrelease, award-winning"
           />
         </div>
 

@@ -18,6 +18,8 @@ import {
   MessageSquare,
 } from "lucide-react";
 
+import { GlobalToaster } from "../../components/ui";
+
 // Import our auth store to get the current user and logout function
 import { useAuthStore } from "../../store/auth";
 
@@ -160,6 +162,7 @@ export default function AdminLayout() {
           <Outlet />
         </main>
       </div>
+      <GlobalToaster />
     </div>
   );
 }

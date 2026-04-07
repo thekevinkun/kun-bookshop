@@ -160,9 +160,15 @@ export const createAuthor = async (
     const sanitizedBio = purify.sanitize(data.bio);
 
     // Parse specialty from JSON string to array — e.g. '["JavaScript","Node.js"]' → array
-    const specialty = data.specialty
-      ? (JSON.parse(data.specialty) as string[])
-      : [];
+    let specialty: string[] = [];
+    if (data.specialty) {
+      try {
+        specialty = JSON.parse(data.specialty) as string[];
+      } catch {
+        res.status(400).json({ error: "Specialties must be a valid list" });
+        return;
+      }
+    }
 
     // Build the social links object from the flat validator fields
     const socialLinks = {
@@ -233,7 +239,12 @@ export const updateAuthor = async (
 
     // Parse specialty if it was sent
     if (data.specialty) {
-      updates.specialty = JSON.parse(data.specialty) as string[];
+      try {
+        updates.specialty = JSON.parse(data.specialty) as string[];
+      } catch {
+        res.status(400).json({ error: "Specialties must be a valid list" });
+        return;
+      }
     }
 
     // Rebuild social links if any were sent

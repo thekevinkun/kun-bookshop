@@ -12,9 +12,6 @@ export const createBookSchema = z.object({
   // author is now a MongoDB ObjectId string referencing the Author collection
   author: requiredString("Author"),
 
-  // Denormalized author name — stored directly for fast list rendering
-  authorName: requiredString("Author name"),
-
   // Description must be at least 20 characters
   description: z.string().min(20, "Description must be at least 20 characters"),
 
@@ -108,13 +105,13 @@ export const createAuthorSchema = z.object({
 
   nationality: z.string().optional(),
 
-  website: z.string().url("Must be a valid URL").optional(),
+  website: z.string().url("Website must be a valid URL").optional(),
 
   // Social links — all optional URLs
-  twitter: z.string().url().optional(),
-  linkedin: z.string().url().optional(),
-  github: z.string().url().optional(),
-  goodreads: z.string().url().optional(),
+  twitter: z.string().url("Twitter link must be a valid URL").optional(),
+  linkedin: z.string().url("LinkedIn link must be a valid URL").optional(),
+  github: z.string().url("GitHub link must be a valid URL").optional(),
+  goodreads: z.string().url("Goodreads link must be a valid URL").optional(),
 });
 
 export const updateAuthorSchema = createAuthorSchema.partial();

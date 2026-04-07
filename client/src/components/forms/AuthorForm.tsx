@@ -2,7 +2,9 @@ import { useState } from "react";
 
 // Import our author hooks
 import { useCreateAuthor, useUpdateAuthor } from "../../hooks/useAuthors";
-import AdminModal from "../ui/AdminModal";
+
+import { toast } from "sonner";
+import { AdminModal } from "../ui";
 
 import type { IAuthor } from "../../types/book";
 
@@ -76,6 +78,9 @@ const AuthorForm = ({ author, onClose }: AuthorFormModalProps) => {
         await createAuthor(formData);
       }
       onClose();
+      toast.success(
+        isEditing ? "Author updated successfully" : "Author added successfully",
+      );
     } catch (err: unknown) {
       setError(
         (err as { response?: { data?: { error?: string } } }).response?.data
@@ -142,9 +147,7 @@ const AuthorForm = ({ author, onClose }: AuthorFormModalProps) => {
             />
           </div>
           <div>
-            <label className="block text-slate-400 text-sm mb-1">
-              Website
-            </label>
+            <label className="block text-slate-400 text-sm mb-1">Website</label>
             <input
               value={website}
               onChange={(e) => setWebsite(e.target.value)}

@@ -9,6 +9,7 @@ import { Plus, Pencil, Trash2, Search } from "lucide-react";
 
 // Import useDebouncedValue from Mantine — NOT useDebounce (wrong hook name)
 import { useDebouncedValue } from "@mantine/hooks";
+import { toast } from "sonner";
 
 // Import our Axios instance
 import api from "../../lib/api";
@@ -46,9 +47,21 @@ const AdminBooks = () => {
   // Mutation to soft-delete a book (sets isActive: false via DELETE /api/books/:id)
   const { mutate: deleteBook } = useMutation({
     mutationFn: (bookId: string) => api.delete(`/books/${bookId}`),
-    onSuccess: () => {
+    onSuccess: (_response, bookId) => {
       // Refresh the books list after deletion
       queryClient.invalidateQueries({ queryKey: ["books"] });
+      const deletedBook = data?.books?.find((item: IBook) => item._id === bookId);
+      toast.success(
+        deletedBook
+          ? `"${deletedBook.title}" deleted successfully`
+          : "Book deleted successfully",
+      );
+    },
+    onError: (err: unknown) => {
+      toast.error(
+        (err as { response?: { data?: { error?: string } } }).response?.data
+          ?.error ?? "Failed to delete book",
+      );
     },
   });
 

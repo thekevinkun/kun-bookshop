@@ -21,7 +21,7 @@ const BookCard = ({ book }: BookCardProps) => {
       className="group cursor-pointer flex flex-col"
       onClick={() => navigate(`/books/${book._id}`)}
     >
-      {/* ---- COVER ---- */}
+      {/* COVER */}
       <div className="relative overflow-hidden rounded-lg mb-3 aspect-[2/3] bg-ocean">
         {/* Cover image — scales up slightly on hover */}
         <img
@@ -54,7 +54,7 @@ const BookCard = ({ book }: BookCardProps) => {
         />
       </div>
 
-      {/* ---- INFO ---- */}
+      {/* INFO */}
       <div className="flex flex-col gap-1 flex-1">
         {/* Title — clamp to 2 lines */}
         <h3
@@ -65,7 +65,10 @@ const BookCard = ({ book }: BookCardProps) => {
         </h3>
 
         {/* Category — italic muted, like in the reference images */}
-        <p className="text-text-muted text-xs italic">{book.category[0]}</p>
+        <div className="flex items-center gap-1">
+          <p className="text-text-muted text-xs italic">{book.category[0]},</p>
+          <p className="text-text-muted text-xs italic">{" "}{book.category[1]}</p>
+        </div>
 
         {/* Rating — compact, only shows stars + number */}
         <div className="flex items-center gap-1 mt-0.5">

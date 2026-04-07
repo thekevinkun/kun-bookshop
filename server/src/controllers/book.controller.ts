@@ -248,6 +248,7 @@ export const createBook = async (req: Request, res: Response) => {
 
     const book = await Book.create({
       ...data,
+      authorName: authorExists.name,
       description: sanitizedDescription,
       category,
       tags,
@@ -261,7 +262,10 @@ export const createBook = async (req: Request, res: Response) => {
     logger.info("Book created", { bookId: book._id, title: book.title });
 
     res.status(201).json({ book });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.name === "ZodError") {
+      return res.status(400).json({ error: error.errors[0].message });
+    }
     logger.error("createBook error", { error });
     res.status(500).json({ error: "Failed to create book" });
   }
@@ -277,16 +281,17 @@ export const updateBook = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Book not found" });
     }
 
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const updates: any = { ...data };
+
     // If author is being changed, verify the new author exists
     if (data.author) {
       const authorExists = await Author.findById(data.author);
       if (!authorExists) {
         return res.status(400).json({ error: "Author not found" });
       }
+      updates.authorName = authorExists.name;
     }
-
-    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-    const updates: any = { ...data };
 
     if (data.description) {
       updates.description = purify.sanitize(data.description);
@@ -330,7 +335,10 @@ export const updateBook = async (req: Request, res: Response) => {
     logger.info("Book updated", { bookId: req.params.id });
 
     res.json({ book: updatedBook });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.name === "ZodError") {
+      return res.status(400).json({ error: error.errors[0].message });
+    }
     logger.error("updateBook error", { error });
     res.status(500).json({ error: "Failed to update book" });
   }

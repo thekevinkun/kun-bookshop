@@ -35,7 +35,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
     ? (activeBook.discountPrice ?? activeBook.price)
     : 0;
 
-  if (!activeBook) {
+  if (!isLoading && !activeBook) {
     // Show an empty state if there are no featured books
     return (
       <section className="relative min-h-screen flex flex-col items-center justify-center bg-navy">
@@ -183,12 +183,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
           <div className="flex justify-center items-center order-1 md:order-2">
             <div className="relative w-64 sm:w-72">
               {isLoading ? (
-                <img
-                  src="/images/placeholder-cover.webp"
-                  alt=""
-                  className="relative z-10 w-full rounded-xl shadow-[0_24px_60px_rgba(0,0,0,0.5)] 
-                    object-cover aspect-[2/3] transition-opacity duration-500 animate-pulse"
-                />
+                <div className="aspect-[2/3] bg-bg-hover rounded-xl shadow-[0_24px_60px_rgba(0,0,0,0.5)]" />
               ) : (
                 <>
                   {/* Back copies of the same cover create a more convincing stacked-book effect */}

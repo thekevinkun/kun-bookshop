@@ -20,6 +20,7 @@ import {
 
 // Import useDebouncedValue so search doesn't fire on every keystroke
 import { useDebouncedValue } from "@mantine/hooks";
+import { toast } from "sonner";
 
 // Import our auth store so we can get the current user's ID
 // This prevents showing delete/role buttons for the logged-in admin's own row
@@ -56,8 +57,24 @@ const AdminUsers = () => {
   // Toggle a user's role — if currently 'user' make them 'admin', and vice versa
   const handleRoleToggle = (userId: string, currentRole: string) => {
     const newRole = currentRole === "admin" ? "user" : "admin";
+    const targetUser = data?.users?.find((u: AdminUser) => u._id === userId);
     if (window.confirm(`Change this user's role to "${newRole}"?`)) {
-      updateRole({ userId, role: newRole });
+      updateRole(
+        { userId, role: newRole },
+        {
+          onSuccess: () =>
+            toast.success(
+              targetUser
+                ? `${targetUser.email} is now ${newRole}`
+                : `User role changed to ${newRole}`,
+            ),
+          onError: (err: unknown) =>
+            toast.error(
+              (err as { response?: { data?: { error?: string } } }).response
+                ?.data?.error ?? "Failed to update user role",
+            ),
+        },
+      );
     }
   };
 
@@ -68,7 +85,14 @@ const AdminUsers = () => {
         `Permanently delete user "${email}"? This cannot be undone.`,
       )
     ) {
-      deleteUser(userId);
+      deleteUser(userId, {
+        onSuccess: () => toast.success(`"${email}" deleted successfully`),
+        onError: (err: unknown) =>
+          toast.error(
+            (err as { response?: { data?: { error?: string } } }).response?.data
+              ?.error ?? "Failed to delete user",
+          ),
+      });
     }
   };
 
