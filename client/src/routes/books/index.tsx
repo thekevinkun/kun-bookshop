@@ -5,7 +5,6 @@ import { useBooks } from "../../hooks/useBooks";
 import { BookGrid, BookFiltersComponent } from "../../components/features";
 
 import type { BookFilters } from "../../types/book";
-import { PLACEHOLDER_BOOKS } from "../../lib/data";
 
 const BooksPage = () => {
   // All active filters live here — same as the original design
@@ -20,18 +19,46 @@ const BooksPage = () => {
   const { data, isLoading } = useBooks(filters);
 
   // Use real data if available, placeholders otherwise
-  const books =
-    data?.books && data.books.length > 0 ? data.books : PLACEHOLDER_BOOKS;
+  const books = data?.books && data.books.length > 0 ? data.books : null;
 
   const totalPages = data?.totalPages ?? 1;
   const currentPage = data?.currentPage ?? 1;
-  const totalCount = data?.total ?? PLACEHOLDER_BOOKS.length;
+  const totalCount = data?.total ?? 0;
 
   // Scroll to top + change page
   const goToPage = (page: number) => {
     setFilters((prev) => ({ ...prev, page }));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  if (isLoading && !books) {
+    // Show a loading state if we're fetching data for the first time
+    return (
+      <section className="relative min-h-screen flex items-center justify-center bg-navy animate-pulse">
+        <div className="w-48 h-6 bg-bg-hover rounded mb-4" />
+        <div className="w-64 h-10 bg-bg-hover rounded mb-2" />
+        <div className="w-32 h-4 bg-bg-hover rounded mb-6" />
+        <div className="w-40 h-5 bg-bg-hover rounded" />
+      </section>
+    );
+  }
+
+  if (!books || books.length === 0) {
+    // Show an empty state if there are no books to display
+    return (
+      <section className="relative min-h-screen flex flex-col items-center justify-center bg-navy">
+        <div className="flex flex-col items-center justify-center text-center">
+          <p className="text-5xl mb-4">📚</p>
+          <h3 className="text-text-light text-lg font-semibold mb-2">
+            No books yet
+          </h3>
+          <p className="text-text-muted text-sm">
+            There are no books at the moment. Check back soon!
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <div className="min-h-screen">

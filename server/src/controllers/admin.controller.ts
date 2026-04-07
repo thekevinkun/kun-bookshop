@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 import { User } from "../models/User";
 import { Book } from "../models/Book";
 import { Order } from "../models/Order";
+import { Review } from "../models/Review";
 
 // Import the logger so we can log errors without exposing stack traces to the client
 import { logger } from "../utils/logger";
@@ -381,5 +382,54 @@ export const getAnalytics = async (
   } catch (error) {
     logger.error("getAnalytics error", { error });
     res.status(500).json({ error: "Failed to fetch analytics" });
+  }
+};
+
+// 8. getAdminReviews — GET /api/admin/reviews
+// Returns all reviews across all books for admin moderation.
+// Supports ?search (book title) and ?minRating filter.
+export const getAdminReviews = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const minRating = parseInt(req.query.minRating as string) || 0;
+
+    // Build filter — only active (non-soft-deleted) reviews
+    const filter: Record<string, any> = { isActive: true };
+
+    // Filter by minimum star rating if provided
+    if (minRating > 0) filter.rating = { $gte: minRating };
+
+    const reviews = await Review.find(filter)
+      .sort({ createdAt: -1 }) // Newest first
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate("userId", "firstName lastName email avatar") // Who wrote it
+      .populate("bookId", "title coverImage") // Which book
+      .lean();
+
+    // If search is provided, filter in memory by book title
+    // (A proper text index search would need a separate approach — this is fine for admin)
+    const search = req.query.search as string | undefined;
+    const filtered = search
+      ? reviews.filter((r: any) =>
+          r.bookId?.title?.toLowerCase().includes(search.toLowerCase()),
+        )
+      : reviews;
+
+    const total = await Review.countDocuments(filter);
+
+    res.json({
+      reviews: filtered,
+      total,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+    });
+  } catch (error) {
+    logger.error("getAdminReviews error", { error });
+    res.status(500).json({ error: "Failed to fetch reviews" });
   }
 };

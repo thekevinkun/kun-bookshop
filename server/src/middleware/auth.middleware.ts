@@ -29,10 +29,10 @@ export const authenticate = (
   res: Response,
   next: NextFunction,
 ): void => {
-  // Try to read the token from the httpOnly cookie first (our primary method)
-  // Fall back to the Authorization header for API clients that can't use cookies
+  // Check Authorization header FIRST — this is what our Axios interceptor sends
+  // Fall back to cookie only if no header token exists
   const token =
-    req.cookies?.token || req.headers.authorization?.replace("Bearer ", ""); // Strip the "Bearer " prefix
+    req.headers.authorization?.replace("Bearer ", "") || req.cookies.token;
 
   // If there's no token at all, the user is not logged in — reject immediately
   if (!token) {

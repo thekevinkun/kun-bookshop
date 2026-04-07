@@ -9,31 +9,23 @@ import {
   SimilarBooks,
 } from "../../components/features";
 
-import { ALL_PLACEHOLDERS } from "../../lib/data";
-
 const BookDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
 
-  // Try the real API first
-  const { data: apiBook, isLoading, isError } = useBook(id!);
+  // Fetch the book from the real API — no placeholder fallback
+  const { data: book, isLoading, isError } = useBook(id!);
 
-  // Fall back to placeholder if API has no book with this ID yet
-  const book = apiBook ?? ALL_PLACEHOLDERS.find((b) => b._id === id);
-
-  // Fetch related books from same category
-  const { data: apiRelated = [] } = useBooksByCategory(
+  // Fetch related books from the same category — only when we have a book
+  const { data: relatedBooksRaw = [] } = useBooksByCategory(
     book?.category?.[0] ?? "",
   );
 
-  // Fall back to placeholder related books if API returns nothing
-  const relatedBooks =
-    apiRelated.length > 0
-      ? apiRelated.filter((b) => b._id !== id).slice(0, 4)
-      : ALL_PLACEHOLDERS.filter(
-          (b) => b._id !== id && b.category[0] === book?.category?.[0],
-        ).slice(0, 4);
+  // Exclude the current book from the related list
+  const relatedBooks = relatedBooksRaw
+    .filter((b: { _id: string }) => b._id !== id)
+    .slice(0, 4);
 
   // --- LOADING ---
   if (isLoading) {
@@ -55,8 +47,8 @@ const BookDetailPage = () => {
   }
 
   // --- NOT FOUND ---
-  // Only show error when both API AND placeholder have nothing
-  if ((isError || !apiBook) && !book) {
+  // Show this when the API returns an error or the book simply doesn't exist
+  if (isError || !book) {
     return (
       <div className="container-page text-center py-24">
         <p className="text-6xl mb-4">📖</p>
@@ -75,23 +67,26 @@ const BookDetailPage = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero — cover + info + buy button */}
-      <BookDetailHero book={book!} isAuthenticated={isAuthenticated} />
+      {/* Hero — cover image, title, price, buy button */}
+      <BookDetailHero book={book} isAuthenticated={isAuthenticated} />
 
-      {/* Content — video + tabs on left, similar books on right */}
+      {/* Main content area */}
       <section className="section bg-bg-dark">
         <div className="container-page">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Left: 2/3 width */}
+            {/* Left: video + tabs — takes up 2/3 of the width on desktop */}
             <div className="lg:col-span-2 flex flex-col gap-8">
-              <BookDetailVideo
-                posterUrl={book!.coverImage}
-                videoUrl={book!.videoUrl}
-              />
-              <BookDetailTabs book={book!} />
+              {/* Only render the video section if this book has a video URL */}
+              {book.videoUrl && (
+                <BookDetailVideo
+                  posterUrl={book.coverImage}
+                  videoUrl={book.videoUrl}
+                />
+              )}
+              <BookDetailTabs book={book} />
             </div>
 
-            {/* Right: 1/3 width */}
+            {/* Right: similar books — takes up 1/3 of the width on desktop */}
             <SimilarBooks books={relatedBooks} />
           </div>
         </div>

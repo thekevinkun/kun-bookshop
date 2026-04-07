@@ -49,13 +49,11 @@ const fileFilter = (
 export const uploadBookFiles = multer({
   storage,
   fileFilter,
-  limits: {
-    // Apply the larger limit here — we'll enforce per-field limits below
-    fileSize: MAX_BOOK_SIZE,
-  },
+  limits: { fileSize: MAX_BOOK_SIZE },
 }).fields([
-  { name: "file", maxCount: 1 }, // The actual book file
-  { name: "coverImage", maxCount: 1 }, // The cover image
+  { name: "file", maxCount: 1 }, // Book file (PDF/ePub)
+  { name: "coverImage", maxCount: 1 }, // Book cover image
+  { name: "avatar", maxCount: 1 }, // Author avatar image — added for Phase 6
 ]);
 
 // --- MAGIC BYTE VERIFICATION MIDDLEWARE ---

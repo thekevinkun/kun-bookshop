@@ -16,6 +16,7 @@ import {
   getOrders,
   getRevenue,
   getAnalytics,
+  getAdminReviews,
 } from "../controllers/admin.controller";
 
 // Create a new Express router for all admin routes
@@ -40,5 +41,7 @@ router.get("/orders", getOrders);
 // Revenue + analytics chart data
 router.get("/revenue", getRevenue);
 router.get("/analytics", getAnalytics);
+
+router.get("/reviews", getAdminReviews);
 
 export default router;

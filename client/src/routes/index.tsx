@@ -1,42 +1,40 @@
-import { useFeaturedBooks } from "../hooks/useBooks";
-import { useBooks } from "../hooks/useBooks";
+// Import hooks for fetching featured and latest books from the real API
+import { useFeaturedBooks, useBooks } from "../hooks/useBooks";
 
+// Import layout sections
 import {
   Hero,
   AuthorsSection,
   DiscountSection,
   CTASection,
 } from "../components/layout";
+
+// Import BookGrid for the latest books section
 import { BookGrid } from "../components/features";
 
-import { PLACEHOLDER_FEATURED, PLACEHOLDER_LATEST } from "../lib/data";
-
 const HomePage = () => {
-  // Try to use real featured books from the API — fall back to placeholders
-  const { data: featuredBooks } = useFeaturedBooks();
+  // Fetch featured books for the hero carousel from the real API
+  const { data: featuredBooks, isLoading: featuredLoading } =
+    useFeaturedBooks();
+
+  // Fetch latest books sorted by creation date
   const { data: latestData, isLoading: latestLoading } = useBooks({
     sortBy: "createdAt",
     sortOrder: "desc",
     limit: 15,
   });
 
-  // Use real data if available, otherwise show placeholders
-  const heroBooks =
-    featuredBooks && featuredBooks.length > 0
-      ? featuredBooks
-      : PLACEHOLDER_FEATURED;
-
-  const latestBooks =
-    latestData?.books && latestData.books.length > 0
-      ? latestData.books
-      : PLACEHOLDER_LATEST;
+  // Use real data directly — no placeholder fallbacks
+  const heroBooks = featuredBooks ?? [];
+  const latestBooks = latestData?.books ?? [];
 
   return (
     <div className="min-h-screen">
-      {/* Hero carousel — full screen with auto-slide */}
-      <Hero books={heroBooks} />
+      {/* Hero carousel — only renders when there are featured books */}
+      {/* We still render Hero with an empty array so it can show its own empty state */}
+      <Hero books={heroBooks} isLoading={featuredLoading} />
 
-      {/* Latest books grid */}
+      {/* Latest books section */}
       <section className="section bg-bg-dark">
         <div className="container-page">
           <div className="mb-8">
@@ -46,22 +44,35 @@ const HomePage = () => {
             <div className="w-12 h-1 bg-teal rounded-full mt-2" />
           </div>
 
-          {/* 5-column grid, 3 rows minimum — BookGrid handles the layout */}
-          <BookGrid
-            books={latestBooks}
-            isLoading={latestLoading}
-            skeletonCount={15}
-          />
+          {/* Empty state — shown when loading is done but no books exist yet */}
+          {!latestLoading && latestBooks.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <p className="text-6xl mb-4">📚</p>
+              <h3 className="text-text-light text-lg font-semibold mb-2">
+                No books yet
+              </h3>
+              <p className="text-text-muted text-sm">
+                The catalog is empty — check back soon.
+              </p>
+            </div>
+          ) : (
+            // BookGrid handles the skeleton loading state internally via isLoading
+            <BookGrid
+              books={latestBooks}
+              isLoading={latestLoading}
+              skeletonCount={15}
+            />
+          )}
         </div>
       </section>
 
-      {/* AUTHORS SECTION */}
+      {/* Authors carousel — fetches its own data internally */}
       <AuthorsSection />
 
-      {/* DISCOUNT BANNERS */}
+      {/* Discount banners */}
       <DiscountSection />
 
-      {/* CTA SECTION */}
+      {/* CTA section */}
       <CTASection />
     </div>
   );

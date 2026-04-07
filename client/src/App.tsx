@@ -23,6 +23,8 @@ import {
   AdminBooks,
   AdminUsers,
   AdminOrders,
+  AdminAuthors,
+  AdminReviews,
 } from "./routes/admin";
 
 import { MainLayout, AuthLayout } from "./components/layout";
@@ -68,24 +70,28 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute requireAdmin>
-                <AdminLayout />
-              </ProtectedRoute>
-            }
-          >
-            {/* /admin redirects to /admin/dashboard by default */}
-            <Route index element={<Navigate to="/admin/dashboard" replace />} />
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="books" element={<AdminBooks />} />
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="orders" element={<AdminOrders />} />
-          </Route>
 
           <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
           <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
+        </Route>
+
+        {/* ADMIN ROUTES (NO PUBLIC NAVBAR / FOOTER) */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          {/* /admin redirects to /admin/dashboard by default */}
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="books" element={<AdminBooks />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="authors" element={<AdminAuthors />} />
+          <Route path="reviews" element={<AdminReviews />} />
         </Route>
 
         {/* CATCH ALL */}

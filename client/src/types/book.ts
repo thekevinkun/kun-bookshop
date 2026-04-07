@@ -67,15 +67,17 @@ export interface PaginatedBooks {
 
 export interface IReview {
   _id: string;
-  bookId: string;
-  userId:
-    | string
-    | {
-        _id: string;
-        firstName: string;
-        lastName: string;
-        avatar?: string;
-      };
+  bookId: {
+    _id: string;
+    title: string;
+    authorName: string;
+  };
+  userId?: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+  };
   rating: number;
   comment: string;
   isPurchaseVerified: boolean;

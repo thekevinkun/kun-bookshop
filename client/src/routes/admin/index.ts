@@ -4,5 +4,15 @@ import AdminDashboard from "./dashboard";
 import AdminBooks from "./books";
 import AdminUsers from "./users";
 import AdminOrders from "./orders";
+import AdminReviews from "./reviews";
+import AdminAuthors from "./authors";
 
-export { AdminLayout, AdminDashboard, AdminBooks, AdminUsers, AdminOrders };
+export {
+  AdminLayout,
+  AdminDashboard,
+  AdminBooks,
+  AdminUsers,
+  AdminOrders,
+  AdminReviews,
+  AdminAuthors,
+};

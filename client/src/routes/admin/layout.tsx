@@ -14,6 +14,8 @@ import {
   Menu,
   X,
   BookMarked,
+  UserSquare,
+  MessageSquare,
 } from "lucide-react";
 
 // Import our auth store to get the current user and logout function
@@ -34,8 +36,10 @@ const NAV_ITEMS: NavItem[] = [
     icon: <LayoutDashboard size={18} />,
   },
   { label: "Books", to: "/admin/books", icon: <BookOpen size={18} /> },
+  { label: "Authors", to: "/admin/authors", icon: <UserSquare size={18} /> }, // ← new
   { label: "Users", to: "/admin/users", icon: <Users size={18} /> },
   { label: "Orders", to: "/admin/orders", icon: <ShoppingBag size={18} /> },
+  { label: "Reviews", to: "/admin/reviews", icon: <MessageSquare size={18} /> }, // ← new
 ];
 
 export default function AdminLayout() {
@@ -130,7 +134,7 @@ export default function AdminLayout() {
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-slate-400
-                       hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm"
+              hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm"
           >
             <LogOut size={16} />
             Logout

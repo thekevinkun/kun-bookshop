@@ -55,7 +55,10 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   // Update a single filter key without wiping the rest
-  const updateFilter = (key: keyof BookFilters, value: any) => {
+  const updateFilter = (
+    key: keyof BookFilters,
+    value: string | number | undefined,
+  ) => {
     onChange({
       ...filters,
       [key]: value,

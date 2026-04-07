@@ -28,6 +28,12 @@ import authRoutes from "./routes/auth.routes";
 // Import the book routes here so we can mount them on the Express app
 import bookRoutes from "./routes/book.routes";
 
+// Import the author router — handles all /api/authors/* endpoints
+import authorRoutes from "./routes/author.routes";
+
+// Import the review router — handles all /api/reviews/* endpoints
+import reviewRoutes from "./routes/review.routes";
+
 // Import the checkout and webhook routes so we can mount them on the Express app
 import checkoutRoutes from "./routes/checkout.routes";
 import webhookRoutes from "./routes/webhook.routes";
@@ -113,6 +119,9 @@ app.use("/api/admin", adminRoutes);
 // add this line after app.use('/api/auth', authRoutes)
 app.use("/api/books", bookRoutes);
 
+// Mount the author router — all paths start with /api/authors
+app.use("/api/authors", authorRoutes);
+
 // Checkout route goes with the other API routes (after express.json())
 app.use("/api/checkout", checkoutRoutes);
 
@@ -121,6 +130,9 @@ app.use("/api/downloads", downloadsRoutes);
 
 // Register the users routes — handles /api/users/library and /api/users/wishlist
 app.use("/api/users", usersRoutes);
+
+// Mount the review router — all paths start with /api/reviews
+app.use("/api/reviews", reviewRoutes);
 
 // --- HEALTH CHECK ROUTE ---
 // A simple route to confirm the server is running — used by Docker and monitoring tools
