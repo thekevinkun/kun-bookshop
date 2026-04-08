@@ -17,6 +17,8 @@ import {
   Calendar,
 } from "lucide-react";
 
+import { BookPreview } from ".";
+
 import type { IBook } from "../../types/book";
 
 interface BookDetailHeroProps {
@@ -50,6 +52,9 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
 
   // Local state for the "Added!" flash feedback on the button
   const [justAdded, setJustAdded] = useState(false);
+
+  // Controls whether the PDF preview modal is open or closed
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false); // Starts closed
 
   // Fetch the user's wishlist so we know if this book is already wishlisted
   const { data: wishlist } = useWishlist();
@@ -223,7 +228,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
             </p>
 
             {/* Buttons */}
-            <div className="flex gap-3 flex-wrap">
+            <div id="book-purchase-section" className="flex gap-3 flex-wrap">
               <button
                 className="btn-primary flex items-center gap-2"
                 onClick={handleAddToCart}
@@ -239,6 +244,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                       : "Add to Cart" // Default state
                 }
               </button>
+
               {/* Wishlist toggle button — sits below the Add to Cart button */}
               <button
                 onClick={handleWishlistToggle}
@@ -265,10 +271,15 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
               </button>
             </div>
 
-            {book.previewPages && (
-              <button className="btn-ghost btn-sm self-start flex items-center gap-2">
-                <BookOpen size={13} />
-                Preview first {book.previewPages} pages — free
+            {/* Preview button — only show if the book has a preview available (previewPages is set) */}
+            {book.previewPages && book.previewPages > 0 && (
+              <button
+                onClick={() => setIsPreviewOpen(true)} // Open the preview modal
+                className="btn-ghost btn-sm self-start flex items-center gap-2"
+              >
+                <BookOpen className="w-4 h-4" />{" "}
+                {/* BookOpen icon from lucide-react */}
+                Preview ({book.previewPages} pages)
               </button>
             )}
           </div>
@@ -310,6 +321,20 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
           </div>
         </div>
       </div>
+
+      {/* PDF Preview Modal — rendered outside the normal flow but controlled by isPreviewOpen */}
+      <BookPreview
+        bookId={book._id}
+        bookTitle={book.title}
+        fileType={book.fileType} // Add this — 'pdf' | 'epub'
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
+        onBuy={() => {
+          document
+            .getElementById("book-purchase-section")
+            ?.scrollIntoView({ behavior: "smooth" });
+        }}
+      />
     </section>
   );
 };

@@ -112,3 +112,27 @@ export interface IDownloadRecord {
   bookId: IBook; // Populated by the backend with the book's title and authorName
   downloadedAt: string;
 }
+
+export interface EpubLocation {
+  start?: {
+    displayed?: {
+      page?: number;
+    };
+  };
+}
+
+export interface EpubRendition {
+  display: () => Promise<void>;
+  prev: () => void;
+  next: () => void;
+  on: (event: string, callback: (...args: unknown[]) => void) => void;
+  destroy?: () => void;
+}
+
+export interface EpubBook {
+  renderTo: (
+    element: Element | string,
+    options?: Record<string, unknown>,
+  ) => EpubRendition;
+  destroy?: () => void;
+}

@@ -21,7 +21,7 @@ const HomePage = () => {
   const { data: latestData, isLoading: latestLoading } = useBooks({
     sortBy: "createdAt",
     sortOrder: "desc",
-    limit: 15,
+    limit: 10,
   });
 
   // Use real data directly — no placeholder fallbacks

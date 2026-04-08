@@ -7,7 +7,7 @@ import {
   getSimilarBooks,
   getCategories,
   searchAutocomplete,
-  getPreview,
+  getBookPreview,
   createBook,
   updateBook,
   deleteBook,
@@ -40,14 +40,14 @@ router.get("/categories", getCategories);
 // GET /api/books/category/:category — books by category
 router.get("/category/:category", getBooksByCategory);
 
+// GET /api/books/:id/preview — free preview for non-buyers
+router.get("/:id/preview", getBookPreview);
+
 // GET /api/books/:id/similar — related books based on shared categories
 router.get("/:id/similar", getSimilarBooks);
 
 // GET /api/books/:id — single book detail
 router.get("/:id", getBookById);
-
-// GET /api/books/:id/preview — free preview for non-buyers
-router.get("/:id/preview", getPreview);
 
 // --- ADMIN ONLY ROUTES ---
 // authenticate verifies the JWT, isAdmin checks the role

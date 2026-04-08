@@ -320,29 +320,69 @@ export const getCategories = async (req: Request, res: Response) => {
   }
 };
 
-// GET /api/books/:id/preview — free preview for non-buyers
-export const getPreview = async (req: Request, res: Response) => {
+// GET /api/books/:id/preview
+// Generates a short-lived signed Cloudinary URL for the book's file.
+// Only returns the URL + previewPages count — the frontend enforces the page limit.
+// This endpoint is PUBLIC — no auth required (it's a teaser for non-purchasers).
+export const getBookPreview = async (req: Request, res: Response) => {
   try {
-    const book = await Book.findOne({ _id: req.params.id, isActive: true });
+    // Cast the id param to string so TypeScript is happy
+    const bookId = req.params.id as string;
 
-    if (!book) {
-      return res.status(404).json({ error: "Book not found" });
+    // Find the book and only select the fields we need for the preview
+    // filePublicId is the Cloudinary identifier, previewPages tells us the limit
+    const book = await Book.findById(bookId)
+      .select("title filePublicId previewPages isActive") // Only fetch what we need
+      .lean(); // .lean() returns a plain JS object — faster than a full Mongoose doc
+
+    // If no book found or it has been soft-deleted, return 404
+    if (!book || !book.isActive) {
+      res.status(404).json({ error: "Book not found" }); // Inform the client cleanly
+      return; // Stop execution here
     }
 
-    if (!book.previewPages) {
-      return res
-        .status(404)
-        .json({ error: "No preview available for this book" });
+    // If this book has no file uploaded yet, we can't generate a preview
+    if (!book.filePublicId) {
+      res
+        .status(400)
+        .json({ error: "This book does not have a preview available" }); // Clear message
+      return; // Stop execution here
     }
 
+    // If the admin never set previewPages, default to 5 so something is shown
+    const previewPages = book.previewPages ?? 5; // Nullish coalescing — only triggers on null/undefined
+
+    // Generate a Cloudinary signed URL that expires in 15 minutes (900 seconds)
+    // We use a shorter expiry than downloads (1hr) because previews are low-value access
+    const expiresAt = Math.floor(Date.now() / 1000) + 900; // Current Unix timestamp + 15 min
+
+    // Build the signed URL using the Cloudinary SDK
+    // resource_type: 'raw' is required for PDFs and ePubs — they are non-image files
+    // sign_url: true adds a cryptographic signature so the URL can't be guessed or tampered with
+    const previewUrl = cloudinary.url(book.filePublicId, {
+      sign_url: true, // Enable URL signing — required for secure delivery
+      expires_at: expiresAt, // URL becomes invalid after 15 minutes
+      resource_type: "raw", // Must be 'raw' for PDF/ePub files
+      type: "upload", // 'upload' is the default Cloudinary delivery type
+    });
+
+    // Log that a preview was generated — useful for analytics without storing the URL
+    logger.info("Book preview URL generated", {
+      bookId,
+      title: book.title,
+      previewPages,
+    }); // Safe log — no URL
+
+    // Return the signed URL and the page limit to the frontend
+    // The frontend is responsible for only rendering up to previewPages
     res.json({
-      previewPages: book.previewPages,
-      fileType: book.fileType,
-      previewAvailable: true,
+      previewUrl, // The signed Cloudinary URL — valid for 15 minutes
+      previewPages, // How many pages the frontend is allowed to render
     });
   } catch (error) {
-    logger.error("getPreview error", { error });
-    res.status(500).json({ error: "Failed to fetch preview" });
+    // Log the full error internally but never send stack traces to the client
+    logger.error("Error generating book preview", { error }); // Internal log for debugging
+    res.status(500).json({ error: "Failed to generate book preview" }); // Safe client message
   }
 };
 

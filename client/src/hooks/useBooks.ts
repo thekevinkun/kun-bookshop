@@ -154,3 +154,19 @@ export const useAutocomplete = (q: string) => {
     staleTime: 60 * 1000,
   });
 };
+
+// useBookPreview — fetches the signed preview URL for a specific book
+// bookId is optional because we only fetch when the user opens the preview modal
+export const useBookPreview = (bookId: string | null) => {
+  return useQuery({
+    queryKey: ["bookPreview", bookId], // Cache key includes the bookId so each book has its own cache entry
+    queryFn: async () => {
+      // Call the preview endpoint with the book's ID
+      const response = await api.get(`/books/${bookId}/preview`); // GET /api/books/:id/preview
+      return response.data as { previewUrl: string; previewPages: number }; // Type the response
+    },
+    enabled: !!bookId, // Only run this query when we actually have a bookId (modal is open)
+    staleTime: 10 * 60 * 1000, // Cache for 10 minutes — URL is valid for 15min, this gives a safe buffer
+    retry: false, // Don't retry on failure — if the preview fails, show the error immediately
+  });
+};
