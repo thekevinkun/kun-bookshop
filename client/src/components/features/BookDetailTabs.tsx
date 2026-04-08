@@ -145,6 +145,12 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
                 label: "Purchases",
                 value: book.purchaseCount.toLocaleString(),
               },
+              {
+                icon: <BookOpen size={14} className="text-teal-400" />,
+                label: "Preview",
+                // Only show the page count if previewPages exists, otherwise show N/A
+                value: book.previewPages ? `${book.previewPages} pages` : "N/A",
+              },
             ].map((item) => (
               <div
                 key={item.label}

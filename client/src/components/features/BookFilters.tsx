@@ -1,34 +1,27 @@
-import { useState } from "react";
+// Import React hooks for state management
+import { useState, useEffect } from "react";
+
+// Import React Router hook to read URL query params
+import { useSearchParams } from "react-router-dom";
+
+// Import icons for the search bar and filter panel
 import { Search, SlidersHorizontal, X } from "lucide-react";
 
-import { useAutocomplete } from "../../hooks/useBooks";
+// Import our hooks — useAutocomplete for search suggestions, useCategories for real category list
+import { useAutocomplete, useCategories } from "../../hooks/useBooks";
+
+// Import useDebouncedValue — delays search so we don't fire on every keystroke
 import { useDebouncedValue } from "@mantine/hooks";
 
-import type { BookFilters } from "../../types/book";
+// Import the BookFilters type that defines the shape of our filter state
+import type { BookFilters, IBook } from "../../types/book";
 
 interface BookFiltersProps {
-  // Current active filters — controlled from the parent page
   filters: BookFilters;
-  // Called whenever the user changes any filter
   onChange: (filters: BookFilters) => void;
 }
 
-// Available categories — in a real app these could come from the API
-const CATEGORIES = [
-  "Fiction",
-  "Non-Fiction",
-  "Mystery",
-  "Thriller",
-  "Romance",
-  "Science Fiction",
-  "Fantasy",
-  "Biography",
-  "Self-Help",
-  "History",
-  "Business",
-  "Technology",
-];
-
+// Sort options — these don't come from the DB, they're fixed UI choices
 const SORT_OPTIONS = [
   { label: "Newest", value: "createdAt", order: "desc" },
   { label: "Oldest", value: "createdAt", order: "asc" },
@@ -39,42 +32,74 @@ const SORT_OPTIONS = [
 ];
 
 const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
-  // Local search input value — we debounce before passing to the parent
-  const [searchInput, setSearchInput] = useState(filters.search || "");
+  // Read URL search params so we can initialize filters from the URL
+  // e.g. /books?sortBy=purchaseCount&sortOrder=desc sets the sort dropdown correctly
+  const [searchParams] = useSearchParams();
 
-  // Whether the mobile filter panel is open
+  // Local search input — raw value before debounce
+  const [searchInput, setSearchInput] = useState(
+    filters.search || searchParams.get("search") || "",
+  );
+
+  // Whether the expanded filter panel is visible
   const [showFilters, setShowFilters] = useState(false);
 
-  // Debounce the search input by 400ms so we don't fire on every keystroke
+  // Whether the autocomplete dropdown is visible
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Debounce the search input — only update after 400ms of no typing
   const [debouncedSearch] = useDebouncedValue(searchInput, 400);
 
-  // Fetch autocomplete suggestions based on the debounced value
+  // Fetch autocomplete suggestions from the real API
   const { data: suggestions = [] } = useAutocomplete(debouncedSearch);
 
-  // Whether to show the autocomplete dropdown
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  // Fetch real categories from the database — replaces the hardcoded CATEGORIES array
+  const { data: categories = [], isLoading: categoriesLoading } =
+    useCategories();
+
+  // When the component mounts, apply any filters that were set via URL params
+  // This makes navigating from DiscountSection (?sortBy=rating) work correctly
+  useEffect(() => {
+    const urlSortBy = searchParams.get("sortBy") as
+      | BookFilters["sortBy"]
+      | null;
+    const urlSortOrder = searchParams.get("sortOrder") as
+      | BookFilters["sortOrder"]
+      | null;
+    const urlSearch = searchParams.get("search");
+    const urlCategory = searchParams.get("category");
+    const urlAuthor = searchParams.get("author");
+
+    // Only apply if any URL params are present — don't override existing filter state
+    if (urlSortBy || urlSortOrder || urlSearch || urlCategory || urlAuthor) {
+      onChange({
+        ...filters,
+        ...(urlSortBy && { sortBy: urlSortBy }),
+        ...(urlSortOrder && { sortOrder: urlSortOrder }),
+        ...(urlSearch && { search: urlSearch }),
+        ...(urlCategory && { category: urlCategory }),
+        page: 1,
+      });
+      if (urlSearch) setSearchInput(urlSearch);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only runs once on mount — intentional
 
   // Update a single filter key without wiping the rest
   const updateFilter = (
     key: keyof BookFilters,
     value: string | number | undefined,
   ) => {
-    onChange({
-      ...filters,
-      [key]: value,
-      // Reset to page 1 whenever a filter changes
-      page: 1,
-    });
+    onChange({ ...filters, [key]: value, page: 1 });
   };
 
-  // Clear all active filters back to defaults
+  // Reset everything back to defaults
   const clearFilters = () => {
     setSearchInput("");
     onChange({ page: 1, sortBy: "createdAt", sortOrder: "desc" });
   };
 
-  // Count how many non-default filters are currently active
-  // Used to show a badge on the filter button
+  // Count active non-default filters to show on the badge
   const activeFilterCount = [
     filters.category,
     filters.fileType,
@@ -85,9 +110,9 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
 
   return (
     <div className="flex flex-col gap-4 mb-8">
-      {/* --- TOP ROW: search + filter toggle + sort --- */}
+      {/* ── Top row: search + filter toggle + sort ── */}
       <div className="flex gap-3 items-center">
-        {/* Search bar with autocomplete */}
+        {/* Search bar */}
         <div className="relative flex-1">
           <Search
             size={16}
@@ -101,23 +126,19 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
             onChange={(e) => {
               setSearchInput(e.target.value);
               setShowSuggestions(true);
-              // Pass the search to parent immediately as user types
               updateFilter("search", e.target.value);
             }}
             onFocus={() => setShowSuggestions(true)}
-            onBlur={() => {
-              // Delay hiding so clicks on suggestions register first
-              setTimeout(() => setShowSuggestions(false), 150);
-            }}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
           />
 
-          {/* Autocomplete dropdown */}
+          {/* Autocomplete dropdown — shows real book suggestions from the API */}
           {showSuggestions && suggestions.length > 0 && (
             <div
               className="absolute top-full left-0 right-0 mt-1 bg-card border border-bg-hover
-                rounded-lg shadow-xl z-50 overflow-hidden"
+                            rounded-lg shadow-xl z-50 overflow-hidden"
             >
-              {suggestions.map((book) => (
+              {suggestions.map((book: IBook) => (
                 <button
                   key={book._id}
                   className="w-full flex items-center gap-3 px-4 py-2 hover:bg-bg-hover
@@ -128,7 +149,6 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
                     setShowSuggestions(false);
                   }}
                 >
-                  {/* Small cover thumbnail in the dropdown */}
                   <img
                     src={book.coverImage}
                     alt={book.title}
@@ -146,7 +166,7 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
           )}
         </div>
 
-        {/* Filter toggle button — shows badge with active filter count */}
+        {/* Filter toggle button */}
         <button
           className="btn-ghost btn-sm relative flex items-center gap-2"
           onClick={() => setShowFilters(!showFilters)}
@@ -192,39 +212,59 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
         </select>
       </div>
 
-      {/* --- EXPANDED FILTER PANEL --- */}
+      {/* ── Expanded filter panel ── */}
       {showFilters && (
         <div className="card-base flex flex-col sm:flex-row gap-6">
-          {/* Category filter */}
+          {/* Category filter — real categories from the DB */}
           <div className="flex-1">
             <p className="text-text-muted text-xs font-semibold uppercase tracking-wider mb-2">
               Category
             </p>
-            <div className="flex flex-wrap gap-2">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  className={`text-xs px-3 py-1 rounded-full border transition-all duration-150
-                    ${
-                      filters.category === cat
-                        ? "bg-teal text-white border-teal"
-                        : "border-bg-hover text-text-muted hover:border-teal hover:text-teal"
-                    }`}
-                  onClick={() =>
-                    // Clicking the active category deselects it
-                    updateFilter(
-                      "category",
-                      filters.category === cat ? undefined : cat,
-                    )
-                  }
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+
+            {/* Loading skeleton — shown while categories are fetching */}
+            {categoriesLoading && (
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="skeleton h-6 w-20 rounded-full" />
+                ))}
+              </div>
+            )}
+
+            {/* Empty state — no books in the DB yet */}
+            {!categoriesLoading && categories.length === 0 && (
+              <p className="text-text-muted text-xs">
+                No categories yet — add some books first.
+              </p>
+            )}
+
+            {/* Real category pills */}
+            {!categoriesLoading && categories.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    className={`text-xs px-3 py-1 rounded-full border transition-all duration-150
+                      ${
+                        filters.category === cat
+                          ? "bg-teal text-white border-teal"
+                          : "border-bg-hover text-text-muted hover:border-teal hover:text-teal"
+                      }`}
+                    onClick={() =>
+                      // Clicking the active category deselects it
+                      updateFilter(
+                        "category",
+                        filters.category === cat ? undefined : cat,
+                      )
+                    }
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Right column: file type + price range */}
+          {/* Right column: format + price range + clear */}
           <div className="flex flex-col gap-4 sm:w-56">
             {/* File type filter */}
             <div>
@@ -290,7 +330,7 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
               </div>
             </div>
 
-            {/* Clear filters button — only shows when something is active */}
+            {/* Clear all */}
             {activeFilterCount > 0 && (
               <button
                 className="btn-ghost btn-sm flex items-center gap-2 self-start"

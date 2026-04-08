@@ -11,6 +11,7 @@ import {
 import HomePage from "./routes/index";
 import BooksPage from "./routes/books/index";
 import BookDetailPage from "./routes/books/[id]";
+import AuthorProfilePage from "./routes/authors/[id]";
 
 import { CheckoutSuccessPage, CheckoutCancelPage } from "./routes/checkout";
 
@@ -54,7 +55,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/books" element={<BooksPage />} />
           <Route path="/books/:id" element={<BookDetailPage />} />
-
+          <Route path="/authors/:id" element={<AuthorProfilePage />} />
           <Route
             path="/library"
             element={

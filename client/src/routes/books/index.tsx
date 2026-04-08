@@ -1,13 +1,20 @@
+// Import React hooks for state management
 import { useState } from "react";
+
+// Import navigation icons for pagination
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+// Import the books fetching hook
 import { useBooks } from "../../hooks/useBooks";
 
+// Import the feature components
 import { BookGrid, BookFiltersComponent } from "../../components/features";
 
+// Import the BookFilters type
 import type { BookFilters } from "../../types/book";
 
 const BooksPage = () => {
-  // All active filters live here — same as the original design
+  // All active filters live here as controlled state
   const [filters, setFilters] = useState<BookFilters>({
     page: 1,
     limit: 15,
@@ -15,67 +22,36 @@ const BooksPage = () => {
     sortOrder: "desc",
   });
 
-  // Fetch books with the current filters
+  // Fetch books from the real API with the current filters
   const { data, isLoading } = useBooks(filters);
 
-  // Use real data if available, placeholders otherwise
-  const books = data?.books && data.books.length > 0 ? data.books : null;
-
+  const books = data?.books ?? [];
   const totalPages = data?.totalPages ?? 1;
   const currentPage = data?.currentPage ?? 1;
   const totalCount = data?.total ?? 0;
 
-  // Scroll to top + change page
+  // Scroll to top and change page
   const goToPage = (page: number) => {
     setFilters((prev) => ({ ...prev, page }));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (isLoading && !books) {
-    // Show a loading state if we're fetching data for the first time
-    return (
-      <section className="relative min-h-screen flex items-center justify-center bg-navy animate-pulse">
-        <div className="w-48 h-6 bg-bg-hover rounded mb-4" />
-        <div className="w-64 h-10 bg-bg-hover rounded mb-2" />
-        <div className="w-32 h-4 bg-bg-hover rounded mb-6" />
-        <div className="w-40 h-5 bg-bg-hover rounded" />
-      </section>
-    );
-  }
-
-  if (!books || books.length === 0) {
-    // Show an empty state if there are no books to display
-    return (
-      <section className="relative min-h-screen flex flex-col items-center justify-center bg-navy">
-        <div className="flex flex-col items-center justify-center text-center">
-          <p className="text-5xl mb-4">📚</p>
-          <h3 className="text-text-light text-lg font-semibold mb-2">
-            No books yet
-          </h3>
-          <p className="text-text-muted text-sm">
-            There are no books at the moment. Check back soon!
-          </p>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <div className="min-h-screen">
-      {/* HERO SEARCH SECTION */}
+      {/* ── Hero search section ── */}
       <section className="relative bg-navy pt-12 overflow-hidden">
-        {/* Background teal glow */}
+        {/* Background teal glow — decorative */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-teal/5 rounded-full blur-3xl" />
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px]
+                          bg-teal/5 rounded-full blur-3xl"
+          />
         </div>
 
         <div className="container-page relative z-10 text-center">
-          {/* Eyebrow */}
           <p className="text-teal text-xs font-semibold uppercase tracking-widest mb-3">
             Discover Your Next Great Read
           </p>
-
-          {/* Headline */}
           <h1 className="text-text-light text-4xl sm:text-5xl font-bold leading-tight mb-2">
             Explore and Search for
           </h1>
@@ -84,15 +60,14 @@ const BooksPage = () => {
             <span className="text-text-light"> In Our Library</span>
           </h1>
 
-          {/* ---- BookFiltersComponent sits here inside the hero ---- */}
-          {/* It owns the search bar, autocomplete, sort, and filter panel */}
+          {/* BookFiltersComponent always visible — search + sort + filters */}
           <div className="max-w-3xl mx-auto">
             <BookFiltersComponent filters={filters} onChange={setFilters} />
           </div>
         </div>
       </section>
 
-      {/* CATALOG SECTION */}
+      {/* ── Catalog section ── */}
       <section className="section bg-bg-dark">
         <div className="container-page">
           {/* Section heading */}
@@ -101,16 +76,77 @@ const BooksPage = () => {
               All Library Books
             </h2>
             <div className="w-10 h-1 bg-teal rounded-full mt-1" />
-            <p className="text-text-muted text-xs mt-2">
-              {totalCount.toLocaleString()} books available
-            </p>
+            {!isLoading && (
+              <p className="text-text-muted text-xs mt-2">
+                {totalCount.toLocaleString()}{" "}
+                {totalCount === 1 ? "book" : "books"} found
+              </p>
+            )}
           </div>
 
-          {/* Book grid */}
-          <BookGrid books={books} isLoading={isLoading} skeletonCount={15} />
+          {/* Loading state — skeleton grid */}
+          {isLoading && (
+            <BookGrid books={[]} isLoading={true} skeletonCount={15} />
+          )}
 
-          {/* Pagination */}
-          {totalPages > 1 && (
+          {/* Empty state — no books in DB at all */}
+          {!isLoading &&
+            books.length === 0 &&
+            !filters.search &&
+            !filters.category &&
+            !filters.minPrice &&
+            !filters.maxPrice &&
+            !filters.fileType && (
+              <div className="flex flex-col items-center justify-center py-24 text-center">
+                <p className="text-5xl mb-4">📚</p>
+                <h3 className="text-text-light text-lg font-semibold mb-2">
+                  No books yet
+                </h3>
+                <p className="text-text-muted text-sm">
+                  The catalog is empty — check back soon.
+                </p>
+              </div>
+            )}
+
+          {/* No results state — filters are active but nothing matched */}
+          {!isLoading &&
+            books.length === 0 &&
+            (filters.search ||
+              filters.category ||
+              filters.minPrice ||
+              filters.maxPrice ||
+              filters.fileType) && (
+              <div className="flex flex-col items-center justify-center py-24 text-center">
+                <p className="text-5xl mb-4">🔍</p>
+                <h3 className="text-text-light text-lg font-semibold mb-2">
+                  No results found
+                </h3>
+                <p className="text-text-muted text-sm mb-4">
+                  Try adjusting your filters or searching for something else.
+                </p>
+                <button
+                  className="btn-ghost btn-sm"
+                  onClick={() =>
+                    setFilters({
+                      page: 1,
+                      limit: 15,
+                      sortBy: "createdAt",
+                      sortOrder: "desc",
+                    })
+                  }
+                >
+                  Clear all filters
+                </button>
+              </div>
+            )}
+
+          {/* Book grid — only when we have results */}
+          {!isLoading && books.length > 0 && (
+            <BookGrid books={books} isLoading={false} skeletonCount={15} />
+          )}
+
+          {/* Pagination — only when there's more than one page */}
+          {!isLoading && totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-12">
               <button
                 className="btn-ghost btn-sm flex items-center gap-1"
@@ -121,6 +157,7 @@ const BooksPage = () => {
                 Prev
               </button>
 
+              {/* Page number buttons with ellipsis for large ranges */}
               {Array.from({ length: totalPages }, (_, i) => i + 1)
                 .filter(
                   (page) =>

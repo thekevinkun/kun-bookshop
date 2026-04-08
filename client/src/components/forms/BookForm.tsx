@@ -6,9 +6,8 @@ import { useAllAuthors } from "../../hooks/useAuthors";
 import { toast } from "sonner";
 import { AdminModal } from "../ui";
 
-import api from "../../lib/api";
-
 import type { IBook } from "../../types/book";
+import api from "../../lib/api";
 
 interface BookFormProps {
   book?: IBook | null;
@@ -21,7 +20,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
 
   const [title, setTitle] = useState(book?.title ?? "");
   const [authorId, setAuthorId] = useState(
-    typeof book?.author === "string" ? book.author : book?.author?._id ?? "",
+    typeof book?.author === "string" ? book.author : (book?.author?._id ?? ""),
   );
   const [price, setPrice] = useState(String(book?.price ?? ""));
   const [discountPrice, setDiscountPrice] = useState(
@@ -29,6 +28,15 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
   );
   const [description, setDescription] = useState(book?.description ?? "");
   const [category, setCategory] = useState(book?.category?.join(", ") ?? "");
+  const [isbn, setIsbn] = useState(book?.isbn ?? "");
+  const [publishedDate, setPublishedDate] = useState(
+    book?.publishedDate
+      ? new Date(book.publishedDate).toISOString().split("T")[0] // Format as YYYY-MM-DD for the input
+      : "",
+  );
+  const [previewPages, setPreviewPages] = useState(
+    String(book?.previewPages ?? ""),
+  );
   const [tags, setTags] = useState(book?.tags?.join(", ") ?? "");
   const [fileType, setFileType] = useState<"pdf" | "epub">(
     book?.fileType ?? "pdf",
@@ -54,6 +62,11 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
       formData.append("description", description);
       formData.append("price", price);
       formData.append("fileType", fileType);
+
+      // Optional fields — only append if they have a value
+      if (isbn) formData.append("isbn", isbn);
+      if (publishedDate) formData.append("publishedDate", publishedDate);
+      if (previewPages) formData.append("previewPages", previewPages);
 
       const categoryArray = category
         .split(",")
@@ -107,6 +120,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
       disableClose={loading}
     >
       <div className="space-y-4">
+        {/* Title and author are required, so we show them first */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">Title *</label>
           <input
@@ -117,6 +131,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           />
         </div>
 
+        {/* Author dropdown — required, populated from authors query */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">Author *</label>
           <select
@@ -138,6 +153,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           )}
         </div>
 
+        {/* Price and discount price side by side */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-slate-400 text-sm mb-1">
@@ -165,6 +181,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           </div>
         </div>
 
+        {/* Category input — required, comma-separated */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">
             File Type *
@@ -179,6 +196,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           </select>
         </div>
 
+        {/* Category input — required, comma-separated */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">
             Categories * (comma-separated)
@@ -191,6 +209,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           />
         </div>
 
+        {/* Tags input — optional, comma-separated */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">
             Tags (comma-separated)
@@ -203,6 +222,47 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           />
         </div>
 
+        {/* ISBN */}
+        <div>
+          <label className="block text-slate-400 text-sm mb-1">ISBN</label>
+          <input
+            value={isbn}
+            onChange={(e) => setIsbn(e.target.value)}
+            className="input-field"
+            placeholder="978-3-16-148410-0 (optional)"
+          />
+        </div>
+
+        {/* Published date + Preview pages side by side */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-slate-400 text-sm mb-1">
+              Published Date
+            </label>
+            {/* Date input — browser renders a native date picker */}
+            <input
+              type="date"
+              value={publishedDate}
+              onChange={(e) => setPublishedDate(e.target.value)}
+              className="input-field"
+            />
+          </div>
+          <div>
+            <label className="block text-slate-400 text-sm mb-1">
+              Preview Pages
+            </label>
+            <input
+              type="number"
+              value={previewPages}
+              onChange={(e) => setPreviewPages(e.target.value)}
+              className="input-field"
+              placeholder="e.g. 10 (optional)"
+              min={0}
+            />
+          </div>
+        </div>
+
+        {/* Description textarea */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">
             Description * (min 20 chars)
@@ -216,6 +276,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           />
         </div>
 
+        {/* Video URL input */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">
             Video URL (YouTube embed)
@@ -228,6 +289,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           />
         </div>
 
+        {/* Is Featured checkbox */}
         <div className="flex items-center gap-3">
           <input
             type="checkbox"
@@ -241,6 +303,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           </label>
         </div>
 
+        {/* Cover image file input */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">
             Cover Image {isEditing ? "(leave empty to keep current)" : "*"}
@@ -253,9 +316,11 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           />
         </div>
 
+        {/* Book file input */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">
-            Book File (PDF/ePub) {isEditing ? "(leave empty to keep current)" : "*"}
+            Book File (PDF/ePub){" "}
+            {isEditing ? "(leave empty to keep current)" : "*"}
           </label>
           <input
             type="file"
@@ -265,8 +330,10 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           />
         </div>
 
+        {/* Error message */}
         {error && <p className="text-red-400 text-sm">{error}</p>}
 
+        {/* Submit and cancel buttons */}
         <div className="flex gap-3 pt-2">
           <button
             onClick={onClose}

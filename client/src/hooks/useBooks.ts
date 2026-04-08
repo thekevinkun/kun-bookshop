@@ -82,6 +82,20 @@ export const useBook = (id: string) => {
   });
 };
 
+// Fetches the list of distinct categories that exist in the database
+// Used by BookFiltersComponent to show only real categories — not a hardcoded list
+export const useCategories = () => {
+  return useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      // GET /api/books/categories — returns { categories: string[] }
+      const { data } = await api.get("/books/categories");
+      return data.categories as string[]; // Flat sorted array of category strings
+    },
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes — categories don't change often
+  });
+};
+
 // --- useBooksByCategory ---
 // Fetches books filtered by a single category
 export const useBooksByCategory = (category: string) => {

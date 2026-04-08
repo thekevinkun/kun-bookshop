@@ -65,7 +65,6 @@ const deleteFromCloudinary = async (publicId: string): Promise<void> => {
 // 1. getAuthors — GET /api/authors
 // Returns all active authors. Supports optional ?search= param.
 // Public — no auth required.
-
 export const getAuthors = async (
   req: Request,
   res: Response,
@@ -87,10 +86,23 @@ export const getAuthors = async (
       .limit(limit)
       .lean();
 
+    // For each author, count how many active books they have
+    // Promise.all runs all counts in parallel — much faster than sequential awaits
+    const authorsWithCount = await Promise.all(
+      authors.map(async (author) => {
+        const bookCount = await Book.countDocuments({
+          author: author._id as any,
+          isActive: true,
+        });
+        // Attach bookCount to the author object before returning
+        return { ...author, bookCount };
+      }),
+    );
+
     const total = await Author.countDocuments(filter);
 
     res.json({
-      authors,
+      authors: authorsWithCount,
       total,
       totalPages: Math.ceil(total / limit),
       currentPage: page,

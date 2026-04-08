@@ -4,6 +4,7 @@ import {
   getFeatured,
   getBookById,
   getBooksByCategory,
+  getCategories,
   searchAutocomplete,
   getPreview,
   createBook,
@@ -31,6 +32,9 @@ router.get("/featured", getFeatured);
 
 // GET /api/books/search/autocomplete — search suggestions as user types
 router.get("/search/autocomplete", searchAutocomplete);
+
+// GET /api/books/categories — public, no auth needed
+router.get("/categories", getCategories);
 
 // GET /api/books/category/:category — books by category
 router.get("/category/:category", getBooksByCategory);

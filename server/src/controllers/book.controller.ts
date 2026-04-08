@@ -187,6 +187,24 @@ export const getBookById = async (req: Request, res: Response) => {
   }
 };
 
+// GET /api/books/categories — returns every distinct category that exists
+// across all active books — used by the BookFilters category buttons
+export const getCategories = async (req: Request, res: Response) => {
+  try {
+    // MongoDB distinct() returns a flat array of unique values for a field
+    // We only look at active books so soft-deleted books don't pollute the list
+    const categories = await Book.distinct("category", { isActive: true });
+
+    // Sort alphabetically so the filter buttons are easy to scan
+    categories.sort();
+
+    res.json({ categories });
+  } catch (error) {
+    logger.error("getCategories error", { error });
+    res.status(500).json({ error: "Failed to fetch categories" });
+  }
+};
+
 // GET /api/books/:id/preview — free preview for non-buyers
 export const getPreview = async (req: Request, res: Response) => {
   try {

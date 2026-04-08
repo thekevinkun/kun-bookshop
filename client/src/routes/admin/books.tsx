@@ -11,11 +11,12 @@ import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { useDebouncedValue } from "@mantine/hooks";
 import { toast } from "sonner";
 
-// Import our Axios instance
-import api from "../../lib/api";
 import { BookForm } from "../../components/forms";
 
 import type { IBook } from "../../types/book";
+
+// Import our Axios instance
+import api from "../../lib/api";
 
 // AdminBooks page
 const AdminBooks = () => {
@@ -50,7 +51,9 @@ const AdminBooks = () => {
     onSuccess: (_response, bookId) => {
       // Refresh the books list after deletion
       queryClient.invalidateQueries({ queryKey: ["books"] });
-      const deletedBook = data?.books?.find((item: IBook) => item._id === bookId);
+      const deletedBook = data?.books?.find(
+        (item: IBook) => item._id === bookId,
+      );
       toast.success(
         deletedBook
           ? `"${deletedBook.title}" deleted successfully`
