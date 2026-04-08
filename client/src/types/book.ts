@@ -28,6 +28,7 @@ export interface IBook {
   fileType: "pdf" | "epub";
   fileSize: number;
   isbn?: string;
+  publisher?: string;
   category: string[];
   tags: string[];
   rating: number;

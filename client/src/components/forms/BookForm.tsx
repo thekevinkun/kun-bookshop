@@ -29,6 +29,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
   const [description, setDescription] = useState(book?.description ?? "");
   const [category, setCategory] = useState(book?.category?.join(", ") ?? "");
   const [isbn, setIsbn] = useState(book?.isbn ?? "");
+  const [publisher, setPublisher] = useState(book?.publisher ?? "");
   const [publishedDate, setPublishedDate] = useState(
     book?.publishedDate
       ? new Date(book.publishedDate).toISOString().split("T")[0] // Format as YYYY-MM-DD for the input
@@ -65,6 +66,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
 
       // Optional fields — only append if they have a value
       if (isbn) formData.append("isbn", isbn);
+      if (publisher) formData.append("publisher", publisher);
       if (publishedDate) formData.append("publishedDate", publishedDate);
       if (previewPages) formData.append("previewPages", previewPages);
 
@@ -222,15 +224,28 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           />
         </div>
 
-        {/* ISBN */}
-        <div>
-          <label className="block text-slate-400 text-sm mb-1">ISBN</label>
-          <input
-            value={isbn}
-            onChange={(e) => setIsbn(e.target.value)}
-            className="input-field"
-            placeholder="978-3-16-148410-0 (optional)"
-          />
+        {/* ISBN and publisher side by side */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-slate-400 text-sm mb-1">ISBN</label>
+            <input
+              value={isbn}
+              onChange={(e) => setIsbn(e.target.value)}
+              className="input-field"
+              placeholder="978-3-16-148410-0 (optional)"
+            />
+          </div>
+          <div>
+            <label className="block text-slate-400 text-sm mb-1">
+              Publisher
+            </label>
+            <input
+              value={publisher}
+              onChange={(e) => setPublisher(e.target.value)}
+              className="input-field"
+              placeholder="Penguin Classics"
+            />
+          </div>
         </div>
 
         {/* Published date + Preview pages side by side */}

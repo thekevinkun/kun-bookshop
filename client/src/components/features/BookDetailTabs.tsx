@@ -12,6 +12,7 @@ import {
   BookOpen,
   Calendar,
   Tag,
+  Building2,
 } from "lucide-react";
 
 // Import React Router for navigation
@@ -139,6 +140,11 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
                 icon: <Tag size={14} className="text-teal-400" />,
                 label: "ISBN",
                 value: book.isbn ?? "N/A",
+              },
+              {
+                icon: <Building2 size={14} className="text-teal-400" />,
+                label: "Publisher",
+                value: book.publisher ?? "N/A",
               },
               {
                 icon: <Star size={14} className="text-teal-400" />,

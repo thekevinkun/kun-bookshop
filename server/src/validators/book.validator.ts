@@ -29,6 +29,9 @@ export const createBookSchema = z.object({
   // Optional ISBN
   isbn: z.string().optional(),
 
+  // Optional publisher name
+  publisher: z.string().optional(),
+
   // Category comes in as a JSON string from FormData
   category: z.string().min(1, "At least one category is required"),
 

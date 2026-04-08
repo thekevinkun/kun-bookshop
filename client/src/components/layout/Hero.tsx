@@ -85,13 +85,19 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                 {activeBook.title}
               </h1>
 
-              {/* Author */}
-              <p className="text-text-muted text-base">
-                By{" "}
-                <span className="text-teal font-semibold">
-                  {activeBook.authorName}
-                </span>
-              </p>
+              {/* Author and Publisher */}
+              <div className="flex items-center gap-5">
+                <p className="text-text-muted text-base">
+                  By{" "}
+                  <span className="text-teal font-semibold">
+                    {activeBook.authorName}
+                  </span>
+                </p>
+
+                <p className="text-text-muted italic text-base">
+                  {activeBook.publisher}
+                </p>
+              </div>
 
               {/* Rating row */}
               <div className="flex items-center gap-3">

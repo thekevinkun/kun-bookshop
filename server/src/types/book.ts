@@ -32,6 +32,7 @@ export interface IBook {
   fileType: "pdf" | "epub"; // Only these two formats
   fileSize: number; // In bytes
   isbn?: string; // Optional ISBN number
+  publisher?: string; // Optional publisher name
   category: string[]; // e.g. ['Fiction', 'Thriller']
   tags: string[]; // e.g. ['bestseller', 'new']
   rating: number; // Average rating, default 0

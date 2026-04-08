@@ -51,6 +51,9 @@ const BookSchema = new Schema<IBookDocument>(
     // Optional ISBN — useful for real book data
     isbn: { type: String, default: null },
 
+    // Optional publisher name — stored as plain text for now
+    publisher: { type: String, default: null, trim: true },
+
     // Array of category strings — e.g. ['Fiction', 'Mystery']
     category: [{ type: String }],
 
