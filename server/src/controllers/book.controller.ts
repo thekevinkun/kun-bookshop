@@ -25,6 +25,10 @@ const IGNORED_SIMILARITY_CATEGORIES = new Set([
 // This helper makes category comparison case-insensitive and whitespace-safe.
 const normalizeCategory = (category: string) => category.trim().toLowerCase();
 
+// This helper escapes regex characters so title searches stay literal.
+const escapeRegex = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 // --- HELPER: Upload buffer to Cloudinary ---
 const uploadToCloudinary = (
   buffer: Buffer,
@@ -67,7 +71,16 @@ export const getBooks = async (req: Request, res: Response) => {
     const query = bookQuerySchema.parse(req.query);
     const filter: any = { isActive: true };
 
-    if (query.search) filter.$text = { $search: query.search };
+    if (query.search) {
+      // This makes the search text safe to use inside a regex.
+      const safeSearch = escapeRegex(query.search.trim());
+
+      // This keeps catalog search behavior consistent with autocomplete.
+      filter.$or = [
+        { title: { $regex: safeSearch, $options: "i" } },
+        { authorName: { $regex: safeSearch, $options: "i" } },
+      ];
+    }
     if (query.category) filter.category = query.category;
     if (query.author) filter.author = query.author; // Filter by Author ObjectId
 

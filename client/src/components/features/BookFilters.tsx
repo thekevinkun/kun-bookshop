@@ -1,5 +1,5 @@
 // Import React hooks for state management
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // Import React Router hook to read URL query params
 import { useSearchParams } from "react-router-dom";
@@ -32,6 +32,9 @@ const SORT_OPTIONS = [
 ];
 
 const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
+  // This lets us detect clicks outside the whole search/filter area.
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   // Read URL search params so we can initialize filters from the URL
   // e.g. /books?sortBy=purchaseCount&sortOrder=desc sets the sort dropdown correctly
   const [searchParams] = useSearchParams();
@@ -93,11 +96,35 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
     onChange({ ...filters, [key]: value, page: 1 });
   };
 
+  // This applies the current input text to the real catalog search.
+  const applySearch = (value: string) => {
+    const trimmedValue = value.trim();
+    onChange({
+      ...filters,
+      search: trimmedValue ? trimmedValue : undefined,
+      page: 1,
+    });
+    setShowSuggestions(false);
+  };
+
   // Reset everything back to defaults
   const clearFilters = () => {
     setSearchInput("");
     onChange({ page: 1, sortBy: "createdAt", sortOrder: "desc" });
   };
+
+  useEffect(() => {
+    // This closes floating panels when the user clicks somewhere else.
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) {
+        setShowSuggestions(false);
+        setShowFilters(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, []);
 
   // Count active non-default filters to show on the badge
   const activeFilterCount = [
@@ -105,11 +132,10 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
     filters.fileType,
     filters.minPrice,
     filters.maxPrice,
-    filters.search,
   ].filter(Boolean).length;
 
   return (
-    <div className="flex flex-col gap-4 mb-8">
+    <div ref={containerRef} className="relative z-30 flex flex-col gap-4 mb-8">
       {/* ── Top row: search + filter toggle + sort ── */}
       <div className="flex gap-3 items-center">
         {/* Search bar */}
@@ -126,10 +152,16 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
             onChange={(e) => {
               setSearchInput(e.target.value);
               setShowSuggestions(true);
-              updateFilter("search", e.target.value);
             }}
             onFocus={() => setShowSuggestions(true)}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+            onKeyDown={(e) => {
+              // This lets Enter commit the search without clicking a suggestion.
+              if (e.key === "Enter") {
+                e.preventDefault();
+                applySearch(searchInput);
+              }
+            }}
           />
 
           {/* Autocomplete dropdown — shows real book suggestions from the API */}
@@ -145,8 +177,8 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
                     text-left transition-colors duration-150"
                   onClick={() => {
                     setSearchInput(book.title);
-                    updateFilter("search", book.title);
-                    setShowSuggestions(false);
+                    // This commits the clicked suggestion to the catalog.
+                    applySearch(book.title);
                   }}
                 >
                   <img
@@ -214,7 +246,10 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
 
       {/* ── Expanded filter panel ── */}
       {showFilters && (
-        <div className="card-base flex flex-col sm:flex-row gap-6">
+        <div
+          // This makes the filter panel float instead of pushing the catalog down.
+          className="absolute left-0 right-0 top-full mt-2 card-base flex flex-col sm:flex-row gap-6 z-40 shadow-2xl"
+        >
           {/* Category filter — real categories from the DB */}
           <div className="flex-1">
             <p className="text-text-muted text-xs font-semibold uppercase tracking-wider mb-2">

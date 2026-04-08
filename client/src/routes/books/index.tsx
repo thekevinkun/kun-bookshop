@@ -39,12 +39,12 @@ const BooksPage = () => {
   return (
     <div className="min-h-screen">
       {/* ── Hero search section ── */}
-      <section className="relative bg-navy pt-12 overflow-hidden">
+      <section className="relative bg-navy pt-12 overflow-visible">
         {/* Background teal glow — decorative */}
         <div className="absolute inset-0 pointer-events-none">
           <div
             className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px]
-                          bg-teal/5 rounded-full blur-3xl"
+            bg-teal/5 rounded-full blur-3xl"
           />
         </div>
 
