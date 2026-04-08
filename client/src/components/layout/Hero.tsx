@@ -27,7 +27,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
   // Auto-advance every 5 seconds unless hovered
   useEffect(() => {
     if (isPaused) return;
-    const timer = setInterval(next, 5000);
+    const timer = setInterval(next, 15000);
     return () => clearInterval(timer); // Clean up on unmount or pause
   }, [isPaused, next]);
 
