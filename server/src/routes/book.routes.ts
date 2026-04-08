@@ -4,6 +4,7 @@ import {
   getFeatured,
   getBookById,
   getBooksByCategory,
+  getSimilarBooks,
   getCategories,
   searchAutocomplete,
   getPreview,
@@ -38,6 +39,9 @@ router.get("/categories", getCategories);
 
 // GET /api/books/category/:category — books by category
 router.get("/category/:category", getBooksByCategory);
+
+// GET /api/books/:id/similar — related books based on shared categories
+router.get("/:id/similar", getSimilarBooks);
 
 // GET /api/books/:id — single book detail
 router.get("/:id", getBookById);

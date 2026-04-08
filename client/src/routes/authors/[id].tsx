@@ -11,7 +11,7 @@ import { Globe, ArrowLeft } from "lucide-react";
 import api from "../../lib/api";
 
 // Import BookCard to display the author's books in a grid
-import BookCard from "../../components/features/BookCard";
+import { BookCard } from "../../cards";
 
 import type { IBook } from "../../types/book";
 

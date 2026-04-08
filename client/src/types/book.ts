@@ -15,8 +15,8 @@ export interface IBook {
         socialLinks?: {
           twitter?: string | null;
           linkedin?: string | null;
-          github?: string | null;
-          goodreads?: string | null;
+          facebook?: string | null;
+          instagram?: string | null;
         };
       };
   authorName: string;
@@ -98,8 +98,8 @@ export interface IAuthor {
   socialLinks: {
     twitter?: string;
     linkedin?: string;
-    github?: string;
-    goodreads?: string;
+    facebook?: string;
+    instagram?: string;
   };
   isActive: boolean;
   createdAt: string;

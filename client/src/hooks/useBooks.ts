@@ -11,6 +11,7 @@ export const bookKeys = {
   list: (filters: BookFilters) => [...bookKeys.lists(), filters] as const,
   featured: () => [...bookKeys.all, "featured"] as const,
   detail: (id: string) => [...bookKeys.all, "detail", id] as const,
+  similar: (id: string) => [...bookKeys.all, "similar", id] as const,
   category: (category: string) =>
     [...bookKeys.all, "category", category] as const,
   autocomplete: (q: string) => [...bookKeys.all, "autocomplete", q] as const,
@@ -78,6 +79,27 @@ export const useBook = (id: string) => {
     // Prevents firing on initial render before the param is available
     enabled: !!id,
 
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+// --- useSimilarBooks ---
+// Fetches books that share meaningful categories with the current book
+export const useSimilarBooks = (id: string) => {
+  return useQuery({
+    // This keeps the similar-books cache separate per book detail page.
+    queryKey: bookKeys.similar(id),
+
+    queryFn: async (): Promise<IBook[]> => {
+      // The server decides which categories are meaningful for matching.
+      const { data } = await api.get(`/books/${id}/similar`);
+      return data.books;
+    },
+
+    // This avoids firing the request before the route param exists.
+    enabled: !!id,
+
+    // Similar books do not change often, so a short cache is fine.
     staleTime: 5 * 60 * 1000,
   });
 };

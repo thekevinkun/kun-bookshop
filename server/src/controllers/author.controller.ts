@@ -133,7 +133,9 @@ export const getAuthorById = async (
 
     // Also fetch this author's active books for the author profile page
     const books = await Book.find({ author: req.params.id, isActive: true })
-      .select("title authorName coverImage price rating purchaseCount")
+      .select(
+        "title authorName coverImage price discountPrice rating purchaseCount category",
+      )
       .limit(12)
       .lean();
 
@@ -186,8 +188,8 @@ export const createAuthor = async (
     const socialLinks = {
       twitter: data.twitter ?? undefined,
       linkedin: data.linkedin ?? undefined,
-      github: data.github ?? undefined,
-      goodreads: data.goodreads ?? undefined,
+      facebook: data.facebook ?? undefined,
+      instagram: data.instagram ?? undefined,
     };
 
     const author = await Author.create({
@@ -260,12 +262,12 @@ export const updateAuthor = async (
     }
 
     // Rebuild social links if any were sent
-    if (data.twitter || data.linkedin || data.github || data.goodreads) {
+    if (data.twitter || data.linkedin || data.facebook || data.instagram) {
       updates.socialLinks = {
         twitter: data.twitter ?? author.socialLinks?.twitter ?? null,
         linkedin: data.linkedin ?? author.socialLinks?.linkedin ?? null,
-        github: data.github ?? author.socialLinks?.github ?? null,
-        goodreads: data.goodreads ?? author.socialLinks?.goodreads ?? null,
+        facebook: data.facebook ?? author.socialLinks?.facebook ?? null,
+        instagram: data.instagram ?? author.socialLinks?.instagram ?? null,
       };
     }
 

@@ -48,8 +48,8 @@ const AuthorSchema = new Schema<IAuthor>(
     socialLinks: {
       twitter: { type: String, default: null },
       linkedin: { type: String, default: null },
-      github: { type: String, default: null },
-      goodreads: { type: String, default: null },
+      facebook: { type: String, default: null },
+      instagram: { type: String, default: null },
     },
 
     // Soft delete — keeps author data intact even if removed from public view

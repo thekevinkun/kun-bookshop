@@ -622,7 +622,7 @@ export const PLACEHOLDER_AUTHORS: IAuthor[] = [
     website: "https://github.com/getify",
     socialLinks: {
       twitter: "https://twitter.com/getify",
-      github: "https://github.com/getify",
+      facebook: "https://facebook.com/getify",
     },
     isActive: true,
     createdAt: "",
@@ -693,7 +693,7 @@ export const PLACEHOLDER_AUTHORS: IAuthor[] = [
     specialty: ["JavaScript", "Programming Languages", "Open Source"],
     nationality: "Dutch",
     website: "https://marijnhaverbeke.nl",
-    socialLinks: { github: "https://github.com/marijnh" },
+    socialLinks: { instagram: "https://instagram.com/marijnh" },
     isActive: true,
     createdAt: "",
     updatedAt: "",

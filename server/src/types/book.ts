@@ -19,8 +19,8 @@ export interface IBook {
         socialLinks?: {
           twitter?: string | null;
           linkedin?: string | null;
-          github?: string | null;
-          goodreads?: string | null;
+          facebook?: string | null;
+          instagram?: string | null;
         };
       };
   authorName: string; // Always a plain string — safe to display without populate
@@ -97,8 +97,8 @@ export interface IAuthor extends Document {
   socialLinks: {
     twitter?: string;
     linkedin?: string;
-    github?: string;
-    goodreads?: string;
+    facebook?: string;
+    instagram?: string;
   };
   isActive: boolean; // Soft delete
   createdAt: Date;

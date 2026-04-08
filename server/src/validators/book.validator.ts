@@ -110,8 +110,8 @@ export const createAuthorSchema = z.object({
   // Social links — all optional URLs
   twitter: z.string().url("Twitter link must be a valid URL").optional(),
   linkedin: z.string().url("LinkedIn link must be a valid URL").optional(),
-  github: z.string().url("GitHub link must be a valid URL").optional(),
-  goodreads: z.string().url("Goodreads link must be a valid URL").optional(),
+  facebook: z.string().url("Facebook link must be a valid URL").optional(),
+  instagram: z.string().url("Instagram link must be a valid URL").optional(),
 });
 
 export const updateAuthorSchema = createAuthorSchema.partial();

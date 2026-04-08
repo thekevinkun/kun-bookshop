@@ -1,4 +1,4 @@
-import BookCard from "./BookCard";
+import { BookCard } from "../../cards";
 import type { IBook } from "../../types/book";
 
 interface SimilarBooksProps {
@@ -13,10 +13,11 @@ const SimilarBooks = ({ books }: SimilarBooksProps) => (
     <div className="w-8 h-0.5 bg-teal rounded-full -mt-2 mb-2" />
 
     {books.length > 0 ? (
-      // 2-column grid matches the reference image
+      // This keeps the same grid layout used before in the sidebar.
       <div className="grid grid-cols-2 gap-4">
         {books.map((b) => (
-          <BookCard key={b._id} book={b} />
+          // This reuses the normal card but hides category and price text.
+          <BookCard key={b._id} book={b} compactInfo />
         ))}
       </div>
     ) : (

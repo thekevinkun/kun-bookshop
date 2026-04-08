@@ -60,12 +60,12 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
     >
       {/* Subtle background texture — dark radial gradient for depth */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_left,_#1e3a5f33_0%,_transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_#1e3a5f33_0%,_transparent_70%)]" />
       </div>
 
       <div className="container-page relative z-10 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* ---- LEFT: Book info ---- */}
+          {/* LEFT: Book info */}
           {isLoading ? (
             <div className="animate-pulse w-full">
               <div className="w-32 h-4 bg-bg-hover rounded mb-4" />
@@ -179,7 +179,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
             </div>
           )}
 
-          {/* ---- RIGHT: Book cover with stacked shadow effect ---- */}
+          {/* RIGHT: Book cover with stacked shadow effect */}
           <div className="flex justify-center items-center order-1 md:order-2">
             <div className="relative w-64 sm:w-72">
               {isLoading ? (

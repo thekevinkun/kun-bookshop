@@ -114,6 +114,9 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
   };
 
   const displayPrice = book.discountPrice ?? book.price;
+  const visibleCategories = Array.isArray(book.category)
+    ? book.category.slice(0, 3)
+    : [];
   const discountPercent = book.discountPrice
     ? Math.round(((book.price - book.discountPrice) / book.price) * 100)
     : null;
@@ -122,7 +125,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
     <section className="relative min-h-[85vh] flex items-center bg-navy overflow-hidden">
       {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#1e3a5f33_0%,_transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_#1e3a5f33_0%,_transparent_70%)]" />
       </div>
 
       <div className="container-page relative z-10 w-full py-16">
@@ -136,14 +139,15 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
               <ArrowLeft size={15} /> Back
             </button>
 
-            <div className="flex items-center gap-2">
-               <span className="badge-primary self-start text-xs uppercase tracking-widest">
-                {book.category[0]}
-              </span>
-
-              <span className="badge-primary self-start text-xs uppercase tracking-widest">
-                {book.category[1]}
-              </span>
+            <div className="flex flex-wrap items-center gap-2">
+              {visibleCategories.map((category) => (
+                <span
+                  key={category}
+                  className="badge-primary self-start text-xs uppercase tracking-widest"
+                >
+                  {category}
+                </span>
+              ))}
             </div>
 
             <h1 className="text-text-light text-4xl sm:text-5xl font-bold leading-tight">

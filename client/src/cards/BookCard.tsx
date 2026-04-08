@@ -1,15 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
-import type { IBook } from "../../types/book";
+import type { IBook } from "../types/book";
 
 interface BookCardProps {
   book: IBook;
+  compactInfo?: boolean;
 }
 
-const BookCard = ({ book }: BookCardProps) => {
+const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
   const navigate = useNavigate();
 
   const displayPrice = book.discountPrice ?? book.price;
+  const categories = Array.isArray(book.category) ? book.category : [];
 
   const discountPercent =
     book.discountPrice && book.price > 0
@@ -64,11 +66,12 @@ const BookCard = ({ book }: BookCardProps) => {
           {book.title}
         </h3>
 
-        {/* Category — italic muted, like in the reference images */}
-        <div className="flex items-center gap-1">
-          <p className="text-text-muted text-xs italic">{book.category[0]},</p>
-          <p className="text-text-muted text-xs italic">{" "}{book.category[1]}</p>
-        </div>
+        {/* This hides extra text when we want a smaller info block. */}
+        {!compactInfo && categories.length > 0 && (
+          <p className="text-text-muted text-xs italic line-clamp-2">
+            {categories.join(", ")}
+          </p>
+        )}
 
         {/* Rating — compact, only shows stars + number */}
         <div className="flex items-center gap-1 mt-0.5">
@@ -88,17 +91,19 @@ const BookCard = ({ book }: BookCardProps) => {
           </span>
         </div>
 
-        {/* Price — pushed to the bottom */}
-        <div className="flex items-baseline gap-2 mt-auto pt-2">
-          <span className="text-teal text-sm font-bold">
-            ${displayPrice.toFixed(2)}
-          </span>
-          {book.discountPrice && (
-            <span className="text-text-muted text-xs line-through">
-              ${book.price.toFixed(2)}
+        {/* This keeps the price hidden in the compact sidebar version. */}
+        {!compactInfo && (
+          <div className="flex items-baseline gap-2 mt-auto pt-2">
+            <span className="text-teal text-sm font-bold">
+              ${displayPrice.toFixed(2)}
             </span>
-          )}
-        </div>
+            {book.discountPrice && (
+              <span className="text-text-muted text-xs line-through">
+                ${book.price.toFixed(2)}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

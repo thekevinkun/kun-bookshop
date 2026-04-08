@@ -26,9 +26,9 @@ const AuthorForm = ({ author, onClose }: AuthorFormModalProps) => {
   const [website, setWebsite] = useState(author?.website ?? "");
   const [twitter, setTwitter] = useState(author?.socialLinks?.twitter ?? "");
   const [linkedin, setLinkedin] = useState(author?.socialLinks?.linkedin ?? "");
-  const [github, setGithub] = useState(author?.socialLinks?.github ?? "");
-  const [goodreads, setGoodreads] = useState(
-    author?.socialLinks?.goodreads ?? "",
+  const [facebook, setFacebook] = useState(author?.socialLinks?.facebook ?? "");
+  const [instagram, setInstagram] = useState(
+    author?.socialLinks?.instagram ?? "",
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [error, setError] = useState("");
@@ -66,8 +66,8 @@ const AuthorForm = ({ author, onClose }: AuthorFormModalProps) => {
       if (website) formData.append("website", website);
       if (twitter) formData.append("twitter", twitter);
       if (linkedin) formData.append("linkedin", linkedin);
-      if (github) formData.append("github", github);
-      if (goodreads) formData.append("goodreads", goodreads);
+      if (facebook) formData.append("facebook", facebook);
+      if (instagram) formData.append("instagram", instagram);
 
       // Avatar file — field name must be 'avatar' to match multer config
       if (avatarFile) formData.append("avatar", avatarFile);
@@ -130,7 +130,7 @@ const AuthorForm = ({ author, onClose }: AuthorFormModalProps) => {
             value={specialty}
             onChange={(e) => setSpecialty(e.target.value)}
             className="input-field"
-            placeholder="Self-help, Psychology, Philosophy"
+            placeholder="Self-Help, Psychology, Philosophy"
           />
         </div>
 
@@ -163,8 +163,8 @@ const AuthorForm = ({ author, onClose }: AuthorFormModalProps) => {
             {[
               { label: "Twitter", value: twitter, set: setTwitter },
               { label: "LinkedIn", value: linkedin, set: setLinkedin },
-              { label: "GitHub", value: github, set: setGithub },
-              { label: "Goodreads", value: goodreads, set: setGoodreads },
+              { label: "Facebook", value: facebook, set: setFacebook },
+              { label: "Instagram", value: instagram, set: setInstagram },
             ].map(({ label, value, set }) => (
               <div key={label}>
                 <label className="block text-slate-500 text-xs mb-1">

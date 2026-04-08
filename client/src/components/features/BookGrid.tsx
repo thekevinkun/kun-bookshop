@@ -1,4 +1,4 @@
-import BookCard from "./BookCard";
+import { BookCard } from "../../cards";
 import type { IBook } from "../../types/book";
 
 interface BookGridProps {

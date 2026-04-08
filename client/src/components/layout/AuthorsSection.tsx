@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Import the AuthorCard feature component
-import { AuthorCard } from "../features";
+import { AuthorCard } from "../../cards";
 
 // Import the hook that fetches all authors from the real API
 // useAllAuthors returns a flat array — no pagination needed for a carousel

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useBook, useBooksByCategory } from "../../hooks/useBooks";
+import { useBook, useSimilarBooks } from "../../hooks/useBooks";
 import { useAuthStore } from "../../store/auth";
 
 import {
@@ -17,15 +17,8 @@ const BookDetailPage = () => {
   // Fetch the book from the real API — no placeholder fallback
   const { data: book, isLoading, isError } = useBook(id!);
 
-  // Fetch related books from the same category — only when we have a book
-  const { data: relatedBooksRaw = [] } = useBooksByCategory(
-    book?.category?.[0] ?? "",
-  );
-
-  // Exclude the current book from the related list
-  const relatedBooks = relatedBooksRaw
-    .filter((b: { _id: string }) => b._id !== id)
-    .slice(0, 4);
+  // Fetch related books using shared meaningful categories from the server.
+  const { data: relatedBooks = [] } = useSimilarBooks(id!);
 
   // LOADING
   if (isLoading) {

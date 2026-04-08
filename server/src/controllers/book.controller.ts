@@ -15,6 +15,16 @@ import { JSDOM } from "jsdom";
 const window = new JSDOM("").window;
 const purify = DOMPurify(window as any);
 
+// These categories are too broad to be useful for "similar books" matching.
+const IGNORED_SIMILARITY_CATEGORIES = new Set([
+  "fiction",
+  "non-fiction",
+  "general",
+]);
+
+// This helper makes category comparison case-insensitive and whitespace-safe.
+const normalizeCategory = (category: string) => category.trim().toLowerCase();
+
 // --- HELPER: Upload buffer to Cloudinary ---
 const uploadToCloudinary = (
   buffer: Buffer,
@@ -164,6 +174,98 @@ export const getBooksByCategory = async (req: Request, res: Response) => {
   } catch (error) {
     logger.error("getBooksByCategory error", { error });
     res.status(500).json({ error: "Failed to fetch books by category" });
+  }
+};
+
+// GET /api/books/:id/similar — related books based on shared meaningful categories
+export const getSimilarBooks = async (req: Request, res: Response) => {
+  try {
+    // This keeps the route param as a plain string for Mongo queries.
+    const bookId = String(req.params.id);
+
+    // We only need the current book's categories to build similarity rules.
+    const currentBook = await Book.findOne({
+      _id: bookId,
+      isActive: true,
+    })
+      .select("category")
+      .lean();
+
+    // If the current book does not exist, we stop early.
+    if (!currentBook) {
+      return res.status(404).json({ error: "Book not found" });
+    }
+
+    // This keeps only valid category strings from the current book.
+    const rawCategories = Array.isArray(currentBook.category)
+      ? currentBook.category.filter(
+          (category): category is string =>
+            typeof category === "string" && category.trim().length > 0,
+        )
+      : [];
+
+    // This removes broad categories like "Non-Fiction" from matching.
+    const meaningfulCategories = rawCategories.filter(
+      (category) =>
+        !IGNORED_SIMILARITY_CATEGORIES.has(normalizeCategory(category)),
+    );
+
+    // If every category is broad, we fall back to the original category list.
+    const categoriesToMatch =
+      meaningfulCategories.length > 0 ? meaningfulCategories : rawCategories;
+
+    // No categories means there is nothing useful to compare against.
+    if (categoriesToMatch.length === 0) {
+      return res.json({ books: [] });
+    }
+
+    // We fetch candidate books that share at least one chosen category.
+    const candidateBooks = await Book.find({
+      _id: { $ne: bookId },
+      isActive: true,
+      category: { $in: categoriesToMatch },
+    })
+      .populate("author", "name avatar")
+      .lean();
+
+    // This stores the normalized category set for faster overlap checks.
+    const normalizedMatchSet = new Set(
+      categoriesToMatch.map((category) => normalizeCategory(category)),
+    );
+
+    // This scores each candidate by how many meaningful categories it shares.
+    const rankedBooks = candidateBooks
+      .map((book) => {
+        // This normalizes the candidate's categories before comparing them.
+        const normalizedCandidateCategories = Array.isArray(book.category)
+          ? book.category
+              .filter(
+                (category): category is string =>
+                  typeof category === "string" && category.trim().length > 0,
+              )
+              .map((category) => normalizeCategory(category))
+          : [];
+
+        // This counts how many categories overlap with the current book.
+        const overlapCount = normalizedCandidateCategories.filter((category) =>
+          normalizedMatchSet.has(category),
+        ).length;
+
+        return { book, overlapCount };
+      })
+      // This keeps only books with at least one real category match.
+      .filter(({ overlapCount }) => overlapCount > 0)
+      // This puts the strongest matches first.
+      .sort((a, b) => b.overlapCount - a.overlapCount)
+      // This keeps the sidebar short and focused.
+      .slice(0, 4)
+      // This returns the plain book objects expected by the client.
+      .map(({ book }) => book);
+
+    res.json({ books: rankedBooks });
+  } catch (error) {
+    logger.error("getSimilarBooks error", { error });
+    res.status(500).json({ error: "Failed to fetch similar books" });
   }
 };
 

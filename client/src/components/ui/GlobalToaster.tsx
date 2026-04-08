@@ -9,7 +9,7 @@ const GlobalToaster = () => {
       richColors
       visibleToasts={4}
       toastOptions={{
-        duration: Infinity,
+        duration: 4500,
         unstyled: true,
         classNames: {
           toast:
