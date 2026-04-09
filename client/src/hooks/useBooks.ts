@@ -57,8 +57,8 @@ export const useFeaturedBooks = () => {
       return data.books;
     },
 
-    // Featured books change rarely — cache for 10 minutes
-    staleTime: 10 * 60 * 1000,
+    // 3 minutes — purchase counts change, hero should stay fresh
+    staleTime: 3 * 60 * 1000,
   });
 };
 

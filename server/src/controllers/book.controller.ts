@@ -220,17 +220,66 @@ export const getBooks = async (req: Request, res: Response) => {
   }
 };
 
-// GET /api/books/featured — homepage carousel
-export const getFeatured = async (req: Request, res: Response) => {
-  try {
-    const books = await Book.find({ isActive: true, isFeatured: true })
-      .populate("author", "name avatar specialty")
-      .limit(8);
-    res.json({ books });
-  } catch (error) {
-    logger.error("getFeatured error", { error });
-    res.status(500).json({ error: "Failed to fetch featured books" });
-  }
+// GET /api/books/featured
+// Public. Returns up to 5 books scored by a combination of signals:
+//   purchaseCount * 10  — primary driver (real market signal)
+//   isNewRelease * 5    — bonus for books published within the last 60 days
+//   rating * 2          — tiebreaker on quality
+// Fallback when everything scores 0: newest publishedDate wins.
+export const getFeatured = async (
+  _req: Request,
+  res: Response,
+): Promise<void> => {
+  // Fetch all active books — we score in-memory since the catalog is small
+  // and MongoDB's $addFields aggregation for this formula would be harder to read
+  const allBooks = await Book.find({ isActive: true })
+    .populate("author", "name avatar specialty")
+    .lean();
+
+  // Determine the cutoff date for "new release" — anything published in the last 60 days
+  const sixtyDaysAgo = new Date();
+  sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+  // Score every book using our three signals
+  const scored = allBooks.map((book) => {
+    // Signal 1: purchase count — the strongest signal, weighted highest
+    const purchaseScore = (book.purchaseCount ?? 0) * 10;
+
+    // Signal 2: new release bonus — recently published books get a visibility boost
+    // Uses publishedDate (the real publication date) not createdAt (when admin added it)
+    const isNewRelease =
+      book.publishedDate && new Date(book.publishedDate) >= sixtyDaysAgo;
+    const newReleaseScore = isNewRelease ? 5 : 0;
+
+    // Signal 3: rating tiebreaker — between equally purchased books, better rated wins
+    const ratingScore = (book.rating ?? 0) * 2;
+
+    // Final score — sum of all three signals
+    const score = purchaseScore + newReleaseScore + ratingScore;
+
+    return { ...book, score };
+  });
+
+  // Sort by score descending — highest scoring books first
+  // Secondary sort by publishedDate descending handles the all-zero fallback:
+  // when no one has bought anything and all scores are 0, newest published books show first
+  scored.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    // Tiebreaker: newer publication date wins
+    const dateA = a.publishedDate ? new Date(a.publishedDate).getTime() : 0;
+    const dateB = b.publishedDate ? new Date(b.publishedDate).getTime() : 0;
+    return dateB - dateA;
+  });
+
+  // Take only the top 5 — hero carousel is always capped at 5
+  const books = scored.slice(0, 5);
+
+  logger.info("Featured books served", {
+    count: books.length,
+    topScore: books[0]?.score ?? 0,
+  });
+
+  res.status(200).json({ books });
 };
 
 // GET /api/books/search/autocomplete — search suggestions
@@ -746,72 +795,182 @@ export const updateBook = async (req: Request, res: Response) => {
 };
 
 // GET /api/books/recommendations
-// Authenticated. Returns up to 8 books the user might like based on their purchase history.
-// Falls back to top-rated books if the user hasn't bought anything yet.
+// Authenticated. Returns exactly 10 books personalised to the user.
+// Algorithm:
+//   1. Collect categories from library (purchased) + wishlist (interested)
+//   2. Exclude books the user already owns — no point recommending owned books
+//   3. Exclude books already showing in the hero — no overlap between sections
+//   4. Score remaining books: purchaseCount * 10 + rating * 2
+//   5. If personalised results don't fill 10, pad with top-scored books not in result set
+// Fallback (new user with no library and no wishlist): top-scored books overall
 export const getRecommendations = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  // Get the logged-in user's ID from the JWT payload (set by authenticate middleware)
   const userId = req.user!.userId;
 
-  // Fetch the user's library — just the purchased book IDs, nothing else
-  const user = await User.findById(userId).select("library").lean();
+  // Fetch the user's library and wishlist — just the ID arrays, nothing else
+  const user = await User.findById(userId).select("library wishlist").lean();
 
-  // We'll collect the final list of recommended books here
+  // Fetch the current hero books so we can exclude them from recommendations
+  // This prevents the same book appearing in both sections
+  const heroBooks = await Book.find({ isActive: true })
+    .select("purchaseCount publishedDate rating")
+    .lean();
+
+  // Re-run the same hero scoring logic to know which 5 are currently in the hero
+  const sixtyDaysAgo = new Date();
+  sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+  const heroScored = heroBooks.map((book) => ({
+    ...book,
+    score:
+      (book.purchaseCount ?? 0) * 10 +
+      (book.publishedDate && new Date(book.publishedDate) >= sixtyDaysAgo
+        ? 5
+        : 0) +
+      (book.rating ?? 0) * 2,
+  }));
+  heroScored.sort((a, b) => b.score - a.score);
+
+  // The IDs of the top 5 hero books — these are excluded from recommendations
+  const heroIds = heroScored.slice(0, 5).map((b) => b._id.toString());
+
+  // Build the full exclusion list:
+  // - books the user already owns (library)
+  // - books currently in the hero
+  // We deliberately keep wishlist books INCLUDABLE — recommending something they wishlisted
+  // is a useful nudge toward purchase
+  const libraryIds = (user?.library ?? []).map((id) => id.toString());
+  const excludeIds = [...new Set([...libraryIds, ...heroIds])];
+
+  // Determine whether we have enough signal for personalisation
+  const hasLibrary = libraryIds.length > 0;
+  const hasWishlist = (user?.wishlist ?? []).length > 0;
+  const isPersonalised = hasLibrary || hasWishlist;
+
   let books;
 
-  if (user && user.library.length > 0) {
+  if (isPersonalised) {
     // PERSONALISED PATH
-    // Step 1: Find all the books the user already owns
-    const ownedBooks = await Book.find({
-      _id: { $in: user.library }, // Only look at books in their library
-      isActive: true,
-    })
-      .select("category") // We only need the categories to build the interest profile
-      .lean();
 
-    // Step 2: Flatten all category arrays into one list, then deduplicate
-    // e.g. [['Fiction', 'Sci-Fi'], ['Fantasy']] → ['Fiction', 'Sci-Fi', 'Fantasy']
-    const interestedCategories = [
-      ...new Set(ownedBooks.flatMap((b) => b.category)),
-    ];
+    // Step 1: Collect categories from library purchases
+    const libraryBooks = hasLibrary
+      ? await Book.find({ _id: { $in: user!.library }, isActive: true })
+          .select("category")
+          .lean()
+      : [];
 
-    // Step 3: Find active books that match at least one of those categories
-    // AND that the user does NOT already own — no point recommending owned books
-    books = await Book.find({
+    // Step 2: Collect categories from wishlist items
+    const wishlistBooks = hasWishlist
+      ? await Book.find({ _id: { $in: user!.wishlist }, isActive: true })
+          .select("category")
+          .lean()
+      : [];
+
+    // Step 3: Build a weighted category frequency map
+    // Wishlist categories count double — user is actively interested but hasn't bought yet
+    const categoryWeight: Record<string, number> = {};
+
+    for (const book of libraryBooks) {
+      for (const cat of book.category) {
+        categoryWeight[cat] = (categoryWeight[cat] ?? 0) + 1; // Each purchase = 1 point
+      }
+    }
+    for (const book of wishlistBooks) {
+      for (const cat of book.category) {
+        categoryWeight[cat] = (categoryWeight[cat] ?? 0) + 2; // Each wishlist = 2 points (weighted higher)
+      }
+    }
+
+    // Step 4: Get all unique categories the user cares about
+    const interestedCategories = Object.keys(categoryWeight);
+
+    // Step 5: Find candidate books — match at least one interested category, not excluded
+    const candidates = await Book.find({
       isActive: true,
-      category: { $in: interestedCategories }, // At least one category must match
-      _id: { $nin: user.library }, // Exclude already-owned books
+      category: { $in: interestedCategories },
+      _id: { $nin: excludeIds }, // Exclude owned + hero books
     })
       .select(
-        "title authorName coverImage price discountPrice rating reviewCount category",
-      ) // Only send what the frontend needs
-      .sort({ rating: -1, createAt: -1 }) // Best-rated first — simple but effective ranking
-      .limit(10) // Cap at 10 so the section doesn't become overwhelming
-      .lean();
-  } else {
-    // FALLBACK PATH (new user / no purchases yet)
-    // No purchase history to learn from — just show the top-rated books overall
-    books = await Book.find({ isActive: true })
-      .select(
-        "title authorName coverImage price discountPrice rating reviewCount category",
+        "title authorName coverImage price discountPrice rating reviewCount purchaseCount category",
       )
-      .sort({ rating: -1, createdAt: -1 }) // createdAt as tiebreaker when ratings are equal
-      .limit(10)
       .lean();
+
+    // Step 6: Score candidates — purchaseCount drives rank, category weight personalises it,
+    // rating breaks ties
+    const scored = candidates.map((book) => {
+      // Sum the category weights for every category this book shares with the user's interests
+      const categoryScore = book.category.reduce(
+        (sum, cat) => sum + (categoryWeight[cat] ?? 0),
+        0,
+      );
+      const score =
+        (book.purchaseCount ?? 0) * 10 + // Popularity
+        categoryScore * 3 + // Personal relevance (category weight)
+        (book.rating ?? 0) * 2; // Quality tiebreaker
+
+      return { ...book, score };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    books = scored.slice(0, 10);
+
+    // Step 7: If personalised results don't fill 10, pad with top-scored books
+    // This handles the case where the user's taste is very niche
+    if (books.length < 10) {
+      const alreadyInResults = books.map((b) => b._id.toString());
+      const padExclude = [...excludeIds, ...alreadyInResults];
+
+      const padCandidates = await Book.find({
+        isActive: true,
+        _id: { $nin: padExclude }, // Don't repeat anything already in the list
+      })
+        .select(
+          "title authorName coverImage price discountPrice rating reviewCount purchaseCount category",
+        )
+        .lean();
+
+      const padScored = padCandidates
+        .map((book) => ({
+          ...book,
+          score: (book.purchaseCount ?? 0) * 10 + (book.rating ?? 0) * 2,
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10 - books.length); // Only take as many as we need to reach 10
+
+      books = [...books, ...padScored];
+    }
+  } else {
+    // FALLBACK PATH (brand new user — no library, no wishlist)
+    // Show the top-scored books overall, excluding only hero books
+    const candidates = await Book.find({
+      isActive: true,
+      _id: { $nin: excludeIds }, // Still exclude hero books so sections don't overlap
+    })
+      .select(
+        "title authorName coverImage price discountPrice rating reviewCount purchaseCount category",
+      )
+      .lean();
+
+    const scored = candidates
+      .map((book) => ({
+        ...book,
+        score: (book.purchaseCount ?? 0) * 10 + (book.rating ?? 0) * 2,
+      }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+
+    books = scored;
   }
 
-  // Log for monitoring — useful to see how often personalised vs fallback is served
   logger.info("Recommendations served", {
     userId,
-    personalised: !!(user && user.library.length > 0),
+    personalised: isPersonalised,
     count: books.length,
   });
 
-  res
-    .status(200)
-    .json({ books, personalised: !!(user && user.library.length > 0) });
+  res.status(200).json({ books, personalised: isPersonalised });
 };
 
 // DELETE /api/books/:id — admin soft deletes a book

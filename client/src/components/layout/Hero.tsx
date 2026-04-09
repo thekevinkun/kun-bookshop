@@ -27,7 +27,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
   // Auto-advance every 5 seconds unless hovered
   useEffect(() => {
     if (isPaused) return;
-    const timer = setInterval(next, 15000);
+    const timer = setInterval(next, 10000);
     return () => clearInterval(timer); // Clean up on unmount or pause
   }, [isPaused, next]);
 
@@ -54,7 +54,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
 
   return (
     <section
-      className="relative min-h-[90vh] flex items-center overflow-hidden bg-navy"
+      className="relative min-h-[92vh] flex items-center overflow-hidden bg-navy"
       onMouseEnter={() => setIsPaused(true)} // Pause on hover
       onMouseLeave={() => setIsPaused(false)} // Resume on leave
     >
@@ -81,7 +81,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
               </span>
 
               {/* Book title — large and bold */}
-              <h1 className="text-text-light text-5xl sm:text-6xl font-bold leading-tight">
+              <h1 className="text-text-light leading-tight">
                 {activeBook.title}
               </h1>
 
@@ -96,6 +96,10 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
 
                 <p className="text-text-muted italic text-base">
                   {activeBook.publisher}
+                </p>
+
+                <p className="text-text-muted italic text-base">
+                  #{activeBook.tags[0]}
                 </p>
               </div>
 
