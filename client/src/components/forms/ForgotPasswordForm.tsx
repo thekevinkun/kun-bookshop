@@ -31,11 +31,11 @@ const ForgotPasswordForm = () => {
 
       // Show the success state — same message whether email exists or not
       setIsSuccess(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError("root", {
         message:
-          error.response?.data?.error ||
-          "Something went wrong. Please try again.",
+          (error as { response?: { data?: { error?: string } } }).response?.data
+            ?.error || "Something went wrong. Please try again.",
       });
     }
   };

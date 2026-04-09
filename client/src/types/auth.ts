@@ -8,6 +8,12 @@ export interface User {
   role: "user" | "admin";
   isVerified: boolean;
   avatar?: string;
+  emailPreferences?: {
+    marketing: boolean;
+    orderUpdates: boolean;
+    newReleases: boolean;
+    priceDrops: boolean;
+  };
 }
 
 // Define the shape of the entire auth store — state + actions

@@ -34,6 +34,9 @@ import authorRoutes from "./routes/author.routes";
 // Import the review router — handles all /api/reviews/* endpoints
 import reviewRoutes from "./routes/review.routes";
 
+// Import User-scoped orders route
+import ordersRoutes from "./routes/orders.routes";
+
 // Import the checkout and webhook routes so we can mount them on the Express app
 import checkoutRoutes from "./routes/checkout.routes";
 import webhookRoutes from "./routes/webhook.routes";
@@ -133,6 +136,9 @@ app.use("/api/users", usersRoutes);
 
 // Mount the review router — all paths start with /api/reviews
 app.use("/api/reviews", reviewRoutes);
+
+// User's own order history
+app.use("/api/orders", ordersRoutes);
 
 // --- HEALTH CHECK ROUTE ---
 // A simple route to confirm the server is running — used by Docker and monitoring tools

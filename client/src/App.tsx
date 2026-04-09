@@ -16,7 +16,11 @@ import AuthorProfilePage from "./routes/authors/[id]";
 import { CheckoutSuccessPage, CheckoutCancelPage } from "./routes/checkout";
 
 import LibraryPage from "./routes/library/index";
+
 import ProfilePage from "./routes/profile/index";
+import OrdersPage from "./routes/profile/orders";
+import EditProfilePage from "./routes/profile/edit";
+import ChangePasswordPage from "./routes/profile/password";
 
 import {
   AdminLayout,
@@ -69,6 +73,30 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/orders"
+            element={
+              <ProtectedRoute>
+                <OrdersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/edit"
+            element={
+              <ProtectedRoute>
+                <EditProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/password"
+            element={
+              <ProtectedRoute>
+                <ChangePasswordPage />
               </ProtectedRoute>
             }
           />

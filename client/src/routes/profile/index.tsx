@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 // Import useNavigate to redirect unauthenticated users and handle navigation
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 // Import our React Query hooks for wishlist and download history data
 import {
@@ -24,6 +24,9 @@ import {
   Download, // Download history item icon
   BookOpen, // Library stat icon on profile card
   BadgeCheck, // Verified / role badge icon
+  ShoppingBag,
+  KeyRound,
+  Pencil,
 } from "lucide-react";
 
 import type { IBook, IDownloadRecord } from "../../types/book";
@@ -207,6 +210,34 @@ export default function ProfilePage() {
                   <BookOpen size={15} />
                   My Library
                 </button>
+
+                {/* Quick links to sub-pages */}
+                <div className="flex flex-col gap-2 w-full mt-2">
+                  <Link
+                    to="/profile/edit"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                  >
+                    <Pencil className="w-4 h-4" />{" "}
+                    {/* Import Pencil from lucide-react */}
+                    Edit Profile
+                  </Link>
+                  <Link
+                    to="/profile/orders"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                  >
+                    <ShoppingBag className="w-4 h-4" />{" "}
+                    {/* Import ShoppingBag from lucide-react */}
+                    Order History
+                  </Link>
+                  <Link
+                    to="/profile/password"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                  >
+                    <KeyRound className="w-4 h-4" />{" "}
+                    {/* Import KeyRound from lucide-react */}
+                    Change Password
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

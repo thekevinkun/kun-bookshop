@@ -32,7 +32,15 @@ export interface IOrder {
     email?: string;
   };
   items: ICartItem[];
+  subtotal: number;
+  discount: number;
   total: number;
+  couponCode?: string;
   paymentStatus: "pending" | "completed" | "failed" | "refunded";
-  createdAt: string;
+  paymentMethod: "stripe";
+  stripePaymentIntentId?: string; // Stripe's payment ID, set after payment completes
+  stripeSessionId?: string; // Stripe's checkout session ID, set when session is created
+  completedAt?: Date; // When the payment was confirmed
+  createdAt: Date;
+  updatedAt: Date;
 }
