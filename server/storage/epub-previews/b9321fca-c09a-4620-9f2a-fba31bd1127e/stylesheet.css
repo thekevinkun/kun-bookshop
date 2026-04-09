@@ -1,0 +1,1109 @@
+.bold_ital {
+  font-style: italic;
+  font-weight: bold;
+}
+.calibre {
+  display: block;
+  font-size: 1.125em;
+  line-height: 1.2;
+  orphans: 2;
+  padding-left: 0;
+  padding-right: 0;
+  widows: 2;
+  margin: 0 5pt;
+}
+.calibre1 {
+  display: block;
+  orphans: 2;
+  widows: 2;
+  margin: 0;
+  padding: 0;
+}
+.calibre2 {
+  display: block;
+  font-size: 0.51852em;
+  orphans: 2;
+  text-align: center;
+  widows: 2;
+  margin: 1.5em;
+}
+.calibre3 {
+  display: block;
+  list-style-type: decimal;
+  margin-bottom: 0;
+  margin-right: 0;
+  margin-top: 0;
+  outline: 0;
+  padding-bottom: 0;
+  padding-right: 0;
+  padding-top: 0;
+  border: currentColor none 0;
+}
+.calibre4 {
+  line-height: 1.2;
+}
+.calibre5 {
+  font-weight: bold;
+}
+.calibre6 {
+  display: block;
+}
+.calibre7 {
+  font-style: italic;
+}
+.calibre8 {
+  display: block;
+  line-height: 1.2;
+}
+.calibre9 {
+  display: block;
+  page-break-inside: avoid;
+  margin: 1em 0;
+  padding: 0;
+}
+.calibre10 {
+  display: block;
+  page-break-inside: avoid;
+  margin: 0;
+  padding: 0;
+}
+.calibre11 {
+  display: block;
+  list-style-type: disc;
+  margin-bottom: 0;
+  margin-right: 0;
+  margin-top: 0;
+  outline: 0;
+  padding-bottom: 0;
+  padding-right: 0;
+  padding-top: 0;
+  border: currentColor none 0;
+}
+.calibre12 {
+  display: table-column-group;
+}
+.calibre13 {
+  display: table-column;
+}
+.calibre14 {
+  display: table-row-group;
+  vertical-align: middle;
+}
+.calibre15 {
+  display: block;
+  font-size: 1.125em;
+  line-height: 1.2;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0 5pt;
+}
+.calibre16 {
+  color: #222;
+  display: block;
+  font-family: "Shift Light", Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, Georgia, serif;
+  font-size: 1.25926em;
+  font-weight: normal;
+  line-height: inherit;
+  text-align: center;
+  margin: 0 0 1em;
+}
+.calibre17 {
+  -webkit-text-fill-color: rgb(255, 102, 0);
+  color: rgb(255, 102, 0);
+  text-decoration: underline;
+}
+.calibre18 {
+  border-radius: 2px;
+  color: gray;
+  display: block;
+  height: 2px;
+  margin: 1em 0;
+  border-top: rgb(99, 99, 99) solid 1px;
+  border-right: currentColor solid 1px;
+  border-bottom: currentColor solid 0;
+  border-left: currentColor solid 1px;
+}
+.calibre19 {
+  display: block;
+  font-size: 1.77778em;
+  font-weight: bold;
+  line-height: 1.2;
+  margin: 0.67em 0;
+}
+.calibre20 {
+  display: block;
+  list-style-type: decimal;
+  margin: 1em 0;
+}
+.calibre21 {
+  display: list-item;
+}
+.calibre22 {
+  display: block;
+  list-style-type: decimal;
+  margin: 0;
+}
+.center {
+  display: block;
+  line-height: inherit;
+  outline: 0;
+  text-align: center;
+  text-indent: 0;
+  margin: 0;
+  padding: 0;
+}
+.center1 {
+  display: block;
+  font-family: "Shift Light", Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, Georgia, serif;
+  text-align: center;
+  text-indent: 0;
+  margin: 1em 0 0;
+}
+.center2 {
+  display: block;
+  font-family: "Shift Light", Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, Georgia, serif;
+  font-size: 0.66667em;
+  text-align: center;
+  text-indent: 0;
+  margin: 1em 0 0;
+}
+.figure_small {
+  display: block;
+  line-height: inherit;
+  outline: 0;
+  page-break-inside: avoid;
+  text-align: center;
+  text-indent: 0;
+  margin: 1em 0;
+  padding: 0;
+}
+.footnote {
+  display: block;
+  orphans: 2;
+  widows: 2;
+  margin: 15% 0 0;
+  padding: 0;
+}
+.fr {
+  float: right;
+}
+.freefont {
+  font-family: "Free Sans", "Helvetica", sans-serif;
+}
+.h {
+  clear: both;
+  display: block;
+  height: 100%;
+  max-width: 100%;
+  orphans: 2;
+  text-align: center;
+  widows: 2;
+  margin: 0;
+  padding: 0;
+}
+.h1 {
+  height: 100%;
+  max-width: 100%;
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+.h2em {
+  height: 2em;
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+.head-cell {
+  background-color: #747678;
+  display: table-cell;
+  text-align: inherit;
+  vertical-align: middle;
+  padding: 4px;
+  border-top: #747678 solid 1px;
+  border-right: #fff solid 1px;
+  border-bottom: #fff solid 1px;
+  border-left: #fff solid 1px;
+}
+.noborder {
+  display: table-cell;
+  text-align: inherit;
+  vertical-align: inherit;
+  padding: 4px;
+}
+.page_top_padding {
+  display: block;
+  line-height: inherit;
+  outline: 0;
+  text-indent: 0;
+  width: 100%;
+  margin: 0 0 0 0%;
+  padding: 0;
+}
+.pt {
+  font-size: 0.83333em;
+  line-height: 1.2;
+}
+.runin {
+  font-size: 0.75em;
+}
+.scap {
+  font-size: 0.71429em;
+}
+.squeeze {
+  display: inline-block;
+  line-height: inherit;
+  max-width: 100%;
+  outline: 0;
+  text-indent: 0;
+  width: 40%;
+  margin: 0;
+  padding: 0;
+}
+.squeeze-amzn {
+  display: none;
+  height: 179px;
+  width: 224px;
+}
+.squeeze-epub {
+  height: auto;
+  width: 100%;
+}
+.sup {
+  font-size: 0.77778em;
+  line-height: 1.2;
+  vertical-align: super;
+}
+.table {
+  display: block;
+  orphans: 2;
+  widows: 2;
+  margin: 1em 0;
+  padding: 0 0 0.25em;
+  border: #747678 solid 1px;
+}
+.table-style {
+  border-collapse: collapse;
+  border-spacing: 2px;
+  display: table;
+  text-indent: 0;
+  width: 100%;
+  margin: 1em 0;
+}
+.table-style1 {
+  display: table-row;
+  vertical-align: inherit;
+}
+.text-cell {
+  display: table-cell;
+  text-align: inherit;
+  vertical-align: inherit;
+  padding: 4px;
+  border: #747678 solid 1px;
+}
+.w {
+  clear: both;
+  display: block;
+  max-height: 100%;
+  orphans: 2;
+  text-align: center;
+  widows: 2;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.w1 {
+  height: auto;
+  max-height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.w30c {
+  clear: both;
+  display: block;
+  max-height: 100%;
+  orphans: 2;
+  text-align: center;
+  widows: 2;
+  margin: 0 35%;
+  padding: 0;
+}
+.w60c {
+  clear: both;
+  display: block;
+  max-height: 100%;
+  orphans: 2;
+  text-align: center;
+  widows: 2;
+  margin: 0 20%;
+  padding: 0;
+}
+.w80c {
+  clear: both;
+  display: block;
+  max-height: 100%;
+  orphans: 2;
+  text-align: center;
+  widows: 2;
+  margin: 0 10%;
+  padding: 0;
+}
+.x01-fm-contents-bm-head {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 0 0 0 2.33em;
+}
+.x01-fm-contents-cn {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: -2.11em;
+  widows: 2;
+  margin: 0.89em 0 0 2.11em;
+}
+.x01-fm-contents-cn-last {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: -2.11em;
+  widows: 2;
+  margin: 3.89em 0 0 2.11em;
+}
+.x01-fm-contents-pt {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 3.5em 0 0.5em;
+}
+.x01-fm-copyright-text {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.51852em;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0;
+}
+.x01-fm-copyright-text-space {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.51852em;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.29em 0 0;
+}
+.x01-fm-head {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 1.48148em;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 15% 0 10%;
+}
+.x02-part-subtitle {
+  color: #6d6e70;
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 1.48148em;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0 0 0.89em;
+}
+.x02-part-title {
+  color: #6d6e70;
+  display: block;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 1.77778em;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 1.2;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 20% 0 1.4em;
+}
+.x03-chapter-number {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 1.48148em;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0.2em 0 0.5em;
+}
+.x03-chapter-subtitle {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 1em;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0.71em 0 1.21em;
+}
+.x03-chapter-title {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 1.48148em;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0.89em 0 0.94em;
+}
+.x03-chapter-title-brk {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 1.48148em;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 15% 0 0.94em;
+}
+.x03-chapter-title-brk1 {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 1.48148em;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0.2em 0 0.94em;
+}
+.x03-co-body-text {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 10% 0 0;
+}
+.x04-body-text {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-indent: 1.24em;
+  widows: 2;
+  margin: 0;
+}
+.x04-body-text-fl {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 0;
+}
+.x05-head-a {
+  display: block;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 0.88889em;
+  font-style: normal;
+  font-weight: bold;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 2.27em 0 0.73em;
+}
+.x05-head-a1 {
+  display: block;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 0.88889em;
+  font-style: normal;
+  font-weight: bold;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: left;
+  text-indent: 0;
+  widows: 2;
+  margin: 2.27em 18% 0.73em;
+}
+.x05-head-b {
+  display: block;
+  font-family: "Gotham Medium", "Helvetica", sans-serif;
+  font-size: 0.88889em;
+  font-style: normal;
+  font-weight: normal;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: left;
+  text-indent: 0;
+  widows: 2;
+  margin: 2.27em 0 0.73em;
+}
+.x05-subhead-a {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0 0 0.25em;
+}
+.x06-chapter-summary-head {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 1em;
+  line-height: 1.2;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 2.08em 0 0.67em;
+  padding: 0.5em 0 0;
+  border-top: #747678 solid 2px;
+}
+.x06-cue {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.07em 0 0;
+}
+.x06-extract-1p {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.54em 2em;
+}
+.x06-extract-first {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.54em 2em 0;
+}
+.x06-extract-last {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0 2em 1.54em;
+}
+.x06-verse {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  font-style: italic;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0;
+}
+.x06-verse-first {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  font-style: italic;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.51em 0 0;
+}
+.x06-verse-source {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.51em 0;
+}
+.x07-list-bulleted {
+  display: list-item;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  list-style-type: square;
+  outline: 0;
+  text-indent: 0;
+  margin: 0 0 0 0.18em;
+  padding: 0;
+  border: currentColor none 0;
+}
+.x07-list-bulleted-first {
+  display: list-item;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  list-style-type: square;
+  outline: 0;
+  text-indent: 0;
+  margin: 1.51em 0 0 0.18em;
+  padding: 0;
+  border: currentColor none 0;
+}
+.x07-list-bulleted-last {
+  display: list-item;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  list-style-type: square;
+  outline: 0;
+  text-indent: 0;
+  margin: 0 0 1.51em 0.18em;
+  padding: 0;
+  border: currentColor none 0;
+}
+.x07-list-numbered {
+  display: list-item;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  list-style-type: decimal;
+  outline: 0;
+  text-indent: 0;
+  margin: 0 0 0 0.8em;
+  padding: 0;
+  border: currentColor none 0;
+}
+.x07-list-numbered-first {
+  display: list-item;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  list-style-type: decimal;
+  outline: 0;
+  text-indent: 0;
+  margin: 1.51em 0 0 0.8em;
+  padding: 0;
+  border: currentColor none 0;
+}
+.x07-list-numbered-last {
+  display: list-item;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  list-style-type: decimal;
+  outline: 0;
+  text-indent: 0;
+  margin: 0 0 1.51em 0.8em;
+  padding: 0;
+  border: currentColor none 0;
+}
+.x07-list-unnumbered-para-first {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.51em 1.07em 0;
+}
+.x07-list-unnumbered-para-last {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.51em 1.07em;
+}
+.x08-table-body {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 0.2em 0.25em;
+}
+.x08-table-body-fr {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-align: right;
+  text-indent: 0;
+  widows: 2;
+  margin: 0;
+}
+.x08-table-body-hang-small {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: -2em;
+  widows: 2;
+  margin: 0.2em 0.25em 0.2em 2.25em;
+}
+.x08-table-caption {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.66667em;
+  font-style: italic;
+  orphans: 2;
+  text-align: center;
+  text-indent: 1.56em;
+  widows: 2;
+  margin: 1.33em 0 0;
+}
+.x08-table-column-head {
+  background-color: #747678;
+  color: #fff;
+  display: block;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  font-weight: bold;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0.5em 0 0.25em;
+  padding: 0.35em;
+}
+.x08-table-column-head-3-first {
+  background-color: #747678;
+  color: #fff;
+  display: block;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  font-weight: bold;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0 0 0.25em;
+  padding: 0.35em;
+}
+.x08-table-column-head-left {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  font-weight: bold;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 0;
+}
+.x08-table-column-head-right {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  font-weight: bold;
+  orphans: 2;
+  text-align: right;
+  text-indent: 0;
+  widows: 2;
+  margin: 0;
+}
+.x08-table-column-head1 {
+  color: #fff;
+  display: block;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  font-weight: bold;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 0;
+}
+.x08-table-hang {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: -3em;
+  widows: 2;
+  margin: 0.2em 0.25em 0.2em 3.25em;
+}
+.x08-table-title {
+  display: block;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  font-weight: bold;
+  orphans: 2;
+  page-break-after: avoid;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.5em 0 0.35em;
+}
+.x12-caption {
+  display: block;
+  font-family: "Gotham Light", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.75em 4em 2.12em;
+}
+.x13-bm-about-au {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.5em 0 0;
+}
+.x13-bm-endnote-subpara {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 0 0 0 2.89em;
+}
+.x13-bm-endnotes {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: -2.89em;
+  widows: 2;
+  margin: 0 0 0 2.89em;
+}
+.x13-bm-endnotes-head-a {
+  display: block;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  font-weight: bold;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.44em 0 0.67em;
+}
+.x13-bm-index {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: -2.67em;
+  widows: 2;
+  margin: 0 0 0 2.67em;
+}
+.x13-bm-index-alpha {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: -2.67em;
+  widows: 2;
+  margin: 2.44em 0 0 2.67em;
+}
+.x13-bm-index-nav-bar {
+  display: block;
+  orphans: 2;
+  page-break-inside: avoid;
+  widows: 2;
+  width: 100%;
+  margin: 1em 0;
+  padding: 0;
+  border-top: #999 solid 2px;
+  border-bottom: #999 solid 2px;
+}
+.x13-bm-index-nav-bar-letter {
+  color: #999;
+  text-align: center;
+  padding: 0 0.15em;
+}
+.x13-bm-index-nav-bar1 {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 1em;
+  line-height: 1.5em;
+  orphans: 2;
+  text-align: center;
+  widows: 2;
+  margin: 0.1em;
+  padding: 0.4em;
+}
+.x13-bm-index-note {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 0 0 1em;
+}
+.x13-bm-index1 {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: -1.78em;
+  widows: 2;
+  margin: 0 0 0 2.67em;
+}
+.x13-bm-index2 {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: -0.89em;
+  widows: 2;
+  margin: 0 0 0 2.67em;
+}
+.x14-free-style {
+  display: block;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 0.6em 10% 0;
+}
+.x14-free-style-3-first {
+  display: block;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  font-weight: bold;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 15% 10% 1.25em;
+  padding: 0 0 0.2em;
+  border-bottom: #747678 dotted 2px;
+}
+.x14-free-style1 {
+  display: list-item;
+  font-family: "Gotham Book", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  list-style-type: decimal;
+  outline: 0;
+  text-indent: 0;
+  margin: 0.6em 10% 0 8.5%;
+  padding: 0;
+  border: currentColor none 0;
+}
+.x14-free-style2 {
+  display: block;
+  font-size: 1em;
+  orphans: 2;
+  widows: 2;
+  margin: 0;
+}
+.x14-free-style3 {
+  display: block;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 0.66667em;
+  font-weight: bold;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.5em 10% 1.25em;
+  padding: 0 0 0.2em;
+  border-bottom: #747678 dotted 2px;
+}
+.x14-freestyle-download {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 0.88889em;
+  orphans: 2;
+  text-align: center;
+  text-indent: 0;
+  widows: 2;
+  margin: 1.51em 0 0;
+}
+.xfootnote-text {
+  display: block;
+  font-family: "Minion Pro", "Georgia", serif;
+  font-size: 1em;
+  line-height: 1.2;
+  orphans: 2;
+  text-indent: 0;
+  widows: 2;
+  margin: 0;
+}
+.pcalibre:first-letter {
+  float: left;
+  font-family: "Gotham Bold", "Helvetica", sans-serif;
+  font-size: 2.6em;
+  font-weight: bold;
+  line-height: 0.85;
+  margin: 0 0.05em 0 0;
+}
+.pcalibre1:link {
+  -webkit-text-fill-color: rgb(255, 102, 0);
+  color: rgb(255, 102, 0);
+  text-decoration: underline;
+}
+.pcalibre2:visited {
+  -webkit-text-fill-color: rgb(255, 102, 0);
+  color: rgb(255, 102, 0);
+  text-decoration: underline;
+}
+.pcalibre3:hover {
+  -webkit-text-fill-color: rgb(255, 102, 0);
+  color: rgb(255, 102, 0);
+  text-decoration: underline;
+}
+.pcalibre4:active {
+  -webkit-text-fill-color: rgb(255, 102, 0);
+  color: rgb(255, 102, 0);
+  text-decoration: underline;
+}

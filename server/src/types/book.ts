@@ -44,6 +44,8 @@ export interface IBook {
   previewPages?: number; // How many pages non-buyers can preview
   videoUrl?: string; // YouTube embed URL for the book trailer
   filePublicId?: string; // Cloudinary public ID for the book file
+  epubPreviewDir?: string | null; // Local extracted EPUB preview directory id
+  epubPackagePath?: string | null; // Relative path to package.opf in extracted EPUB
   coverPublicId?: string; // Cloudinary public ID for the cover image
   createdAt: Date;
   updatedAt: Date;

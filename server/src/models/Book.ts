@@ -89,6 +89,12 @@ const BookSchema = new Schema<IBookDocument>(
     // Stored separately from fileUrl so we can call cloudinary.uploader.destroy()
     filePublicId: { type: String, default: null },
 
+    // Local extracted EPUB preview directory identifier
+    epubPreviewDir: { type: String, default: null },
+
+    // Relative path to the package.opf inside the extracted EPUB preview
+    epubPackagePath: { type: String, default: null },
+
     // Cloudinary public ID for the cover image — same reason as above
     coverPublicId: { type: String, default: null },
   },

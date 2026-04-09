@@ -8,6 +8,7 @@ import {
   getCategories,
   searchAutocomplete,
   getBookPreview,
+  getEpubPreviewAsset,
   createBook,
   updateBook,
   deleteBook,
@@ -42,6 +43,9 @@ router.get("/category/:category", getBooksByCategory);
 
 // GET /api/books/:id/preview — free preview for non-buyers
 router.get("/:id/preview", getBookPreview);
+
+// GET /api/books/:id/preview/epub/* — serves extracted EPUB assets for epubjs
+router.get("/:id/preview/epub/*assetPath", getEpubPreviewAsset);
 
 // GET /api/books/:id/similar — related books based on shared categories
 router.get("/:id/similar", getSimilarBooks);

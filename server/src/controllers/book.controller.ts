@@ -3,6 +3,8 @@ import { Book } from "../models/Book";
 import { Author } from "../models/Author";
 import cloudinary from "../config/cloudinary";
 import { logger } from "../utils/logger";
+import { promises as fs } from "fs";
+import path from "path";
 import {
   bookQuerySchema,
   createBookSchema,
@@ -10,6 +12,11 @@ import {
 } from "../validators/book.validator";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
+import {
+  extractEpubPreview,
+  removeEpubPreview,
+  resolveEpubPreviewPath,
+} from "../services/epub-preview.service";
 
 // Set up DOMPurify on the server using a fake DOM from jsdom
 const window = new JSDOM("").window;
@@ -62,6 +69,89 @@ const deleteFromCloudinary = async (
   } catch (error) {
     // Log but don't crash — a failed delete shouldn't block the main operation
     logger.warn("Failed to delete from Cloudinary", { publicId, error });
+  }
+};
+
+const buildAbsoluteUrl = (req: Request, pathname: string) =>
+  `${req.protocol}://${req.get("host")}${pathname}`;
+
+const getEpubPreviewUrl = (req: Request, bookId: string, packagePath: string) =>
+  buildAbsoluteUrl(
+    req,
+    `/api/books/${bookId}/preview/epub/${packagePath
+      .split("/")
+      .map(encodeURIComponent)
+      .join("/")}`,
+  );
+
+const EPUB_CONTENT_TYPES: Record<string, string> = {
+  ".css": "text/css; charset=utf-8",
+  ".gif": "image/gif",
+  ".htm": "text/html; charset=utf-8",
+  ".html": "text/html; charset=utf-8",
+  ".jpeg": "image/jpeg",
+  ".jpg": "image/jpeg",
+  ".js": "application/javascript; charset=utf-8",
+  ".ncx": "application/x-dtbncx+xml; charset=utf-8",
+  ".opf": "application/oebps-package+xml; charset=utf-8",
+  ".otf": "font/otf",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".ttf": "font/ttf",
+  ".webp": "image/webp",
+  ".woff": "font/woff",
+  ".woff2": "font/woff2",
+  ".xhtml": "application/xhtml+xml; charset=utf-8",
+  ".xml": "application/xml; charset=utf-8",
+};
+
+const OPTIONAL_EPUB_ASSETS = new Map<string, { body: string; contentType: string }>([
+  [
+    "META-INF/com.apple.ibooks.display-options.xml",
+    {
+      body: `<?xml version="1.0" encoding="UTF-8"?><display_options><platform name="*"><option name="specified-fonts">false</option></platform></display_options>`,
+      contentType: "application/xml; charset=utf-8",
+    },
+  ],
+]);
+
+const stripEmbeddedFontFaces = (css: string) =>
+  css.replace(/@font-face\s*{[^}]*}/gims, "");
+
+const ensureStoredEpubPreview = async (book: {
+  _id: unknown;
+  fileUrl?: string | null;
+  epubPreviewDir?: string | null;
+  epubPackagePath?: string | null;
+}) => {
+  if (book.epubPreviewDir && book.epubPackagePath) {
+    return {
+      previewDir: book.epubPreviewDir,
+      packagePath: book.epubPackagePath,
+    };
+  }
+
+  if (!book.fileUrl) {
+    throw new Error("EPUB source file is not available");
+  }
+
+  const response = await fetch(book.fileUrl);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch EPUB source: ${response.status}`);
+  }
+
+  const epubBuffer = Buffer.from(await response.arrayBuffer());
+  const preview = await extractEpubPreview(epubBuffer);
+
+  try {
+    await Book.findByIdAndUpdate(book._id, {
+      epubPreviewDir: preview.previewDir,
+      epubPackagePath: preview.packagePath,
+    });
+    return preview;
+  } catch (error) {
+    await removeEpubPreview(preview.previewDir);
+    throw error;
   }
 };
 
@@ -332,7 +422,9 @@ export const getBookPreview = async (req: Request, res: Response) => {
     // Find the book and only select the fields we need for the preview
     // filePublicId is the Cloudinary identifier, previewPages tells us the limit
     const book = await Book.findById(bookId)
-      .select("title filePublicId previewPages isActive") // Only fetch what we need
+      .select(
+        "title filePublicId fileType fileUrl previewPages isActive epubPreviewDir epubPackagePath",
+      ) // Only fetch what we need
       .lean(); // .lean() returns a plain JS object — faster than a full Mongoose doc
 
     // If no book found or it has been soft-deleted, return 404
@@ -356,15 +448,22 @@ export const getBookPreview = async (req: Request, res: Response) => {
     // We use a shorter expiry than downloads (1hr) because previews are low-value access
     const expiresAt = Math.floor(Date.now() / 1000) + 900; // Current Unix timestamp + 15 min
 
-    // Build the signed URL using the Cloudinary SDK
-    // resource_type: 'raw' is required for PDFs and ePubs — they are non-image files
-    // sign_url: true adds a cryptographic signature so the URL can't be guessed or tampered with
-    const previewUrl = cloudinary.url(book.filePublicId, {
-      sign_url: true, // Enable URL signing — required for secure delivery
-      expires_at: expiresAt, // URL becomes invalid after 15 minutes
-      resource_type: "raw", // Must be 'raw' for PDF/ePub files
-      type: "upload", // 'upload' is the default Cloudinary delivery type
-    });
+    let previewUrl: string;
+
+    if (book.fileType === "epub") {
+      const preview = await ensureStoredEpubPreview(book);
+      previewUrl = getEpubPreviewUrl(req, bookId, preview.packagePath);
+    } else {
+      // Build the signed URL using the Cloudinary SDK
+      // resource_type: 'raw' is required for PDFs and ePubs — they are non-image files
+      // sign_url: true adds a cryptographic signature so the URL can't be guessed or tampered with
+      previewUrl = cloudinary.url(book.filePublicId, {
+        sign_url: true, // Enable URL signing — required for secure delivery
+        expires_at: expiresAt, // URL becomes invalid after 15 minutes
+        resource_type: "raw", // Must be 'raw' for PDF/ePub files
+        type: "upload", // The file was uploaded (not fetched from a remote URL)
+      });
+    }
 
     // Log that a preview was generated — useful for analytics without storing the URL
     logger.info("Book preview URL generated", {
@@ -386,8 +485,91 @@ export const getBookPreview = async (req: Request, res: Response) => {
   }
 };
 
+// GET /api/books/:id/preview/epub/* — serves extracted EPUB assets for the reader
+export const getEpubPreviewAsset = async (req: Request, res: Response) => {
+  const rawAssetPath = req.params.assetPath;
+  const assetPath = Array.isArray(rawAssetPath)
+    ? rawAssetPath.join("/")
+    : rawAssetPath;
+
+  try {
+    const bookId = String(req.params.id);
+
+    if (!assetPath) {
+      res.status(400).json({ error: "Preview asset path is required" });
+      return;
+    }
+
+    const book = await Book.findById(bookId)
+      .select("isActive fileType epubPreviewDir")
+      .lean();
+
+    if (!book || !book.isActive) {
+      res.status(404).json({ error: "Book not found" });
+      return;
+    }
+
+    if (book.fileType !== "epub" || !book.epubPreviewDir) {
+      res.status(404).json({ error: "EPUB preview not found" });
+      return;
+    }
+
+    const absoluteAssetPath = resolveEpubPreviewPath(
+      book.epubPreviewDir,
+      assetPath,
+    );
+
+    const extension = path.extname(absoluteAssetPath).toLowerCase();
+    const contentType = EPUB_CONTENT_TYPES[extension];
+    if (contentType) {
+      res.type(contentType);
+    }
+
+    // epubjs renders chapter documents in sandboxed iframes (about:srcdoc),
+    // so preview assets must opt out of Helmet's default same-origin resource
+    // policy or the browser will block CSS/images as NotSameOrigin.
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+
+    if (extension === ".otf" || extension === ".ttf" || extension === ".woff" || extension === ".woff2") {
+      res.status(204).end();
+      return;
+    }
+
+    if (extension === ".css") {
+      const css = await fs.readFile(absoluteAssetPath, "utf8");
+      res.send(stripEmbeddedFontFaces(css));
+      return;
+    }
+
+    await fs.access(absoluteAssetPath);
+    res.sendFile(absoluteAssetPath);
+  } catch (error: any) {
+    if (error?.code === "ENOENT") {
+      const fallbackAsset = OPTIONAL_EPUB_ASSETS.get(assetPath);
+      if (fallbackAsset) {
+        res.type(fallbackAsset.contentType);
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.send(fallbackAsset.body);
+        return;
+      }
+    }
+
+    if (error?.code === "ENOENT") {
+      res.status(404).json({ error: "Preview asset not found" });
+      return;
+    }
+
+    logger.error("Error serving EPUB preview asset", { error });
+    res.status(500).json({ error: "Failed to serve EPUB preview asset" });
+  }
+};
+
 // POST /api/books — admin creates a new book
 export const createBook = async (req: Request, res: Response) => {
+  let createdEpubPreviewDir: string | null = null;
+
   try {
     const data = createBookSchema.parse(req.body);
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
@@ -405,10 +587,17 @@ export const createBook = async (req: Request, res: Response) => {
     }
 
     const sanitizedDescription = purify.sanitize(data.description);
+    const bookFile = files.file[0];
+    const nextFileType = data.fileType;
+    const epubPreview =
+      nextFileType === "epub"
+        ? await extractEpubPreview(bookFile.buffer)
+        : null;
+    createdEpubPreviewDir = epubPreview?.previewDir ?? null;
 
     // Upload both files to Cloudinary in parallel
     const [fileUpload, coverUpload] = await Promise.all([
-      uploadToCloudinary(files.file[0].buffer, "kun-bookshop/books", "raw"),
+      uploadToCloudinary(bookFile.buffer, "kun-bookshop/books", "raw"),
       uploadToCloudinary(
         files.coverImage[0].buffer,
         "kun-bookshop/covers",
@@ -427,15 +616,21 @@ export const createBook = async (req: Request, res: Response) => {
       tags,
       fileUrl: fileUpload.url,
       filePublicId: fileUpload.publicId, // Store for later deletion
+      epubPreviewDir: epubPreview?.previewDir ?? null,
+      epubPackagePath: epubPreview?.packagePath ?? null,
       coverImage: coverUpload.url,
       coverPublicId: coverUpload.publicId, // Store for later deletion
-      fileSize: files.file[0].size,
+      fileSize: bookFile.size,
     });
 
     logger.info("Book created", { bookId: book._id, title: book.title });
 
     res.status(201).json({ book });
   } catch (error: any) {
+    if (createdEpubPreviewDir) {
+      await removeEpubPreview(createdEpubPreviewDir);
+    }
+
     if (error.name === "ZodError") {
       return res.status(400).json({ error: error.errors[0].message });
     }
@@ -446,6 +641,8 @@ export const createBook = async (req: Request, res: Response) => {
 
 // PUT /api/books/:id — admin updates a book
 export const updateBook = async (req: Request, res: Response) => {
+  let createdEpubPreviewDir: string | null = null;
+
   try {
     const data = updateBookSchema.parse(req.body);
     const book = await Book.findById(req.params.id);
@@ -470,18 +667,33 @@ export const updateBook = async (req: Request, res: Response) => {
       updates.description = purify.sanitize(data.description);
     }
 
-    // Delete old book file from Cloudinary before uploading new one
     if (files?.file?.[0]) {
-      if (book.filePublicId)
-        await deleteFromCloudinary(book.filePublicId, "raw");
+      const nextFileType = (data.fileType ?? book.fileType) as "pdf" | "epub";
+      const nextEpubPreview =
+        nextFileType === "epub"
+          ? await extractEpubPreview(files.file[0].buffer)
+          : null;
+      createdEpubPreviewDir = nextEpubPreview?.previewDir ?? null;
+
       const fileUpload = await uploadToCloudinary(
         files.file[0].buffer,
         "kun-bookshop/books",
         "raw",
       );
+
+      if (book.filePublicId) {
+        await deleteFromCloudinary(book.filePublicId, "raw");
+      }
+
+      if (book.epubPreviewDir) {
+        await removeEpubPreview(book.epubPreviewDir);
+      }
+
       updates.fileUrl = fileUpload.url;
       updates.filePublicId = fileUpload.publicId;
       updates.fileSize = files.file[0].size;
+      updates.epubPreviewDir = nextEpubPreview?.previewDir ?? null;
+      updates.epubPackagePath = nextEpubPreview?.packagePath ?? null;
     }
 
     // Delete old cover from Cloudinary before uploading new one
@@ -509,6 +721,10 @@ export const updateBook = async (req: Request, res: Response) => {
 
     res.json({ book: updatedBook });
   } catch (error: any) {
+    if (createdEpubPreviewDir) {
+      await removeEpubPreview(createdEpubPreviewDir);
+    }
+
     if (error.name === "ZodError") {
       return res.status(400).json({ error: error.errors[0].message });
     }

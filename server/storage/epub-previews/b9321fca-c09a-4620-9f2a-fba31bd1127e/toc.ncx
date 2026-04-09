@@ -1,0 +1,267 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="eng">
+  <head>
+    <meta name="dtb:uid" content="ea13364e-6b65-4365-ac1a-2f7e9af4ec11"/>
+    <meta name="dtb:depth" content="3"/>
+    <meta name="dtb:generator" content="calibre (7.16.0)"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+  <docTitle>
+    <text>Atomic Habits: Tiny Changes, Remarkable Results: An Easy &amp; Proven Way to Build Good Habits &amp; Break Bad Ones</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="uMMGoQAa5tl7aCEos5nWaRH" playOrder="1" class="chapter">
+      <navLabel>
+        <text>Cover</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/01_Cover.xhtml"/>
+    </navPoint>
+    <navPoint id="ubT6cebDLkSrIUKwGf9hEu6" playOrder="2" class="chapter">
+      <navLabel>
+        <text>Title Page</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/02_Title_Page.xhtml"/>
+    </navPoint>
+    <navPoint id="u3LdVZhUEUbsHcbOtMeTBED" playOrder="3" class="chapter">
+      <navLabel>
+        <text>Copyright</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/03_Copyright.xhtml"/>
+    </navPoint>
+    <navPoint id="uy7aWW7442cP6aUSm6XJclC" playOrder="4" class="chapter">
+      <navLabel>
+        <text>Epigraph</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/04_Epigraph.xhtml"/>
+    </navPoint>
+    <navPoint id="uHynXnjEMkEPmVyE3Ze8fDB" playOrder="5" class="chapter">
+      <navLabel>
+        <text>Contents</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/05_Contents.xhtml"/>
+    </navPoint>
+    <navPoint id="uIQndxv9BpP54veYT78MzTG" playOrder="6" class="chapter">
+      <navLabel>
+        <text>Introduction: My Story</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/06_Introduction_My_Story.xhtml"/>
+    </navPoint>
+    <navPoint id="u2tWeiNyceZzqhUkc2epTL2" playOrder="7" class="chapter">
+      <navLabel>
+        <text>THE FUNDAMENTALS: Why Tiny Changes Make a Big Difference</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/07_THE_FUNDAMENTALS_Why_.xhtml"/>
+      <navPoint id="uwdR8E3xdTx68O7x9DPjkO8" playOrder="8" class="chapter">
+        <navLabel>
+          <text>1: The Surprising Power of Atomic Habits</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/08_1_The_Surprising_Powe.xhtml"/>
+      </navPoint>
+      <navPoint id="uwH5MGwOA9GVGwAWb67p4v5" playOrder="9" class="chapter">
+        <navLabel>
+          <text>2: How Your Habits Shape Your Identity (and Vice Versa)</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/09_2_How_Your_Habits_Sha.xhtml"/>
+      </navPoint>
+      <navPoint id="uqCe6wjaqz9tQttuOxuoqYE" playOrder="10" class="chapter">
+        <navLabel>
+          <text>3: How to Build Better Habits in 4 Simple Steps</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/10_3_How_to_Build_Better.xhtml"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="u99ASbkQo2kxMFrQeMR4hkD" playOrder="11" class="chapter">
+      <navLabel>
+        <text>THE 1ST LAW: Make It Obvious</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/11_THE_1ST_LAW_Make_It_O.xhtml"/>
+      <navPoint id="ug5whItDEwONRbiR7IezrJF" playOrder="12" class="chapter">
+        <navLabel>
+          <text>4: The Man Who Didn’t Look Right</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/12_4_The_Man_Who_Didn_t_.xhtml"/>
+      </navPoint>
+      <navPoint id="uSjb9HjlXbAgQcU4nVl7SFD" playOrder="13" class="chapter">
+        <navLabel>
+          <text>5: The Best Way to Start a New Habit</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/13_5_The_Best_Way_to_Sta.xhtml"/>
+      </navPoint>
+      <navPoint id="ugUOuyR8NnFpqzBZgJ4tlZE" playOrder="14" class="chapter">
+        <navLabel>
+          <text>6: Motivation Is Overrated; Environment Often Matters More</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/14_6_Motivation_Is_Overr.xhtml"/>
+      </navPoint>
+      <navPoint id="uhyhsGX2GXPo4My9lCJ9cg5" playOrder="15" class="chapter">
+        <navLabel>
+          <text>7: The Secret to Self-Control</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/15_7_The_Secret_to_Self-.xhtml"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="u2aYn3Lk4rlkXtfAUl8YxK8" playOrder="16" class="chapter">
+      <navLabel>
+        <text>THE 2ND LAW: Make It Attractive</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/16_THE_2ND_LAW_Make_It_A.xhtml"/>
+      <navPoint id="u2zzqjKssnh8nd6JfDeLnr2" playOrder="17" class="chapter">
+        <navLabel>
+          <text>8: How to Make a Habit Irresistible</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/17_8_How_to_Make_a_Habit.xhtml"/>
+      </navPoint>
+      <navPoint id="udOMFPaFKrTictGO7HZBZ99" playOrder="18" class="chapter">
+        <navLabel>
+          <text>9: The Role of Family and Friends in Shaping Your Habits</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/18_9_The_Role_of_Family_.xhtml"/>
+      </navPoint>
+      <navPoint id="uS5JIimAIYxmnzo9Rqs8zIE" playOrder="19" class="chapter">
+        <navLabel>
+          <text>10: How to Find and Fix the Causes of Your Bad Habits</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/19_10_How_to_Find_and_Fi.xhtml"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="uxRF3LaX6SI4DCtRWtYFejG" playOrder="20" class="chapter">
+      <navLabel>
+        <text>THE 3RD LAW: Make It Easy</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/20_THE_3RD_LAW_Make_It_E.xhtml"/>
+      <navPoint id="uUGAft3mkmxxjA9AQqHCrF8" playOrder="21" class="chapter">
+        <navLabel>
+          <text>11: Walk Slowly, but Never Backward</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/21_11_Walk_Slowly_but_Ne.xhtml"/>
+      </navPoint>
+      <navPoint id="u7YLTMv4ZC86YmqI4GN2cF5" playOrder="22" class="chapter">
+        <navLabel>
+          <text>12: The Law of Least Effort</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/22_12_The_Law_of_Least_E.xhtml"/>
+      </navPoint>
+      <navPoint id="ugkeq7UYM7uEifdBHUFlehC" playOrder="23" class="chapter">
+        <navLabel>
+          <text>13: How to Stop Procrastinating by Using the Two-Minute Rule</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/23_13_How_to_Stop_Procra.xhtml"/>
+      </navPoint>
+      <navPoint id="uWhd2dANMsmTYzf62SssjU9" playOrder="24" class="chapter">
+        <navLabel>
+          <text>14: How to Make Good Habits Inevitable and Bad Habits Impossible</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/24_14_How_to_Make_Good_H.xhtml"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="ubNaPtsxPIYyX5yMQEa6AN8" playOrder="25" class="chapter">
+      <navLabel>
+        <text>THE 4TH LAW: Make It Satisfying</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/25_THE_4TH_LAW_Make_It_S.xhtml"/>
+      <navPoint id="uHtktQeVsDksZR65HfpmfJF" playOrder="26" class="chapter">
+        <navLabel>
+          <text>15: The Cardinal Rule of Behavior Change</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/26_15_The_Cardinal_Rule_.xhtml"/>
+      </navPoint>
+      <navPoint id="uNIGgGEPPanN78GKV4wJxDD" playOrder="27" class="chapter">
+        <navLabel>
+          <text>16: How to Stick with Good Habits Every Day</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/27_16_How_to_Stick_with_.xhtml"/>
+      </navPoint>
+      <navPoint id="uwAzAmC6iUutbTzejYDpGk6" playOrder="28" class="chapter">
+        <navLabel>
+          <text>17: How an Accountability Partner Can Change Everything</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/28_17_How_an_Accountabil.xhtml"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="uoT82OrUrubnXk5f7YJ8Bj9" playOrder="29" class="chapter">
+      <navLabel>
+        <text>ADVANCED TACTICS: How to Go from Being Merely Good to Being Truly Great</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/29_ADVANCED_TACTICS_How_.xhtml"/>
+      <navPoint id="u49d8fXDzsOJWs3dPRPfKzF" playOrder="30" class="chapter">
+        <navLabel>
+          <text>18: The Truth About Talent (When Genes Matter and When They Don’t)</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/30_18_The_Truth_About_Ta.xhtml"/>
+      </navPoint>
+      <navPoint id="uOg6IPjGZVUc56fH7nPTGV6" playOrder="31" class="chapter">
+        <navLabel>
+          <text>19: The Goldilocks Rule: How to Stay Motivated in Life and Work</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/31_19_The_Goldilocks_Rul.xhtml"/>
+      </navPoint>
+      <navPoint id="uG4toadzZX8UtxCPmrVBN56" playOrder="32" class="chapter">
+        <navLabel>
+          <text>20: The Downside of Creating Good Habits</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/32_20_The_Downside_of_Cr.xhtml"/>
+      </navPoint>
+      <navPoint id="ugwkQWslkGqB8QHzWoAKeE2" playOrder="33" class="chapter">
+        <navLabel>
+          <text>Conclusion: The Secret to Results That Last</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/33_Conclusion_The_Secret.xhtml"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="uUUoDnIqmdRuzSUjYozOOL3" playOrder="34" class="chapter">
+      <navLabel>
+        <text>Appendix</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/34_Appendix.xhtml"/>
+      <navPoint id="uVhUTALki73xOJUFcvFD8ZG" playOrder="35" class="chapter">
+        <navLabel>
+          <text>What Should You Read Next?</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/35_What_Should_You_Read_.xhtml"/>
+      </navPoint>
+      <navPoint id="uJz6QMGZKnevoITgwX7zSFH" playOrder="36" class="chapter">
+        <navLabel>
+          <text>Little Lessons from the Four Laws</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/36_Little_Lessons_from_t.xhtml"/>
+      </navPoint>
+      <navPoint id="up7Vdt5OKjEkbJH4xbKmFY3" playOrder="37" class="chapter">
+        <navLabel>
+          <text>How to Apply These Ideas to Business</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/37_How_to_Apply_These_Id.xhtml"/>
+      </navPoint>
+      <navPoint id="uVdwRY8uAS8aqXCWlwKKE94" playOrder="38" class="chapter">
+        <navLabel>
+          <text>How to Apply These Ideas to Parenting</text>
+        </navLabel>
+        <content src="OEBPS/xhtml/38_How_to_Apply_These_Id.xhtml"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="uUtMinBGowjoGKVGHplAaKA" playOrder="39" class="chapter">
+      <navLabel>
+        <text>Acknowledgments</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/39_Acknowledgments.xhtml"/>
+    </navPoint>
+    <navPoint id="uU4GQoBZuzygQULWvzgBtTB" playOrder="40" class="chapter">
+      <navLabel>
+        <text>Notes</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/40_Notes.xhtml"/>
+    </navPoint>
+    <navPoint id="udIHqyKAuPJc8MgEq9ECLO8" playOrder="41" class="chapter">
+      <navLabel>
+        <text>Index</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/41_Index.xhtml"/>
+    </navPoint>
+    <navPoint id="ukWJbSWSNh67v846qgQQOQ2" playOrder="42" class="chapter">
+      <navLabel>
+        <text>About the Author</text>
+      </navLabel>
+      <content src="OEBPS/xhtml/77_About_the_Author.xhtml"/>
+    </navPoint>
+  </navMap>
+</ncx>

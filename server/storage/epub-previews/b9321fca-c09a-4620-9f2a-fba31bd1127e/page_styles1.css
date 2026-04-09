@@ -1,0 +1,16 @@
+@page {
+  margin-bottom: 5pt;
+  margin-top: 5pt;
+}
+@font-face {
+  font-family: "Shift Light";
+  font-style: normal;
+  font-weight: normal;
+  src: url(OEBPS/font/Shift-Light.otf);
+}
+@font-face {
+  font-family: "Shift Light";
+  font-style: italic;
+  font-weight: normal;
+  src: url(OEBPS/font/Shift-BoldItalic.otf);
+}
