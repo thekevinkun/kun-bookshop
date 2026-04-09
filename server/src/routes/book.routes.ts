@@ -11,6 +11,7 @@ import {
   getEpubPreviewAsset,
   createBook,
   updateBook,
+  getRecommendations,
   deleteBook,
 } from "../controllers/book.controller";
 import { authenticate } from "../middleware/auth.middleware";
@@ -40,6 +41,9 @@ router.get("/categories", getCategories);
 
 // GET /api/books/category/:category — books by category
 router.get("/category/:category", getBooksByCategory);
+
+// GET /api/books/recommendations — recommendations for user
+router.get("/recommendations", authenticate, getRecommendations);
 
 // GET /api/books/:id/preview — free preview for non-buyers
 router.get("/:id/preview", getBookPreview);

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../lib/api";
 import type { IBook, BookFilters, PaginatedBooks } from "../types/book";
 
-// --- QUERY KEYS ---
+// QUERY KEYS
 // Centralizing query keys prevents typos and makes cache invalidation reliable
 // React Query uses these to identify and cache each unique request
 export const bookKeys = {
@@ -17,7 +17,6 @@ export const bookKeys = {
   autocomplete: (q: string) => [...bookKeys.all, "autocomplete", q] as const,
 };
 
-// --- useBooks ---
 // Fetches the paginated, filtered book catalog
 // Used on the /books catalog page
 export const useBooks = (filters: BookFilters = {}) => {
@@ -48,7 +47,6 @@ export const useBooks = (filters: BookFilters = {}) => {
   });
 };
 
-// --- useFeaturedBooks ---
 // Fetches up to 8 featured books for the homepage carousel
 export const useFeaturedBooks = () => {
   return useQuery({
@@ -64,7 +62,6 @@ export const useFeaturedBooks = () => {
   });
 };
 
-// --- useBook ---
 // Fetches a single book by ID for the detail page
 export const useBook = (id: string) => {
   return useQuery({
@@ -83,7 +80,20 @@ export const useBook = (id: string) => {
   });
 };
 
-// --- useSimilarBooks ---
+// Fetches personalised book recommendations for the logged-in user
+// enabled: !!isAuthenticated ensures we only call this when logged in
+export const useRecommendations = (isAuthenticated: boolean) => {
+  return useQuery({
+    queryKey: ["recommendations"],
+    queryFn: async (): Promise<{ books: IBook[]; personalised: boolean }> => {
+      const res = await api.get("/books/recommendations");
+      return res.data; // { books: [], personalised: boolean }
+    },
+    enabled: isAuthenticated, // Don't fire if user is not logged in
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes — purchases don't happen that often
+  });
+};
+
 // Fetches books that share meaningful categories with the current book
 export const useSimilarBooks = (id: string) => {
   return useQuery({
@@ -118,7 +128,6 @@ export const useCategories = () => {
   });
 };
 
-// --- useBooksByCategory ---
 // Fetches books filtered by a single category
 export const useBooksByCategory = (category: string) => {
   return useQuery({
@@ -136,7 +145,6 @@ export const useBooksByCategory = (category: string) => {
   });
 };
 
-// --- useAutocomplete ---
 // Fetches search suggestions as the user types in the search bar
 export const useAutocomplete = (q: string) => {
   return useQuery({

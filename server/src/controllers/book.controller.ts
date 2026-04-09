@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
+import cloudinary from "../config/cloudinary";
+
+import { User } from "../models/User";
 import { Book } from "../models/Book";
 import { Author } from "../models/Author";
-import cloudinary from "../config/cloudinary";
+
 import { logger } from "../utils/logger";
+
 import { promises as fs } from "fs";
 import path from "path";
 import {
@@ -105,7 +109,10 @@ const EPUB_CONTENT_TYPES: Record<string, string> = {
   ".xml": "application/xml; charset=utf-8",
 };
 
-const OPTIONAL_EPUB_ASSETS = new Map<string, { body: string; contentType: string }>([
+const OPTIONAL_EPUB_ASSETS = new Map<
+  string,
+  { body: string; contentType: string }
+>([
   [
     "META-INF/com.apple.ibooks.display-options.xml",
     {
@@ -531,7 +538,12 @@ export const getEpubPreviewAsset = async (req: Request, res: Response) => {
     res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
     res.setHeader("Access-Control-Allow-Origin", "*");
 
-    if (extension === ".otf" || extension === ".ttf" || extension === ".woff" || extension === ".woff2") {
+    if (
+      extension === ".otf" ||
+      extension === ".ttf" ||
+      extension === ".woff" ||
+      extension === ".woff2"
+    ) {
       res.status(204).end();
       return;
     }
@@ -731,6 +743,75 @@ export const updateBook = async (req: Request, res: Response) => {
     logger.error("updateBook error", { error });
     res.status(500).json({ error: "Failed to update book" });
   }
+};
+
+// GET /api/books/recommendations
+// Authenticated. Returns up to 8 books the user might like based on their purchase history.
+// Falls back to top-rated books if the user hasn't bought anything yet.
+export const getRecommendations = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  // Get the logged-in user's ID from the JWT payload (set by authenticate middleware)
+  const userId = req.user!.userId;
+
+  // Fetch the user's library — just the purchased book IDs, nothing else
+  const user = await User.findById(userId).select("library").lean();
+
+  // We'll collect the final list of recommended books here
+  let books;
+
+  if (user && user.library.length > 0) {
+    // PERSONALISED PATH
+    // Step 1: Find all the books the user already owns
+    const ownedBooks = await Book.find({
+      _id: { $in: user.library }, // Only look at books in their library
+      isActive: true,
+    })
+      .select("category") // We only need the categories to build the interest profile
+      .lean();
+
+    // Step 2: Flatten all category arrays into one list, then deduplicate
+    // e.g. [['Fiction', 'Sci-Fi'], ['Fantasy']] → ['Fiction', 'Sci-Fi', 'Fantasy']
+    const interestedCategories = [
+      ...new Set(ownedBooks.flatMap((b) => b.category)),
+    ];
+
+    // Step 3: Find active books that match at least one of those categories
+    // AND that the user does NOT already own — no point recommending owned books
+    books = await Book.find({
+      isActive: true,
+      category: { $in: interestedCategories }, // At least one category must match
+      _id: { $nin: user.library }, // Exclude already-owned books
+    })
+      .select(
+        "title authorName coverImage price discountPrice rating reviewCount category",
+      ) // Only send what the frontend needs
+      .sort({ rating: -1, createAt: -1 }) // Best-rated first — simple but effective ranking
+      .limit(10) // Cap at 10 so the section doesn't become overwhelming
+      .lean();
+  } else {
+    // FALLBACK PATH (new user / no purchases yet)
+    // No purchase history to learn from — just show the top-rated books overall
+    books = await Book.find({ isActive: true })
+      .select(
+        "title authorName coverImage price discountPrice rating reviewCount category",
+      )
+      .sort({ rating: -1, createdAt: -1 }) // createdAt as tiebreaker when ratings are equal
+      .limit(10)
+      .lean();
+  }
+
+  // Log for monitoring — useful to see how often personalised vs fallback is served
+  logger.info("Recommendations served", {
+    userId,
+    personalised: !!(user && user.library.length > 0),
+    count: books.length,
+  });
+
+  res
+    .status(200)
+    .json({ books, personalised: !!(user && user.library.length > 0) });
 };
 
 // DELETE /api/books/:id — admin soft deletes a book

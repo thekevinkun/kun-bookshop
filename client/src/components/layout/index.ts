@@ -2,6 +2,7 @@ import MainLayout from "./MainLayout";
 import AuthLayout from "./AuthLayout";
 import Navbar from "./Navbar";
 import Hero from "./Hero";
+import RecommendedSection from "./RecommendedSection";
 import AuthorsSection from "./AuthorsSection";
 import DiscountSection from "./DiscountSection";
 import CTASection from "./CTASection";
@@ -12,6 +13,7 @@ export {
   AuthLayout,
   Navbar,
   Hero,
+  RecommendedSection,
   AuthorsSection,
   DiscountSection,
   CTASection,
