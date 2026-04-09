@@ -6,6 +6,7 @@ import AdminUsers from "./users";
 import AdminOrders from "./orders";
 import AdminReviews from "./reviews";
 import AdminAuthors from "./authors";
+import AdminCoupons from "./coupons";
 
 export {
   AdminLayout,
@@ -15,4 +16,5 @@ export {
   AdminOrders,
   AdminReviews,
   AdminAuthors,
+  AdminCoupons,
 };

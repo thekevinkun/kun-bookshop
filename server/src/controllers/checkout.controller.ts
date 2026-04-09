@@ -10,6 +10,7 @@ import { env } from "../config/env";
 import { Order } from "../models/Order";
 import { Book } from "../models/Book";
 import { User } from "../models/User";
+import { Coupon } from "../models/Coupon";
 
 // Import our logger — never use console.log in this project
 import { logger } from "../utils/logger";
@@ -101,17 +102,43 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       return sum + (book.discountPrice ?? book.price);
     }, 0);
 
+    // --- COUPON VALIDATION ---
     // Start with no discount applied
     let discount = 0;
     let appliedCouponCode: string | undefined;
 
-    // --- COUPON VALIDATION ---
     // If a coupon code was sent, validate it before applying
     if (couponCode) {
-      // Import inline to avoid circular deps — Coupon model may not exist yet
-      // We'll handle coupon logic fully in Phase 9 (Enhanced Features)
-      // For now we just pass it through if provided
-      appliedCouponCode = couponCode.toUpperCase().trim();
+      // Look up the coupon — must be active, within its validity window, and under usage limit
+      const coupon = await Coupon.findOne({
+        code: couponCode.toUpperCase().trim(),
+        isActive: true,
+        validFrom: { $lte: new Date() }, // Has already started
+        validUntil: { $gte: new Date() }, // Has not yet expired
+      });
+
+      if (coupon && coupon.usedCount < coupon.usageLimit) {
+        // Calculate the discount against the server-verified subtotal
+        if (coupon.discountType === "percentage") {
+          discount = (subtotal * coupon.discountValue) / 100;
+          // Cap the discount if maxDiscount is set
+          if (
+            coupon.maxDiscount !== undefined &&
+            discount > coupon.maxDiscount
+          ) {
+            discount = coupon.maxDiscount;
+          }
+        } else {
+          // Fixed discount — never exceed the cart total
+          discount = Math.min(coupon.discountValue, subtotal);
+        }
+
+        // Round to 2 decimal places to avoid floating-point drift
+        discount = Math.round(discount * 100) / 100;
+        appliedCouponCode = coupon.code; // Store the clean uppercase code
+      }
+      // If coupon is invalid we silently ignore it — frontend already validated,
+      // so reaching here means a tampered request. Order proceeds at full price.
     }
 
     // Final total after any discount

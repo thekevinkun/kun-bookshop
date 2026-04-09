@@ -30,6 +30,7 @@ import {
   AdminOrders,
   AdminAuthors,
   AdminReviews,
+  AdminCoupons,
 } from "./routes/admin";
 
 import GraphQLDemoPage from "./routes/graphql-demo/index";
@@ -121,6 +122,7 @@ const App = () => {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="books" element={<AdminBooks />} />
           <Route path="users" element={<AdminUsers />} />
+          <Route path="coupons" element={<AdminCoupons />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="authors" element={<AdminAuthors />} />
           <Route path="reviews" element={<AdminReviews />} />

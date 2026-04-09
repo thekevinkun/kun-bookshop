@@ -4,6 +4,7 @@ import ForgotPasswordForm from "./ForgotPasswordForm";
 import AuthorForm from "./AuthorForm";
 import BookForm from "./BookForm";
 import ReviewForm from "./ReviewForm";
+import CouponForm from "./CouponForm";
 
 export {
   LoginForm,
@@ -12,4 +13,5 @@ export {
   AuthorForm,
   BookForm,
   ReviewForm,
+  CouponForm,
 };

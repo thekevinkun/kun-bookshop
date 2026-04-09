@@ -1,0 +1,177 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exclusive Offer from Kun Bookshop</title>
+    <style>
+      /* Reset styles so the email looks consistent across all email clients */
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f1f5f9;
+        font-family: Arial, sans-serif;
+      }
+      .wrapper {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      }
+      .header {
+        background: linear-gradient(135deg, #0f766e, #0d9488);
+        padding: 40px 32px;
+        text-align: center;
+      }
+      .header h1 {
+        color: #ffffff;
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        color: #ccfbf1;
+        margin: 8px 0 0;
+        font-size: 15px;
+      }
+      .body {
+        padding: 36px 32px;
+      }
+      .greeting {
+        font-size: 16px;
+        color: #334155;
+        margin-bottom: 16px;
+      }
+      .intro {
+        font-size: 15px;
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 28px;
+      }
+      /* The coupon code box — visually prominent so it's easy to copy */
+      .coupon-box {
+        background: #f0fdfa;
+        border: 2px dashed #14b8a6;
+        border-radius: 12px;
+        padding: 28px;
+        text-align: center;
+        margin-bottom: 28px;
+      }
+      .coupon-label {
+        font-size: 13px;
+        color: #0f766e;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+      }
+      .coupon-code {
+        font-size: 36px;
+        font-weight: 800;
+        color: #0f766e;
+        letter-spacing: 6px;
+        font-family: "Courier New", monospace;
+      }
+      .coupon-details {
+        margin-top: 12px;
+        font-size: 14px;
+        color: #64748b;
+      }
+      .coupon-details strong {
+        color: #0f766e;
+      }
+      /* CTA button */
+      .cta-wrapper {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+      .cta-btn {
+        display: inline-block;
+        background: #0f766e;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 14px 36px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .expiry-note {
+        text-align: center;
+        font-size: 13px;
+        color: #94a3b8;
+        margin-bottom: 28px;
+      }
+      .footer {
+        background: #f8fafc;
+        padding: 24px 32px;
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+        border-top: 1px solid #e2e8f0;
+      }
+      .footer a {
+        color: #0f766e;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Header -->
+      <div class="header">
+        <h1>📚 Kun Bookshop</h1>
+        <p>An exclusive offer, just for you</p>
+      </div>
+
+      <!-- Body -->
+      <div class="body">
+        <p class="greeting">Hi {{firstName}},</p>
+        <p class="intro">
+          We appreciate you being part of the Kun Bookshop community. Here's an
+          exclusive discount code as a thank-you — use it on your next purchase!
+        </p>
+
+        <!-- Coupon code box -->
+        <div class="coupon-box">
+          <div class="coupon-label">Your Exclusive Coupon Code</div>
+          <div class="coupon-code">{{code}}</div>
+          <div class="coupon-details">
+            {{#if isPercentage}}
+              Save
+              <strong>{{discountValue}}% off</strong>
+              your order
+              {{#if maxDiscount}}(up to
+                <strong>${{maxDiscount}}</strong>){{/if}}
+            {{else}}
+              Save
+              <strong>${{discountValue}}</strong>
+              off your order
+            {{/if}}
+            {{#if minPurchase}}
+              <br />Minimum purchase:
+              <strong>${{minPurchase}}</strong>
+            {{/if}}
+          </div>
+        </div>
+
+        <!-- CTA button -->
+        <div class="cta-wrapper">
+          <a href="{{shopUrl}}" class="cta-btn">Shop Now &rarr;</a>
+        </div>
+
+        <!-- Expiry reminder -->
+        <p class="expiry-note">
+          ⏰ This offer expires on
+          <strong>{{validUntil}}</strong>. Don't miss out!
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>You're receiving this because you have an account at Kun Bookshop.</p>
+        <p>© {{year}} Kun Bookshop. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

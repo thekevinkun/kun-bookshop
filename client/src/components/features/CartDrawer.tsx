@@ -16,6 +16,8 @@ import { useCartStore } from "../../store/cart";
 // Import auth store to check if user is logged in before checkout
 import { useAuthStore } from "../../store/auth";
 
+import { CouponInput, type AppliedCoupon } from "./CouponInput";
+
 // Import our configured Axios instance to call the backend
 import api from "../../lib/api";
 
@@ -27,6 +29,8 @@ interface CartDrawerProps {
 }
 
 const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
+  const navigate = useNavigate();
+
   // Read cart state and actions from our Zustand store
   const { items, removeItem, total, itemCount } = useCartStore();
   // Read auth state — we need to know if user is logged in before checkout
@@ -36,7 +40,10 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   // Local error state — shows an error message if checkout fails
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
-  const navigate = useNavigate();
+  // Holds the currently applied coupon — null means no coupon has been applied
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(
+    null,
+  );
 
   const clearCheckoutState = () => {
     setCheckoutError(null);
@@ -70,6 +77,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
     try {
       const { data } = await api.post("/checkout/create-session", {
         items: items.map((item) => ({ bookId: item.bookId })),
+        couponCode: appliedCoupon?.code, // undefined if no coupon — backend handles that
       });
 
       // DO NOT clearCart() here — the user hasn't paid yet
@@ -102,9 +110,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
       {/* Portal renders outside the DOM tree so z-index issues are impossible */}
       <Dialog.Portal>
         {/* Dark overlay behind the drawer */}
-        <Dialog.Overlay
-          className="cart-overlay fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
-        />
+        <Dialog.Overlay className="cart-overlay fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" />
 
         {/* The drawer panel itself — slides in from the right */}
         <Dialog.Content
@@ -213,12 +219,42 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
               className="p-6 flex flex-col gap-4"
               style={{ borderTop: "1px solid rgba(51,65,85,0.5)" }}
             >
+              {/* Coupon code input — sits above the totals */}
+              <CouponInput
+                cartTotal={total()}
+                appliedCoupon={appliedCoupon}
+                onApply={(coupon) => setAppliedCoupon(coupon)}
+                onRemove={() => setAppliedCoupon(null)}
+              />
+
               {/* Order summary */}
-              <div className="flex justify-between items-center text-text-light">
-                <span className="text-text-muted">
-                  {itemCount()} {itemCount() === 1 ? "book" : "books"}
-                </span>
-                <span className="text-xl font-bold">${total().toFixed(2)}</span>
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between items-center text-text-light">
+                  <span className="text-text-muted">
+                    {itemCount()} {itemCount() === 1 ? "book" : "books"}
+                  </span>
+                  <span className="text-sm">${total().toFixed(2)}</span>
+                </div>
+
+                {/* Discount row — only shown when a coupon is applied */}
+                {appliedCoupon && (
+                  <div className="flex justify-between items-center text-emerald-400 text-sm">
+                    <span>Discount ({appliedCoupon.code})</span>
+                    <span>− ${appliedCoupon.discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {/* Final total — uses discounted amount if coupon applied */}
+                <div className="flex justify-between items-center text-text-light border-t border-slate-700 pt-2 mt-1">
+                  <span className="font-semibold">Total</span>
+                  <span className="text-xl font-bold">
+                    $
+                    {(appliedCoupon
+                      ? appliedCoupon.finalTotal
+                      : total()
+                    ).toFixed(2)}
+                  </span>
+                </div>
               </div>
 
               {/* Error message from failed checkout attempt */}

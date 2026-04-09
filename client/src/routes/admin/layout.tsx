@@ -8,6 +8,7 @@ import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   BookOpen,
+  TicketPercent,
   Users,
   ShoppingBag,
   LogOut,
@@ -40,6 +41,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Books", to: "/admin/books", icon: <BookOpen size={18} /> },
   { label: "Authors", to: "/admin/authors", icon: <UserSquare size={18} /> }, // ← new
   { label: "Users", to: "/admin/users", icon: <Users size={18} /> },
+  { label: "Coupons", to: "/admin/coupons", icon: <TicketPercent size={18} /> },
   { label: "Orders", to: "/admin/orders", icon: <ShoppingBag size={18} /> },
   { label: "Reviews", to: "/admin/reviews", icon: <MessageSquare size={18} /> }, // ← new
 ];

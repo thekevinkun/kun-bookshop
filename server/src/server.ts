@@ -37,6 +37,8 @@ import reviewRoutes from "./routes/review.routes";
 // Import User-scoped orders route
 import ordersRoutes from "./routes/orders.routes";
 
+import couponRoutes from "./routes/coupon.routes";
+
 // Import the checkout and webhook routes so we can mount them on the Express app
 import checkoutRoutes from "./routes/checkout.routes";
 import webhookRoutes from "./routes/webhook.routes";
@@ -139,6 +141,10 @@ app.use("/api/reviews", reviewRoutes);
 
 // User's own order history
 app.use("/api/orders", ordersRoutes);
+
+// Coupon for user and admin
+app.use("/api/coupons", couponRoutes);
+app.use("/api/admin/coupons", couponRoutes);
 
 // --- HEALTH CHECK ROUTE ---
 // A simple route to confirm the server is running — used by Docker and monitoring tools

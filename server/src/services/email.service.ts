@@ -8,10 +8,12 @@ import handlebars from "handlebars";
 import fs from "fs";
 import path from "path";
 
+import type { ICoupon } from "../types/book";
+
 // Import our logger — no console.log in this project
 import { logger } from "../utils/logger";
 
-// --- CREATE TRANSPORTER ---
+// CREATE TRANSPORTER
 // The transporter is the configured email sender — we create it once and reuse it
 // In development we use Ethereal (a fake SMTP service that catches emails without sending them)
 // In production you'd swap this for a real provider like SendGrid, Mailgun, or Amazon SES
@@ -60,7 +62,7 @@ const createTransporter = async () => {
   return cachedTransporter;
 };
 
-// --- LOAD AND COMPILE TEMPLATE ---
+// LOAD AND COMPILE TEMPLATE
 // Reads an .hbs template file from disk and compiles it with Handlebars
 // templateName: the filename without extension (e.g. 'welcome', 'verification')
 // data: the dynamic values to inject into the template (e.g. { firstName, verificationUrl })
@@ -87,7 +89,7 @@ const compileTemplate = (
   return template(data);
 };
 
-// --- SEND EMAIL ---
+// SEND EMAIL
 // The core function — builds the email and sends it
 // All other email functions (sendVerificationEmail, etc.) call this one
 const sendEmail = async (
@@ -115,7 +117,7 @@ const sendEmail = async (
   }
 };
 
-// --- SEND VERIFICATION EMAIL ---
+// SEND VERIFICATION EMAIL
 // Called after a user registers — sends them a link to verify their email address
 export const sendVerificationEmail = async (
   email: string,
@@ -133,7 +135,7 @@ export const sendVerificationEmail = async (
   logger.info(`Verification email sent to: ${email}`);
 };
 
-// --- SEND WELCOME EMAIL ---
+// SEND WELCOME EMAIL
 // Called after the user successfully verifies their email
 export const sendWelcomeEmail = async (
   email: string,
@@ -148,7 +150,7 @@ export const sendWelcomeEmail = async (
   logger.info(`Welcome email sent to: ${email}`);
 };
 
-// --- SEND PASSWORD RESET EMAIL ---
+// SEND PASSWORD RESET EMAIL
 // Called when a user submits the forgot password form
 export const sendPasswordResetEmail = async (
   email: string,
@@ -166,7 +168,7 @@ export const sendPasswordResetEmail = async (
   logger.info(`Password reset email sent to: ${email}`);
 };
 
-// --- SEND PASSWORD CHANGED EMAIL ---
+// SEND PASSWORD CHANGED EMAIL
 // Called after a user successfully changes or resets their password
 // This is a security notification — if someone DIDN'T make this change, they know to act fast
 export const sendPasswordChangedEmail = async (
@@ -180,7 +182,7 @@ export const sendPasswordChangedEmail = async (
   logger.info(`Password changed confirmation email sent to: ${email}`);
 };
 
-// --- SEND ORDER CONFIRMATION EMAIL ---
+// SEND ORDER CONFIRMATION EMAIL
 // Called by the webhook after a payment is confirmed
 // Sends the user a receipt with their order number and book list
 export const sendOrderConfirmation = async (
@@ -198,5 +200,35 @@ export const sendOrderConfirmation = async (
   await sendEmail(email, `Order Confirmed — #${order.orderNumber} 📚`, html);
   logger.info(`Order confirmation email sent to: ${email}`, {
     orderNumber: order.orderNumber,
+  });
+};
+
+// sendCouponBlast — sends the coupon email to a single user
+// Called in a loop by the email-blast controller, one call per user
+// We keep it as a single-user function so failures are isolated per recipient
+export const sendCouponBlast = async (
+  email: string, // Recipient's email address
+  firstName: string, // Used in the greeting line "Hi Kevin,"
+  coupon: ICoupon, // The full coupon document from MongoDB
+): Promise<void> => {
+  const html = compileTemplate("coupon", {
+    firstName, // Greeting name
+    code: coupon.code, // e.g. "SAVE20"
+    isPercentage: coupon.discountType === "percentage", // Drives {{#if isPercentage}} block
+    discountValue: coupon.discountValue, // e.g. 20 (for 20% or $20)
+    maxDiscount: coupon.maxDiscount, // Optional cap
+    minPurchase: coupon.minPurchase, // Optional minimum
+    validUntil: new Date(coupon.validUntil).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric", // e.g. "December 31, 2026"
+    }),
+    shopUrl: process.env.CLIENT_URL ?? "http://localhost:3000/books", // CTA button link
+    year: new Date().getFullYear(), // Footer copyright year
+  });
+
+  await sendEmail(email, `🎉 Your exclusive coupon: ${coupon.code}`, html);
+  logger.info(`Coupon has been sent to: ${email}`, {
+    code: coupon.code,
   });
 };

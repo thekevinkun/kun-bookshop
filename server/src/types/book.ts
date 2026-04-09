@@ -107,3 +107,20 @@ export interface IAuthor extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// This interface describes the shape of a Coupon document in TypeScript
+// It extends Document so mongoose knows it's a MongoDB document
+export interface ICoupon extends Document {
+  code: string; // The coupon code users type in, e.g. "SAVE20"
+  discountType: "percentage" | "fixed"; // Whether discount is % off or flat amount off
+  discountValue: number; // How much to discount — e.g. 20 (meaning 20% or $20)
+  minPurchase?: number; // Optional: minimum cart total required to use this coupon
+  maxDiscount?: number; // Optional: cap on savings for percentage coupons (e.g. max $50 off)
+  validFrom: Date; // The coupon becomes usable on this date
+  validUntil: Date; // The coupon expires after this date
+  usageLimit: number; // How many times total this coupon can be used across all users
+  usedCount: number; // How many times it has been used so far (incremented on each valid use)
+  isActive: boolean; // Admin can deactivate a coupon without deleting it
+  createdAt: Date; // Auto-set by mongoose timestamps option
+  updatedAt: Date; // Auto-set by mongoose timestamps option
+}

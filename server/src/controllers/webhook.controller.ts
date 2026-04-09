@@ -9,6 +9,7 @@ import { env } from "../config/env";
 // Import our models
 import { Order } from "../models/Order";
 import { User } from "../models/User";
+import { Coupon } from "../models/Coupon";
 import { ProcessedEvent } from "../models/ProcessedEvent";
 
 // Import email service to send order confirmation after payment
@@ -32,7 +33,7 @@ export const handleStripeWebhook = async (req: Request, res: Response) => {
 
   let event: ReturnType<typeof stripe.webhooks.constructEvent>;
 
-  // --- VERIFY WEBHOOK SIGNATURE ---
+  // VERIFY WEBHOOK SIGNATURE
   // This proves the request actually came from Stripe and wasn't faked
   try {
     event = stripe.webhooks.constructEvent(
@@ -48,7 +49,7 @@ export const handleStripeWebhook = async (req: Request, res: Response) => {
       .json({ error: "Webhook signature verification failed" });
   }
 
-  // --- IDEMPOTENCY GUARD (Security §4.2) ---
+  // IDEMPOTENCY GUARD (Security §4.2)
   // Try to insert this event's ID into the ProcessedEvent collection
   // If it already exists, MongoDB throws a duplicate key error (code 11000)
   // This prevents the same event from being processed twice if Stripe retries
@@ -69,7 +70,7 @@ export const handleStripeWebhook = async (req: Request, res: Response) => {
     throw err;
   }
 
-  // --- HANDLE THE EVENT ---
+  // HANDLE THE EVENT
   switch (event.type) {
     case "checkout.session.completed":
       // Payment was successful — fulfill the order
@@ -127,6 +128,15 @@ const handleCheckoutCompleted = async (
   // Record exactly when the payment was confirmed
   order.completedAt = new Date();
   await order.save();
+
+  // If a coupon was applied to this order, increment its usedCount by 1
+  // $inc is atomic — safe if two webhooks somehow fire simultaneously
+  if (order.couponCode) {
+    await Coupon.findOneAndUpdate(
+      { code: order.couponCode },
+      { $inc: { usedCount: 1 } },
+    );
+  }
 
   // Add all purchased book IDs to the user's library
   // $addToSet prevents duplicates — safe to run multiple times
