@@ -13,7 +13,7 @@ import { BookGrid, BookFiltersComponent } from "../../components/features";
 // Import the BookFilters type
 import type { BookFilters } from "../../types/book";
 
-const BooksPage = () => {
+export default function BooksPage() {
   // All active filters live here as controlled state
   const [filters, setFilters] = useState<BookFilters>({
     page: 1,
@@ -213,6 +213,4 @@ const BooksPage = () => {
       </section>
     </div>
   );
-};
-
-export default BooksPage;
+}

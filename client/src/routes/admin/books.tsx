@@ -19,7 +19,7 @@ import type { IBook } from "../../types/book";
 import api from "../../lib/api";
 
 // AdminBooks page
-const AdminBooks = () => {
+export default function AdminBooks() {
   const queryClient = useQueryClient();
 
   // Search input value — raw (updates on every keystroke)
@@ -236,6 +236,4 @@ const AdminBooks = () => {
       )}
     </div>
   );
-};
-
-export default AdminBooks;
+}

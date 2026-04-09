@@ -59,7 +59,7 @@ const StatCard = ({ title, value, icon, color }: StatCardProps) => {
 };
 
 // Dashboard page
-const AdminDashboard = () => {
+export default function AdminDashboard() {
   // Track which day range the user has selected for the revenue chart
   const [days, setDays] = useState(30);
 
@@ -249,6 +249,4 @@ const AdminDashboard = () => {
       </div>
     </div>
   );
-};
-
-export default AdminDashboard;
+}

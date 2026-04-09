@@ -16,7 +16,7 @@ import { toast } from "sonner";
 
 import type { IReview } from "../../types/book";
 
-const AdminReviews = () => {
+export default function AdminReviews() {
   const queryClient = useQueryClient();
 
   // Pagination state
@@ -246,6 +246,4 @@ const AdminReviews = () => {
       </div>
     </div>
   );
-};
-
-export default AdminReviews;
+}

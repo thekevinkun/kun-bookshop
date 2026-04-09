@@ -12,7 +12,7 @@ import {
 // Import BookGrid for the latest books section
 import { BookGrid } from "../components/features";
 
-const HomePage = () => {
+export default function HomePage() {
   // Fetch featured books for the hero carousel from the real API
   const { data: featuredBooks, isLoading: featuredLoading } =
     useFeaturedBooks();
@@ -76,6 +76,4 @@ const HomePage = () => {
       <CTASection />
     </div>
   );
-};
-
-export default HomePage;
+}

@@ -7,7 +7,7 @@ import { XCircle, ShoppingCart, ArrowLeft } from "lucide-react";
 // Import cart store so we can reopen the cart drawer
 import { useCartStore } from "../../store/cart";
 
-const CheckoutCancelPage = () => {
+export default function CheckoutCancelPage() {
   // Read itemCount to tell the user their cart is still intact
   const { itemCount } = useCartStore();
 
@@ -49,6 +49,4 @@ const CheckoutCancelPage = () => {
       </div>
     </div>
   );
-};
-
-export default CheckoutCancelPage;
+}

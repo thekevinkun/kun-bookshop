@@ -18,7 +18,7 @@ const STATUS_FILTERS = [
   "refunded",
 ] as const;
 
-const AdminOrders = () => {
+export default function AdminOrders() {
   // Track which status filter is active — empty string means 'All'
   const [status, setStatus] = useState("");
 
@@ -177,6 +177,4 @@ const AdminOrders = () => {
       </div>
     </div>
   );
-};
-
-export default AdminOrders;
+}

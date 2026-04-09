@@ -9,7 +9,7 @@ import {
   SimilarBooks,
 } from "../../components/features";
 
-const BookDetailPage = () => {
+export default function BookDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
@@ -86,6 +86,4 @@ const BookDetailPage = () => {
       </section>
     </div>
   );
-};
-
-export default BookDetailPage;
+}

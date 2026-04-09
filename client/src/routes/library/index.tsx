@@ -21,7 +21,7 @@ import {
 import type { IBook } from "../../types/book"; // Import the IBook type for type-checking the library data
 
 // The main Library page component
-const LibraryPage = () => {
+export default function LibraryPage() {
   // Get the logged-in user from the auth store
   const { user } = useAuthStore();
 
@@ -203,7 +203,4 @@ const LibraryPage = () => {
       </div>
     </div>
   );
-};
-
-// Export the page component so App.tsx can use it as a route
-export default LibraryPage;
+}

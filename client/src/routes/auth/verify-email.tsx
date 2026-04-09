@@ -5,7 +5,7 @@ import api from "../../lib/api";
 
 type VerificationStatus = "verifying" | "success" | "error";
 
-const VerifyEmailPage = () => {
+export default function VerifyEmailPage() {
   const { token } = useParams<{ token: string }>();
   const [status, setStatus] = useState<VerificationStatus>("verifying");
   const [message, setMessage] = useState("Verifying your email...");
@@ -29,12 +29,14 @@ const VerifyEmailPage = () => {
         const response = await api.get(`/auth/verify-email/${token}`);
         setStatus("success");
         setMessage(
-          response.data.message || "Email verified successfully. You can now sign in.",
+          response.data.message ||
+            "Email verified successfully. You can now sign in.",
         );
       } catch (error: unknown) {
         const errorMessage =
           (error as { response?: { data?: { error?: string } } }).response?.data
-            ?.error || "We could not verify your email. Please request a new link.";
+            ?.error ||
+          "We could not verify your email. Please request a new link.";
 
         setStatus("error");
         setMessage(errorMessage);
@@ -75,13 +77,14 @@ const VerifyEmailPage = () => {
             </p>
           </div>
 
-          <Link to="/login" className="btn-primary inline-flex w-full justify-center">
+          <Link
+            to="/login"
+            className="btn-primary inline-flex w-full justify-center"
+          >
             Back to sign in
           </Link>
         </div>
       </div>
     </div>
   );
-};
-
-export default VerifyEmailPage;
+}

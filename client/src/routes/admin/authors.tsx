@@ -18,7 +18,7 @@ import { AuthorForm } from "../../components/forms";
 import type { IAuthor } from "../../types/book";
 
 // AdminAuthors page
-const AdminAuthors = () => {
+export default function AdminAuthors() {
   // Pagination state
   const [page, setPage] = useState(1);
 
@@ -46,8 +46,7 @@ const AdminAuthors = () => {
       )
     ) {
       deleteAuthor(author._id, {
-        onSuccess: () =>
-          toast.success(`"${author.name}" deleted successfully`),
+        onSuccess: () => toast.success(`"${author.name}" deleted successfully`),
         onError: (err: unknown) =>
           toast.error(
             (err as { response?: { data?: { error?: string } } }).response?.data
@@ -139,9 +138,7 @@ const AdminAuthors = () => {
                           />
                         ) : (
                           // Fallback icon if no avatar
-                          <div
-                            className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center"
-                          >
+                          <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center">
                             <User size={18} className="text-slate-400" />
                           </div>
                         )}
@@ -174,7 +171,7 @@ const AdminAuthors = () => {
                         <button
                           onClick={() => setEditingAuthor(author)}
                           className="p-2 text-slate-400 hover:text-teal-400
-                                     hover:bg-teal-500/10 rounded-lg transition-colors"
+                          hover:bg-teal-500/10 rounded-lg transition-colors"
                         >
                           <Pencil size={15} />
                         </button>
@@ -205,7 +202,7 @@ const AdminAuthors = () => {
                 onClick={() => setPage((p) => p - 1)}
                 disabled={page === 1}
                 className="px-3 py-1.5 text-sm bg-slate-700 text-slate-300 rounded-lg
-                           hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
@@ -213,7 +210,7 @@ const AdminAuthors = () => {
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page === data.totalPages}
                 className="px-3 py-1.5 text-sm bg-slate-700 text-slate-300 rounded-lg
-                           hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                  hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 Next
               </button>
@@ -231,6 +228,4 @@ const AdminAuthors = () => {
       )}
     </div>
   );
-};
-
-export default AdminAuthors;
+}

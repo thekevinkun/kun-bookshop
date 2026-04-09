@@ -31,7 +31,7 @@ import type { IBook, IDownloadRecord } from "../../types/book";
 // The two tabs available on the right panel
 type RightTab = "wishlist" | "history";
 
-const ProfilePage = () => {
+export default function ProfilePage() {
   // Get the logged-in user from the auth store
   const { user } = useAuthStore();
 
@@ -469,7 +469,4 @@ const ProfilePage = () => {
       </div>
     </div>
   );
-};
-
-// Export the page component so App.tsx can register it as a route
-export default ProfilePage;
+}

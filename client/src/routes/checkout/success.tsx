@@ -5,7 +5,7 @@ import { CheckCircle, BookOpen, Loader2 } from "lucide-react";
 
 import api from "../../lib/api";
 
-const CheckoutSuccessPage = () => {
+export default function CheckoutSuccessPage() {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const navigate = useNavigate();
@@ -139,6 +139,4 @@ const CheckoutSuccessPage = () => {
       </div>
     </div>
   );
-};
-
-export default CheckoutSuccessPage;
+}

@@ -35,7 +35,7 @@ interface AdminUser {
   createdAt: string;
 }
 
-const AdminUsers = () => {
+export default function AdminUsers() {
   const { user: currentUser } = useAuthStore(); // The logged-in admin
 
   // Pagination state
@@ -201,7 +201,7 @@ const AdminUsers = () => {
                               u.role === "admin" ? "Revoke admin" : "Make admin"
                             }
                             className="p-2 text-slate-400 hover:text-teal-400 hover:bg-teal-500/10
-                                       rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                              rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                           >
                             {u.role === "admin" ? (
                               <ShieldOff size={15} />
@@ -214,7 +214,7 @@ const AdminUsers = () => {
                             onClick={() => handleDelete(u._id, u.email)}
                             disabled={isSelf || isDeletingUser}
                             className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10
-                                       rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                              rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                           >
                             <Trash2 size={15} />
                           </button>
@@ -255,6 +255,4 @@ const AdminUsers = () => {
       </div>
     </div>
   );
-};
-
-export default AdminUsers;
+}

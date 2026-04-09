@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { LoginForm } from "../../components/forms";
 
-const LoginPage = () => {
+export default function LoginPage() {
   const location = useLocation();
   const successMessage = location.state?.message;
 
@@ -59,6 +59,4 @@ const LoginPage = () => {
       </div>
     </div>
   );
-};
-
-export default LoginPage;
+}

@@ -15,7 +15,7 @@ import { BookCard } from "../../cards";
 
 import type { IBook } from "../../types/book";
 
-const AuthorProfilePage = () => {
+export default function AuthorProfilePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -200,6 +200,4 @@ const AuthorProfilePage = () => {
       </section>
     </div>
   );
-};
-
-export default AuthorProfilePage;
+}

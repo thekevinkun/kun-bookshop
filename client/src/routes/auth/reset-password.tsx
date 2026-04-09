@@ -12,7 +12,7 @@ import type { ResetPasswordInput } from "../../validators/auth.validator";
 
 import api from "../../lib/api";
 
-const ResetPasswordPage = () => {
+export default function ResetPasswordPage() {
   // Read the reset token from the URL — e.g. /reset-password/abc123...
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
@@ -32,10 +32,10 @@ const ResetPasswordPage = () => {
       // POST /api/auth/reset-password/:token — sends the new password with the URL token
       await api.post(`/auth/reset-password/${token}`, data);
       setIsSuccess(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       const message =
-        error.response?.data?.error ||
-        "Something went wrong. Please try again.";
+        (error as { response?: { data?: { error?: string } } }).response?.data
+          ?.error || "Something went wrong. Please try again.";
       setError("root", { message });
     }
   };
@@ -149,6 +149,4 @@ const ResetPasswordPage = () => {
       </div>
     </div>
   );
-};
-
-export default ResetPasswordPage;
+}
