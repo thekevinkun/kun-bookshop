@@ -20,7 +20,7 @@ const Footer = () => {
       {/* MAIN FOOTER CONTENT */}
       <div className="container-page py-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* ---- COL 1: Brand ---- */}
+          {/* COL 1: Brand */}
           <div className="flex flex-col gap-4">
             {/* Logo — reuses same markup as Navbar */}
             <Link
@@ -43,7 +43,7 @@ const Footer = () => {
               <a
                 href="mailto:hello@kunbookshop.com"
                 className="flex items-center gap-2 text-text-muted text-sm
-                           hover:text-teal transition-colors"
+                hover:text-teal transition-colors"
               >
                 <Mail size={14} className="text-teal flex-shrink-0" />
                 hello@kunbookshop.com
@@ -83,12 +83,9 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* ---- COL 2: Explore ---- */}
+          {/* COL 2: Explore */}
           <div className="flex flex-col gap-4">
-            <h4
-              className="text-text-light font-semibold text-sm uppercase
-                           tracking-wider"
-            >
+            <h4 className="text-text-light font-semibold text-sm uppercase tracking-wider">
               Explore
             </h4>
             <div className="w-6 h-0.5 bg-teal rounded-full -mt-2" />
@@ -100,6 +97,7 @@ const Footer = () => {
                 { label: "Top Rated", to: "/books?sortBy=rating" },
                 { label: "My Library", to: "/library" },
                 { label: "My Profile", to: "/profile" },
+                { label: "GraphQL Demo", to: "/graphql-demo" },
               ].map((link) => (
                 <Link
                   key={link.label}
@@ -112,7 +110,7 @@ const Footer = () => {
             </nav>
           </div>
 
-          {/* ---- COL 3: Support ---- */}
+          {/* COL 3: Support */}
           <div className="flex flex-col gap-4">
             <h4 className="text-text-light font-semibold text-sm uppercase tracking-wider">
               Support
@@ -138,7 +136,7 @@ const Footer = () => {
             </nav>
           </div>
 
-          {/* ---- COL 4: Newsletter ---- */}
+          {/* COL 4: Newsletter */}
           <div className="flex flex-col gap-4">
             <h4 className="text-text-light font-semibold text-sm uppercase tracking-wider">
               Subscribe

@@ -32,6 +32,8 @@ import {
   AdminReviews,
 } from "./routes/admin";
 
+import GraphQLDemoPage from "./routes/graphql-demo/index";
+
 import { MainLayout, AuthLayout } from "./components/layout";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 
@@ -123,6 +125,8 @@ const App = () => {
           <Route path="authors" element={<AdminAuthors />} />
           <Route path="reviews" element={<AdminReviews />} />
         </Route>
+
+        <Route path="/graphql-demo" element={<GraphQLDemoPage />} />
 
         {/* CATCH ALL */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -36,6 +36,28 @@ export const typeDefs = `#graphql
     hasPreviousPage: Boolean!
   }
 
+  # Represents a single review document returned by the GraphQL API.
+  # Mirrors the REST /api/reviews/:bookId response shape.
+  type Review {
+    id: ID!                   # MongoDB _id as a string
+    bookId: ID!               # Which book this review belongs to
+    userId: ID!               # Who wrote it
+    authorName: String!       # Reviewer's display name — populated from User (firstName + lastName)
+    rating: Int!              # 1–5 stars
+    comment: String!          # Review body text
+    isPurchaseVerified: Boolean! # Set server-side — true if the reviewer owns the book
+    helpfulCount: Int!        # Number of helpful votes
+    isActive: Boolean!        # Soft-delete flag — false means deleted
+    createdAt: String!        # ISO date string
+  }
+
+  # Paginated review connection — mirrors the REST pagination shape
+  type ReviewConnection {
+    reviews: [Review!]!  # The reviews for this page
+    totalCount: Int!     # Total reviews matching the query (for pagination UI)
+    avgRating: Float!    # Average rating across all reviews for this book
+  }
+
   # All available read queries
   type Query {
     # Get paginated books with optional filters
@@ -59,6 +81,17 @@ export const typeDefs = `#graphql
 
     # Get books filtered by a single category
     booksByCategory(category: String!, limit: Int): [Book!]!
+
+    # Get paginated reviews for a specific book# 
+    bookReviews(
+      bookId: ID!             # Required — which book to fetch reviews for
+      page: Int = 1           # Page number — defaults to 1
+      limit: Int = 10         # Reviews per page — defaults to 10
+      sortBy: String = "createdAt" # Sort field — "createdAt" | "rating" | "helpful"
+    ): ReviewConnection!
+
+    # Get top-rated reviews for a book (convenience query — returns up to 3)
+    topReviews(bookId: ID!): [Review!]!
   }
 
   # Admin-only mutations — protected by context auth check
@@ -68,5 +101,12 @@ export const typeDefs = `#graphql
 
     # Soft delete a book — sets isActive to false
     deleteBook(id: ID!): Boolean
+
+    #Create a new review (authenticated users who own the book only)
+    createReview(
+      bookId: ID!      # Which book to review
+      rating: Int!     # 1–5 stars
+      comment: String! # Review body — min 10 chars enforced in resolver
+    ): Review!
   }
 `;
