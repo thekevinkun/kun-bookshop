@@ -70,7 +70,10 @@ const DiscountSection = () => {
         if (usedBookIds.has(book._id)) return false;
 
         // This gets the book's real discount percent.
-        const discountPercent = getDiscountPercent(book.price, book.discountPrice);
+        const discountPercent = getDiscountPercent(
+          book.price,
+          book.discountPrice,
+        );
         if (discountPercent === null) return false;
 
         // This checks if the discount is close enough to the promo label.
@@ -99,91 +102,86 @@ const DiscountSection = () => {
   }).filter((card) => card.covers.length > 0);
 
   return (
-    <section className="section bg-bg-dark">
-      <div className="container-page">
-        {/* This keeps each promo card at the old half-width layout on larger screens. */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {promoCards.map((card, index) => (
-            <div
-              key={card.target}
-              className="relative overflow-hidden rounded-2xl cursor-pointer min-h-[200px] flex items-center group"
-              style={{
-                background:
-                  index === 0
-                    ? "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)"
-                    : "linear-gradient(135deg, #0f3d3d 0%, #134e4a 100%)",
-              }}
-              onClick={() =>
-                // This opens the catalog sorted by newest books.
-                navigate(`/books?sortBy=${card.sortBy}&sortOrder=${card.sortOrder}`)
-              }
-            >
-              {/* This adds a soft glowing shape behind the promo card. */}
-              <div
-                className={`absolute w-48 h-48 rounded-full blur-2xl ${
-                  index === 0
-                    ? "-right-8 -top-8 bg-white/5"
-                    : "-right-8 -bottom-8 bg-teal/10"
-                }`}
-              />
+    <div className="flex flex-col gap-6" style={{ height: "460px" }}>
+      {promoCards.map((card, index) => (
+        <div
+          key={card.target}
+          className="relative overflow-hidden rounded-2xl cursor-pointer flex-1 flex items-center group"
+          style={{
+            background:
+              index === 0
+                ? "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)"
+                : "linear-gradient(135deg, #0f3d3d 0%, #134e4a 100%)",
+          }}
+          onClick={() =>
+            // This opens the catalog sorted by newest books.
+            navigate(`/books?sortBy=${card.sortBy}&sortOrder=${card.sortOrder}`)
+          }
+        >
+          {/* This adds a soft glowing shape behind the promo card. */}
+          <div
+            className={`absolute w-48 h-48 rounded-full blur-2xl ${
+              index === 0
+                ? "-right-8 -top-8 bg-white/5"
+                : "-right-8 -bottom-8 bg-teal/10"
+            }`}
+          />
 
-              {/* This shows up to two matching discounted book covers. */}
-              <div
-                className="absolute right-6 top-1/2 -translate-y-1/2 flex gap-2
+          {/* This shows up to two matching discounted book covers. */}
+          <div
+            className="absolute right-6 top-1/2 -translate-y-1/2 flex gap-2
                   opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+          >
+            {card.covers.map((book, coverIndex) => (
+              <div
+                key={book._id}
+                className={`w-20 rounded-lg overflow-hidden shadow-2xl ${
+                  index === 0
+                    ? coverIndex === 0
+                      ? "rotate-[-8deg] translate-y-2"
+                      : "rotate-[4deg]"
+                    : coverIndex === 0
+                      ? "rotate-[-4deg] translate-y-2"
+                      : "rotate-[6deg]"
+                }`}
               >
-                {card.covers.map((book, coverIndex) => (
-                  <div
-                    key={book._id}
-                    className={`w-20 rounded-lg overflow-hidden shadow-2xl ${
-                      index === 0
-                        ? coverIndex === 0
-                          ? "rotate-[-8deg] translate-y-2"
-                          : "rotate-[4deg]"
-                        : coverIndex === 0
-                          ? "rotate-[-4deg] translate-y-2"
-                          : "rotate-[6deg]"
-                    }`}
-                  >
-                    <img
-                      src={book.coverImage}
-                      alt={book.title}
-                      className="w-full h-full object-cover aspect-[2/3]"
-                      onError={(e) => {
-                        // This swaps in a placeholder if a cover cannot load.
-                        (e.target as HTMLImageElement).src =
-                          "/images/placeholder-cover.webp";
-                      }}
-                    />
-                  </div>
-                ))}
+                <img
+                  src={book.coverImage}
+                  alt={book.title}
+                  className="w-full h-full object-cover aspect-[2/3]"
+                  onError={(e) => {
+                    // This swaps in a placeholder if a cover cannot load.
+                    (e.target as HTMLImageElement).src =
+                      "/images/placeholder-cover.webp";
+                  }}
+                />
               </div>
+            ))}
+          </div>
 
-              {/* This is the text block shown on the left side of the card. */}
-              <div className="relative z-10 p-8">
-                <p
-                  className={`text-xs font-semibold uppercase tracking-widest mb-2 ${
-                    index === 0 ? "text-purple-300" : "text-teal"
-                  }`}
-                >
-                  {card.sublabel}
-                </p>
-                <h3 className="text-white text-4xl font-black mb-4">
-                  {card.label} <span className="text-teal">{card.target}% OFF</span>
-                </h3>
-                <button
-                  className="flex items-center gap-2 bg-white text-gray-900 text-sm font-semibold
+          {/* This is the text block shown on the left side of the card. */}
+          <div className="relative z-10 p-8">
+            <p
+              className={`text-xs font-semibold uppercase tracking-widest mb-2 ${
+                index === 0 ? "text-purple-300" : "text-teal"
+              }`}
+            >
+              {card.sublabel}
+            </p>
+            <h3 className="text-white text-4xl font-black mb-4">
+              {card.label} <span className="text-teal">{card.target}% OFF</span>
+            </h3>
+            <button
+              className="flex items-center gap-2 bg-white text-gray-900 text-sm font-semibold
                     px-5 py-2.5 rounded-full hover:bg-teal hover:text-white transition-all duration-200"
-                >
-                  Shop Now
-                  <ChevronRight size={14} />
-                </button>
-              </div>
-            </div>
-          ))}
+            >
+              Shop Now
+              <ChevronRight size={14} />
+            </button>
+          </div>
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
   );
 };
 

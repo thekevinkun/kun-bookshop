@@ -5,6 +5,7 @@ import {
   RecommendedSection,
   AuthorsSection,
   DiscountSection,
+  NewArrivalsSection,
   CTASection,
 } from "../components/layout";
 
@@ -20,9 +21,29 @@ export default function HomePage() {
 
       <RecommendedSection />
 
-      <AuthorsSection />
+      {/* Combined section — stacked discount cards left, new arrivals 2x2 right */}
+      <section className="section bg-bg-dark">
+        <div className="container-page">
+          {/* Section header */}
+          <div className="mb-8">
+            <h2 className="text-text-light text-2xl font-bold uppercase tracking-wider">
+              New Arrivals & Deals
+            </h2>
+            <div className="w-12 h-1 bg-teal rounded-full mt-2" />
+          </div>
 
-      <DiscountSection />
+          {/* Two-column layout — discount cards left, new arrivals right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+            {/* Left column — stacked discount promo cards */}
+            <DiscountSection />
+
+            {/* Right column — 2x2 new arrival book covers */}
+            <NewArrivalsSection />
+          </div>
+        </div>
+      </section>
+
+      <AuthorsSection />
 
       <CTASection />
     </div>
