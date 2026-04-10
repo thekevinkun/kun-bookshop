@@ -3,7 +3,7 @@ import type { UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
-import { Loader2, KeyRound, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Loader2, KeyRound, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useChangePassword } from "../../hooks/useAuth"; // Our new mutation hook
 import { toast } from "sonner";
@@ -114,9 +114,14 @@ export default function ChangePasswordPage() {
     <div className="min-h-screen">
       <div className="max-w-md mx-auto">
         <div className="section flex flex-col">
-          <h2 className="text-base font-semibold text-[var(--color-text-primary)] mb-6">
-            Change Password
-          </h2>
+          <button
+            className="btn-ghost btn-sm flex items-center gap-1 self-start mb-4"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft size={15} /> Back
+          </button>
+
+          <h2 className="text-base mb-6">Change Password</h2>
 
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -157,7 +162,7 @@ export default function ChangePasswordPage() {
               <button
                 type="submit"
                 disabled={isPending}
-                className="flex items-center gap-2 px-5 py-2 rounded-lg bg-teal-500 hover:bg-teal-600 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+                className="flex items-center gap-2 btn-primary btn-sm"
               >
                 {isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -166,10 +171,11 @@ export default function ChangePasswordPage() {
                 )}
                 {isPending ? "Saving…" : "Change Password"}
               </button>
+
               <button
                 type="button"
                 onClick={() => navigate("/profile")}
-                className="px-4 py-2 rounded-lg text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                className="btn-ghost btn-sm"
               >
                 Cancel
               </button>

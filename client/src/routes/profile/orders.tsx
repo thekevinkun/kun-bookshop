@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   ShoppingBag,
   BookOpen,
@@ -28,14 +28,17 @@ export default function OrdersPage() {
   // Fetch the user's order history from the backend
   const { data, isLoading, isError } = useOrders();
 
+  // Hook for navigation — used to redirect to login if not authenticated
+  const navigate = useNavigate();
+
   const orders = data?.orders ?? []; // Default to empty array while loading
 
   // Loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-20 text-[var(--color-text-muted)]">
-        <Loader2 className="w-6 h-6 animate-spin mr-2 text-teal-500" />
-        <span className="text-sm">Loading your orders…</span>
+      // Full-page centered spinner while we wait for the library to load
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-teal-400" size={40} />
       </div>
     );
   }
@@ -43,8 +46,8 @@ export default function OrdersPage() {
   // Error state
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-3 text-[var(--color-text-muted)]">
-        <AlertCircle className="w-8 h-8 text-rose-400" />
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <AlertCircle className="text-rose-400" size={40} />
         <p className="text-sm">
           Failed to load orders. Please try again later.
         </p>
@@ -55,22 +58,22 @@ export default function OrdersPage() {
   // Empty state
   if (orders.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-4 text-[var(--color-text-muted)]">
-        <div className="w-14 h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center">
-          <ShoppingBag className="w-7 h-7 text-teal-500" />
+      <div className="min-h-screen flex flex-col items-center justify-center gap-6 text-center px-4">
+        <ShoppingBag className="text-teal-400 opacity-50" size={64} />
+
+        <div>
+          <h2 className="text-white mb-2">No orders yet</h2>
+          <p className="text-xs text-gray-400">
+            When you purchase a book, your orders will appear here.
+          </p>
         </div>
-        <p className="text-sm font-medium text-[var(--color-text-primary)]">
-          No orders yet
-        </p>
-        <p className="text-xs">
-          When you purchase a book, your orders will appear here.
-        </p>
-        <Link
-          to="/books"
-          className="mt-1 px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium transition-colors"
+
+        <button
+          onClick={() => navigate("/books")}
+          className="btn-primary" // Reusing our global btn-primary class from globals.css
         >
           Browse Books
-        </Link>
+        </button>
       </div>
     );
   }
@@ -80,9 +83,7 @@ export default function OrdersPage() {
     <div className="flex flex-col gap-4">
       {/* Page header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-[var(--color-text-primary)]">
-          Order History
-        </h2>
+        <h2 className="text-[var(--color-text-primary)]">Order History</h2>
         <span className="text-xs text-[var(--color-text-muted)]">
           {orders.length} order{orders.length !== 1 ? "s" : ""}{" "}
           {/* Pluralise correctly */}

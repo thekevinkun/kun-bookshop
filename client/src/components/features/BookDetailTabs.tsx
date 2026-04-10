@@ -77,11 +77,56 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
   const userReview = reviewsData?.reviews?.find(
     (r: { userId?: { _id?: string } }) => r.userId?._id === user?.id,
   );
+
   const hasReviewed = !!userReview;
+
+  const bookMoreDetails = [
+    {
+      icon: <FileText size={14} className="text-teal-400" />,
+      label: "Format",
+      value: book.fileType.toUpperCase(),
+    },
+    {
+      icon: <Download size={14} className="text-teal-400" />,
+      label: "File Size",
+      value: formatFileSize(book.fileSize),
+    },
+    {
+      icon: <BookOpen size={14} className="text-teal-400" />,
+      label: "Category",
+      value: book.category[0],
+    },
+    {
+      icon: <Calendar size={14} className="text-teal-400" />,
+      label: "Published",
+      value: formatDate(book.publishedDate) ?? "N/A",
+    },
+    {
+      icon: <Tag size={14} className="text-teal-400" />,
+      label: "ISBN",
+      value: book.isbn ?? "N/A",
+    },
+    {
+      icon: <Building2 size={14} className="text-teal-400" />,
+      label: "Publisher",
+      value: book.publisher ?? "N/A",
+    },
+    {
+      icon: <Star size={14} className="text-teal-400" />,
+      label: "Purchases",
+      value: book.purchaseCount.toLocaleString(),
+    },
+    {
+      icon: <BookOpen size={14} className="text-teal-400" />,
+      label: "Preview",
+      // Only show the page count if previewPages exists, otherwise show N/A
+      value: book.previewPages ? `${book.previewPages} pages` : "N/A",
+    },
+  ];
 
   return (
     <RadixTabs.Root defaultValue="summary" className="flex flex-col gap-0">
-      {/* ── Tab header ── */}
+      {/* Tab header */}
       <RadixTabs.List
         className="flex border-b border-slate-700/50 mb-6"
         aria-label="Book details"
@@ -107,7 +152,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
         ))}
       </RadixTabs.List>
 
-      {/* ── SUMMARY TAB ── */}
+      {/* SUMMARY TAB */}
       <RadixTabs.Content value="summary" className="focus:outline-none">
         <div className="flex flex-col gap-4">
           <p className="text-slate-400 leading-relaxed text-sm">
@@ -115,49 +160,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
           </p>
 
           <div className="grid grid-cols-2 gap-3 mt-2">
-            {[
-              {
-                icon: <FileText size={14} className="text-teal-400" />,
-                label: "Format",
-                value: book.fileType.toUpperCase(),
-              },
-              {
-                icon: <Download size={14} className="text-teal-400" />,
-                label: "File Size",
-                value: formatFileSize(book.fileSize),
-              },
-              {
-                icon: <BookOpen size={14} className="text-teal-400" />,
-                label: "Category",
-                value: book.category[0],
-              },
-              {
-                icon: <Calendar size={14} className="text-teal-400" />,
-                label: "Published",
-                value: formatDate(book.publishedDate) ?? "N/A",
-              },
-              {
-                icon: <Tag size={14} className="text-teal-400" />,
-                label: "ISBN",
-                value: book.isbn ?? "N/A",
-              },
-              {
-                icon: <Building2 size={14} className="text-teal-400" />,
-                label: "Publisher",
-                value: book.publisher ?? "N/A",
-              },
-              {
-                icon: <Star size={14} className="text-teal-400" />,
-                label: "Purchases",
-                value: book.purchaseCount.toLocaleString(),
-              },
-              {
-                icon: <BookOpen size={14} className="text-teal-400" />,
-                label: "Preview",
-                // Only show the page count if previewPages exists, otherwise show N/A
-                value: book.previewPages ? `${book.previewPages} pages` : "N/A",
-              },
-            ].map((item) => (
+            {bookMoreDetails.map((item) => (
               <div
                 key={item.label}
                 className="flex items-center gap-2 bg-[#0F172A] rounded-lg px-3 py-2"
@@ -185,7 +188,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
         </div>
       </RadixTabs.Content>
 
-      {/* ── REVIEWS TAB ── */}
+      {/* REVIEWS TAB */}
       <RadixTabs.Content value="reviews" className="focus:outline-none">
         <div className="flex flex-col gap-5">
           {/* Rating summary card */}
@@ -344,7 +347,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
         </div>
       </RadixTabs.Content>
 
-      {/* ── AUTHOR TAB ── */}
+      {/* AUTHOR TAB */}
       <RadixTabs.Content value="author" className="focus:outline-none">
         <div className="flex flex-col gap-5">
           <AuthorTabInfo book={book} authorName={authorName} />

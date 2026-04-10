@@ -5,7 +5,7 @@ import multer from "multer";
 import { fileTypeFromBuffer } from "file-type";
 import { Request, Response, NextFunction } from "express";
 
-// --- ALLOWED FILE TYPES ---
+// ALLOWED FILE TYPES
 // These are the only MIME types we accept for book files and cover images
 const ALLOWED_BOOK_TYPES = [
   "application/pdf",
@@ -14,17 +14,17 @@ const ALLOWED_BOOK_TYPES = [
 
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-// --- FILE SIZE LIMITS ---
+// FILE SIZE LIMITS
 const MAX_BOOK_SIZE = 50 * 1024 * 1024; // 50MB — enough for any book file
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; //  5MB — covers don't need to be huge
 
-// --- MULTER STORAGE ---
+// MULTER STORAGE
 // We use memoryStorage so the file lands in RAM as a Buffer
 // This lets us run magic byte checks BEFORE doing anything else with the file
 // We never write to disk — files go straight to Cloudinary after verification
 const storage = multer.memoryStorage();
 
-// --- MULTER FILTER ---
+// MULTER FILTER
 // This runs before the file is fully received — it's a first-pass MIME check
 // based on what the browser CLAIMS the file is (not fully trusted yet)
 const fileFilter = (
@@ -44,7 +44,7 @@ const fileFilter = (
   }
 };
 
-// --- MULTER INSTANCE ---
+// MULTER INSTANCE
 // Accepts two fields: 'file' (the book) and 'coverImage' (the cover)
 export const uploadBookFiles = multer({
   storage,
@@ -56,7 +56,7 @@ export const uploadBookFiles = multer({
   { name: "avatar", maxCount: 1 }, // Author avatar image — added for Phase 6
 ]);
 
-// --- MAGIC BYTE VERIFICATION MIDDLEWARE ---
+// MAGIC BYTE VERIFICATION MIDDLEWARE
 // This runs AFTER multer — files are now in req.files as Buffers
 // We inspect the actual bytes to confirm the file is really what it claims to be
 export const verifyFileTypes = async (
@@ -71,7 +71,7 @@ export const verifyFileTypes = async (
 
   const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
-  // --- VERIFY BOOK FILE ---
+  // VERIFY BOOK FILE
   if (files.file && files.file[0]) {
     const bookFile = files.file[0];
 
@@ -94,7 +94,7 @@ export const verifyFileTypes = async (
     }
   }
 
-  // --- VERIFY COVER IMAGE ---
+  // VERIFY COVER IMAGE
   if (files.coverImage && files.coverImage[0]) {
     const imageFile = files.coverImage[0];
 

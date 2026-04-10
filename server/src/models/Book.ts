@@ -104,7 +104,7 @@ const BookSchema = new Schema<IBookDocument>(
   },
 );
 
-// --- INDEXES ---
+// INDEXES
 // Text index on title and author so MongoDB can do full-text search
 BookSchema.index({ title: "text", author: "text" });
 

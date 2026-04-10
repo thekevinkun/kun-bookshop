@@ -41,7 +41,7 @@ const RefreshTokenSchema = new Schema<IRefreshToken>(
   },
 );
 
-// --- TTL INDEX ---
+// TTL INDEX
 // MongoDB will automatically DELETE documents where expiresAt is in the past
 // This keeps the collection clean without us having to manually purge expired tokens
 RefreshTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });

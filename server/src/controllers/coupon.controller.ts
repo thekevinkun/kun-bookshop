@@ -70,7 +70,7 @@ export const validateCoupon = async (
     return;
   }
 
-  // ── Calculate the discount amount ──────────────────────────────────────────
+  // Calculate the discount amount
 
   let discountAmount: number;
 

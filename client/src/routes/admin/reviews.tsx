@@ -73,7 +73,7 @@ export default function AdminReviews() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-white text-2xl font-bold">Reviews</h1>
+        <h1 className="text-white">Reviews</h1>
         <p className="text-slate-400 text-sm mt-1">
           {data?.total ?? 0} total reviews across all books.
         </p>
@@ -136,7 +136,7 @@ export default function AdminReviews() {
                       {/* Reviewer avatar */}
                       <div
                         className="w-8 h-8 rounded-full bg-slate-700
-                                      flex items-center justify-center text-xs font-bold text-slate-300"
+                            flex items-center justify-center text-xs font-bold text-slate-300"
                       >
                         {review.userId?.firstName?.[0]}
                         {review.userId?.lastName?.[0]}
@@ -206,7 +206,7 @@ export default function AdminReviews() {
                   <button
                     onClick={() => handleDelete(review._id)}
                     className="p-2 text-slate-500 hover:text-red-400
-                               hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0"
+                      hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0"
                     title="Delete review"
                   >
                     <Trash2 size={16} />
@@ -228,7 +228,7 @@ export default function AdminReviews() {
                 onClick={() => setPage((p) => p - 1)}
                 disabled={page === 1}
                 className="px-3 py-1.5 text-sm bg-slate-700 text-slate-300 rounded-lg
-                           hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                  hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
@@ -236,7 +236,7 @@ export default function AdminReviews() {
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page === data.totalPages}
                 className="px-3 py-1.5 text-sm bg-slate-700 text-slate-300 rounded-lg
-                           hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                  hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 Next
               </button>

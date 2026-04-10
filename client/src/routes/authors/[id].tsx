@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 // Import icons
-import { Globe, ArrowLeft } from "lucide-react";
+import { Globe } from "lucide-react";
 
 // Import our Axios instance
 import api from "../../lib/api";
@@ -33,7 +33,7 @@ export default function AuthorProfilePage() {
   const author = data?.author;
   const books = data?.books ?? [];
 
-  // ── Loading state ──
+  // Loading state
   if (isLoading) {
     return (
       <div className="min-h-screen bg-navy animate-pulse">
@@ -52,7 +52,7 @@ export default function AuthorProfilePage() {
     );
   }
 
-  // ── Not found state ──
+  // Not found state
   if (isError || !author) {
     return (
       <div className="container-page text-center py-24">
@@ -72,19 +72,9 @@ export default function AuthorProfilePage() {
 
   return (
     <div className="min-h-screen bg-bg-dark">
-      {/* ── Hero banner ── */}
+      {/* Hero banner */}
       <section className="bg-navy py-16">
         <div className="container-page">
-          {/* Back button */}
-          <button
-            onClick={() => navigate(-1)} // Go back to wherever the user came from
-            className="flex items-center gap-2 text-text-muted hover:text-teal
-                transition-colors text-sm mb-8"
-          >
-            <ArrowLeft size={16} />
-            Back
-          </button>
-
           {/* Author profile card */}
           <div className="flex flex-col sm:flex-row gap-8 items-start">
             {/* Avatar */}
@@ -92,7 +82,7 @@ export default function AuthorProfilePage() {
               <img
                 src={author.avatar}
                 alt={author.name}
-                className="w-36 h-36 rounded-full object-cover border-4 border-teal/30"
+                className="w-34 h-42 object-cover border-4 border-teal/30"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =
                     "/images/placeholder-author.webp";
@@ -103,15 +93,13 @@ export default function AuthorProfilePage() {
             {/* Author info */}
             <div className="flex flex-col gap-3 flex-1">
               {/* Name */}
-              <h1 className="text-text-light text-3xl font-bold">
-                {author.name}
-              </h1>
+              <h1 className="text-text-light">{author.name}</h1>
 
               {/* Specialties as teal pills */}
               {author.specialty?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {author.specialty.map((s: string) => (
-                    <span key={s} className="badge-primary text-xs">
+                    <span key={s} className="badge-primary">
                       {s}
                     </span>
                   ))}
@@ -164,11 +152,11 @@ export default function AuthorProfilePage() {
         </div>
       </section>
 
-      {/* ── Author's books ── */}
+      {/* Author's books */}
       <section className="section">
         <div className="container-page">
           <div className="mb-8">
-            <h2 className="text-text-light text-xl font-bold uppercase tracking-wider">
+            <h2 className="text-text-light uppercase tracking-wider">
               Books by {author.name}
             </h2>
             <div className="w-10 h-1 bg-teal rounded-full mt-1" />
@@ -181,9 +169,7 @@ export default function AuthorProfilePage() {
           {books.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <p className="text-5xl mb-4">📚</p>
-              <h3 className="text-text-light text-lg font-semibold mb-2">
-                No books yet
-              </h3>
+              <h3 className="text-text-light mb-2">No books yet</h3>
               <p className="text-text-muted text-sm">
                 This author doesn't have any books in the catalog yet.
               </p>

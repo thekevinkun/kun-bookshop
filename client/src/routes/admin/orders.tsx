@@ -32,7 +32,7 @@ export default function AdminOrders() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-white text-2xl font-bold">Orders</h1>
+        <h1 className="text-white">Orders</h1>
         <p className="text-slate-400 text-sm mt-1">
           {data?.total ?? 0} total orders.
         </p>
@@ -145,6 +145,18 @@ export default function AdminOrders() {
                     </td>
                   </tr>
                 ))}
+
+                {/* Empty state row */}
+                {!isLoading && data?.orders?.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="px-6 py-12 text-center text-slate-500"
+                    >
+                      No orders yet.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

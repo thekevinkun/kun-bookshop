@@ -1,7 +1,7 @@
 // Import express-rate-limit to control how many requests an IP can make in a time window
 import rateLimit from "express-rate-limit";
 
-// --- GLOBAL LIMITER ---
+// GLOBAL LIMITER
 // Applies to every route that doesn't have its own specific limiter
 // 100 requests per 15 minutes is fine for normal browsing
 export const globalLimiter = rateLimit({
@@ -14,7 +14,7 @@ export const globalLimiter = rateLimit({
   },
 });
 
-// --- LOGIN LIMITER ---
+// LOGIN LIMITER
 // Strict limiter for sign-in attempts
 // Only failed attempts count so real users are not punished for successful logins
 export const loginLimiter = rateLimit({
@@ -26,7 +26,7 @@ export const loginLimiter = rateLimit({
   },
 });
 
-// --- REGISTER LIMITER ---
+// REGISTER LIMITER
 // Sign-up attempts should count whether they succeed or fail
 // This makes the limiter actually useful against registration spam
 export const registerLimiter = rateLimit({
@@ -38,7 +38,7 @@ export const registerLimiter = rateLimit({
   },
 });
 
-// --- PASSWORD RESET REQUEST LIMITER ---
+// PASSWORD RESET REQUEST LIMITER
 // Limits how often someone can request reset emails from the same IP
 export const forgotPasswordLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15-minute window
@@ -50,7 +50,7 @@ export const forgotPasswordLimiter = rateLimit({
   },
 });
 
-// --- DOWNLOAD LIMITER ---
+// DOWNLOAD LIMITER
 // Prevents bots from mass-downloading books or users from hotlinking
 // 10 downloads per hour is generous for a real user, tight for a bot
 export const downloadLimiter = rateLimit({

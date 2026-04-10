@@ -64,7 +64,7 @@ const AuthorSchema = new Schema<IAuthor>(
   },
 );
 
-// --- INDEXES ---
+// INDEXES
 
 // Text index so admins can search authors by name in the dashboard
 AuthorSchema.index({ name: "text" });

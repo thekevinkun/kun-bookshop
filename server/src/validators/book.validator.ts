@@ -4,7 +4,7 @@ import { z } from "zod";
 const requiredString = (field: string) =>
   z.string().min(1, `${field} is required`);
 
-// --- CREATE BOOK SCHEMA ---
+// CREATE BOOK SCHEMA
 export const createBookSchema = z.object({
   // Title must exist and not be blank
   title: requiredString("Title"),
@@ -52,11 +52,11 @@ export const createBookSchema = z.object({
   videoUrl: z.string().url("Must be a valid URL").optional(),
 });
 
-// --- UPDATE BOOK SCHEMA ---
+// UPDATE BOOK SCHEMA
 // All fields optional — only send what changed
 export const updateBookSchema = createBookSchema.partial();
 
-// --- BOOK QUERY SCHEMA ---
+// BOOK QUERY SCHEMA
 // Validates query string params when browsing/filtering the catalog
 export const bookQuerySchema = z.object({
   search: z.string().optional(),
@@ -79,7 +79,7 @@ export const bookQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(50).optional().default(12),
 });
 
-// --- REVIEW SCHEMAS ---
+// REVIEW SCHEMAS
 // Used in Phase 5 — defined here so validators are centralized
 
 export const createReviewSchema = z.object({
@@ -95,7 +95,7 @@ export const createReviewSchema = z.object({
 
 export const updateReviewSchema = createReviewSchema.partial();
 
-// --- AUTHOR SCHEMAS ---
+// AUTHOR SCHEMAS
 // Used in Phase 7 admin dashboard — defined here so validators are centralized
 
 export const createAuthorSchema = z.object({
@@ -119,7 +119,7 @@ export const createAuthorSchema = z.object({
 
 export const updateAuthorSchema = createAuthorSchema.partial();
 
-// --- EXPORTED TYPES ---
+// EXPORTED TYPES
 export type CreateBookInput = z.infer<typeof createBookSchema>;
 export type UpdateBookInput = z.infer<typeof updateBookSchema>;
 export type BookQueryInput = z.infer<typeof bookQuerySchema>;

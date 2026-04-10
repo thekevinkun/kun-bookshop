@@ -1,11 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Star, ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
 import type { IBook } from "../../types/book";
 
 const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
-  const navigate = useNavigate();
-
   // Which slide is currently active
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -41,9 +39,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
       <section className="relative min-h-screen flex flex-col items-center justify-center bg-navy">
         <div className="flex flex-col items-center justify-center text-center">
           <p className="text-5xl mb-4">📚</p>
-          <h3 className="text-text-light text-lg font-semibold mb-2">
-            No featured yet
-          </h3>
+          <h3 className="text-text-light mb-2">No featured yet</h3>
           <p className="text-text-muted text-sm">
             There are no featured books at the moment. Check back soon!
           </p>
@@ -76,7 +72,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
           ) : (
             <div className="flex flex-col gap-5 order-2 md:order-1">
               {/* Category chip */}
-              <span className="badge-primary self-start text-xs uppercase tracking-widest">
+              <span className="badge-primary self-start uppercase tracking-widest">
                 {activeBook.category[0]}
               </span>
 
@@ -87,20 +83,32 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
 
               {/* Author and Publisher */}
               <div className="flex items-center gap-5">
-                <p className="text-text-muted text-base">
+                <p className="text-text-muted">
                   By{" "}
-                  <span className="text-teal font-semibold">
+                  <Link
+                    to={`/authors/${
+                      typeof activeBook.author === "string"
+                        ? activeBook.author
+                        : activeBook.author?._id
+                    }`}
+                    className="text-teal font-semibold"
+                  >
                     {activeBook.authorName}
-                  </span>
+                  </Link>
                 </p>
 
-                <p className="text-text-muted italic text-base">
-                  {activeBook.publisher}
-                </p>
+                <p className="text-text-muted italic">{activeBook.publisher}</p>
 
-                <p className="text-text-muted italic text-base">
-                  #{activeBook.tags[0]}
-                </p>
+                <div className="flex items-center gap-1">
+                  <p className="text-text-muted italic text-xs">
+                    #{activeBook.tags[0]}
+                  </p>
+                  {activeBook.tags.length > 1 && (
+                    <p className="text-text-muted italic text-xs">
+                      #{activeBook.tags[1]}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Rating row */}
@@ -141,13 +149,13 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                     </span>
                   )}
                 </div>
-                <button
-                  className="btn-primary btn-lg flex items-center gap-2"
-                  onClick={() => navigate(`/books/${activeBook._id}`)}
+                <Link
+                  to={`/books/${activeBook._id}`}
+                  className="btn-primary btn-md flex items-center gap-2"
                 >
                   <BookOpen size={18} />
                   View Book
-                </button>
+                </Link>
               </div>
 
               {/* Slide indicators — dots at the bottom of the text block */}

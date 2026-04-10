@@ -38,7 +38,7 @@ export default function BooksPage() {
 
   return (
     <div className="min-h-screen">
-      {/* ── Hero search section ── */}
+      {/* Hero search section */}
       <section className="relative bg-navy pt-12 overflow-visible">
         {/* Background teal glow — decorative */}
         <div className="absolute inset-0 pointer-events-none">
@@ -52,10 +52,10 @@ export default function BooksPage() {
           <p className="text-teal text-xs font-semibold uppercase tracking-widest mb-3">
             Discover Your Next Great Read
           </p>
-          <h1 className="text-text-light text-4xl sm:text-5xl font-bold leading-tight mb-2">
+          <h1 className="text-text-light leading-tight mb-2">
             Explore and Search for
           </h1>
-          <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-10">
+          <h1 className="leading-tight mb-10">
             <span className="text-teal">Any Book</span>
             <span className="text-text-light"> In Our Library</span>
           </h1>
@@ -67,15 +67,17 @@ export default function BooksPage() {
         </div>
       </section>
 
-      {/* ── Catalog section ── */}
+      {/* Catalog section */}
       <section className="section bg-bg-dark">
         <div className="container-page">
           {/* Section heading */}
           <div className="mb-8">
-            <h2 className="text-text-light text-xl font-bold uppercase tracking-wider">
+            <h2 className="text-text-light uppercase tracking-wider">
               All Library Books
             </h2>
+
             <div className="w-10 h-1 bg-teal rounded-full mt-1" />
+
             {!isLoading && (
               <p className="text-text-muted text-xs mt-2">
                 {totalCount.toLocaleString()}{" "}
@@ -99,9 +101,7 @@ export default function BooksPage() {
             !filters.fileType && (
               <div className="flex flex-col items-center justify-center py-24 text-center">
                 <p className="text-5xl mb-4">📚</p>
-                <h3 className="text-text-light text-lg font-semibold mb-2">
-                  No books yet
-                </h3>
+                <h3 className="text-text-light mb-2">No books yet</h3>
                 <p className="text-text-muted text-sm">
                   The catalog is empty — check back soon.
                 </p>
@@ -118,12 +118,13 @@ export default function BooksPage() {
               filters.fileType) && (
               <div className="flex flex-col items-center justify-center py-24 text-center">
                 <p className="text-5xl mb-4">🔍</p>
-                <h3 className="text-text-light text-lg font-semibold mb-2">
-                  No results found
-                </h3>
+
+                <h3 className="text-text-light mb-2">No results found</h3>
+
                 <p className="text-text-muted text-sm mb-4">
                   Try adjusting your filters or searching for something else.
                 </p>
+
                 <button
                   className="btn-ghost btn-sm"
                   onClick={() =>

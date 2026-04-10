@@ -100,7 +100,7 @@ export default function AdminUsers() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-white text-2xl font-bold">Users</h1>
+        <h1 className="text-white">Users</h1>
         <p className="text-slate-400 text-sm mt-1">
           {data?.total ?? 0} total users registered.
         </p>

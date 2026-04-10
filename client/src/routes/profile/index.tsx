@@ -16,20 +16,22 @@ import { useAuthStore } from "../../store/auth";
 
 // Import icons from lucide-react for the UI elements
 import {
-  Heart, // Wishlist tab icon and empty state
-  Clock, // Download history tab icon and empty state
-  Trash2, // Remove from wishlist button
-  Loader2, // Loading spinner
-  AlertCircle, // Error state icon
-  Download, // Download history item icon
-  BookOpen, // Library stat icon on profile card
-  BadgeCheck, // Verified / role badge icon
+  Heart,
+  Clock,
+  Trash2,
+  Loader2,
+  AlertCircle,
+  Download,
+  BookOpen,
+  BadgeCheck,
   ShoppingBag,
   KeyRound,
   Pencil,
 } from "lucide-react";
 
 import type { IBook, IDownloadRecord } from "../../types/book";
+
+import { formatShortDate } from "../../lib/helpers";
 
 // The two tabs available on the right panel
 type RightTab = "wishlist" | "history";
@@ -68,17 +70,7 @@ export default function ProfilePage() {
     return null;
   }
 
-  // --- Helper: format a date string into a readable short format ---
-  // e.g. "2026-04-06T10:00:00Z" → "Apr 6, 2026"
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  // --- Helper: get the user's initials for the avatar circle ---
+  // Get the user's initials for the avatar circle
   // e.g. "Kevin Mahendra" → "KM"
   const initials = [user.firstName?.charAt(0), user.lastName?.charAt(0)]
     .filter(Boolean)
@@ -115,19 +107,26 @@ export default function ProfilePage() {
               <div className="px-6 pb-6">
                 <div className="flex items-end justify-between -mt-10 mb-4">
                   {/* Avatar circle with initials */}
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white font-bold text-2xl border-4 border-[#0d1117] shadow-xl">
+                  <div
+                    className="w-20 h-20 rounded-2xl bg-gradient-to-br from-teal-400 
+                      to-teal-600 flex items-center justify-center text-white font-bold 
+                      text-2xl border-4 border-[#0d1117] shadow-xl"
+                  >
                     {initials}
                   </div>
 
                   {/* Role badge — top right of avatar row */}
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-teal-500/15 border border-teal-500/30 text-teal-400 text-xs font-medium capitalize">
+                  <div
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full 
+                    bg-teal-500/15 border border-teal-500/30 text-teal-400 text-xs font-medium capitalize"
+                  >
                     <BadgeCheck size={13} />
                     {user.role}
                   </div>
                 </div>
 
                 {/* Name and email */}
-                <h2 className="text-white font-bold text-xl leading-tight">
+                <h2 className="text-white leading-tight">
                   {user.firstName} {user.lastName}
                 </h2>
                 <p className="text-gray-400 text-sm mt-0.5">{user.email}</p>
@@ -242,9 +241,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* 
-              RIGHT — Tabbed Content Panel
-           */}
+          {/* RIGHT — Tabbed Content Panel */}
           <div className="flex-1 min-w-0">
             {/* Tab bar */}
             <div className="flex gap-1 bg-white/5 border border-white/10 rounded-xl p-1 mb-6">
@@ -333,9 +330,7 @@ export default function ProfilePage() {
                       <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
                         <Heart className="text-rose-400 opacity-60" size={28} />
                       </div>
-                      <h3 className="text-white font-semibold text-lg">
-                        Your wishlist is empty
-                      </h3>
+                      <h3 className="text-white">Your wishlist is empty</h3>
                       <p className="text-gray-500 text-sm max-w-xs">
                         Save books you're interested in — they'll show up here
                         so you can grab them later.
@@ -370,7 +365,7 @@ export default function ProfilePage() {
 
                         {/* Book details */}
                         <div className="flex-1 min-w-0 flex flex-col">
-                          <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2">
+                          <h3 className="text-white leading-snug line-clamp-2">
                             {book.title}
                           </h3>
                           <p className="text-gray-500 text-xs mt-0.5">
@@ -438,9 +433,7 @@ export default function ProfilePage() {
                       <div className="w-16 h-16 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center">
                         <Clock className="text-teal-400 opacity-60" size={28} />
                       </div>
-                      <h3 className="text-white font-semibold text-lg">
-                        No downloads yet
-                      </h3>
+                      <h3 className="text-white">No downloads yet</h3>
                       <p className="text-gray-500 text-sm max-w-xs">
                         Your download history will appear here after you
                         download a book from your library.
@@ -482,7 +475,7 @@ export default function ProfilePage() {
                             {/* Date — pushed to the far right */}
                             <div className="text-right flex-shrink-0">
                               <p className="text-gray-400 text-xs">
-                                {formatDate(record.downloadedAt)}
+                                {formatShortDate(record.downloadedAt)}
                               </p>
                               <p className="text-gray-600 text-xs mt-0.5">
                                 Downloaded

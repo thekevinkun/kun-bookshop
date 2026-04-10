@@ -13,7 +13,7 @@ import { logAuditEvent } from "../services/audit.service";
 // Import our Winston logger for error logging
 import { logger } from "../utils/logger";
 
-// --- generateDownloadUrl ---
+// generateDownloadUrl
 // POST /api/downloads/book/:bookId
 // Called when the user clicks "Download" on their library page
 // Verifyownership is already confirmed by verifyBookOwnership middleware before this runs
@@ -64,7 +64,7 @@ export const generateDownloadUrl = async (
   }
 };
 
-// --- getDownloadHistory ---
+// getDownloadHistory
 // GET /api/downloads/history
 // Returns a list of all books this user has ever downloaded, with timestamps
 // Used on the library/profile page to show download activity

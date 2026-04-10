@@ -7,7 +7,7 @@ interface SimilarBooksProps {
 
 const SimilarBooks = ({ books }: SimilarBooksProps) => (
   <div className="flex flex-col gap-4">
-    <h2 className="text-text-light text-lg font-bold uppercase tracking-wider">
+    <h2 className="text-text-light uppercase tracking-wider">
       Similar Books
     </h2>
     <div className="w-8 h-0.5 bg-teal rounded-full -mt-2 mb-2" />

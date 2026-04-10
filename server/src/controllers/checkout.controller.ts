@@ -38,12 +38,12 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     // Get the logged-in user's ID from the JWT payload (attached by auth middleware)
     const userId = req.user!.userId;
 
-    // --- SERVER-SIDE PRICE VERIFICATION (Security §4.1) ---
+    // SERVER-SIDE PRICE VERIFICATION (Security §4.1)
     // Extract just the book IDs from the items array
     const bookIds = items.map((item: { bookId: string }) => item.bookId);
     const bookIdsSorted = [...bookIds].sort().join(","); // Sort so order doesn't matter
 
-    // --- DUPLICATE ORDER GUARD (Security §4.3) ---
+    // DUPLICATE ORDER GUARD (Security §4.3)
     const recentPendingOrder = await Order.findOne({
       userId,
       paymentStatus: "pending",
@@ -102,7 +102,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       return sum + (book.discountPrice ?? book.price);
     }, 0);
 
-    // --- COUPON VALIDATION ---
+    // COUPON VALIDATION
     // Start with no discount applied
     let discount = 0;
     let appliedCouponCode: string | undefined;
@@ -144,7 +144,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     // Final total after any discount
     const total = subtotal - discount;
 
-    // --- CREATE ORDER IN DB ---
+    // CREATE ORDER IN DB
     // We create the order BEFORE the Stripe session so we have an orderId for the metadata
     const order = new Order({
       orderNumber: generateOrderNumber(), // Human-readable unique ID
@@ -165,7 +165,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 
     await order.save();
 
-    // --- CREATE STRIPE CHECKOUT SESSION ---
+    // CREATE STRIPE CHECKOUT SESSION
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"], // Only accept card payments
 

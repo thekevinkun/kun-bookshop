@@ -4,7 +4,7 @@ import { z } from "zod";
 const requiredString = (field: string) =>
   z.string().min(1, `${field} is required`);
 
-// --- REGISTER SCHEMA ---
+// REGISTER SCHEMA
 export const registerSchema = z
   .object({
     email: requiredString("Email")
@@ -30,7 +30,7 @@ export const registerSchema = z
     path: ["confirmPassword"],
   });
 
-// --- LOGIN SCHEMA ---
+// LOGIN SCHEMA
 export const loginSchema = z.object({
   email: requiredString("Email")
     .email("Please provide a valid email address")
@@ -40,7 +40,7 @@ export const loginSchema = z.object({
   password: requiredString("Password"),
 });
 
-// --- FORGOT PASSWORD SCHEMA ---
+// FORGOT PASSWORD SCHEMA
 export const forgotPasswordSchema = z.object({
   email: requiredString("Email")
     .email("Please provide a valid email address")
@@ -48,7 +48,7 @@ export const forgotPasswordSchema = z.object({
     .trim(),
 });
 
-// --- RESET PASSWORD SCHEMA ---
+// RESET PASSWORD SCHEMA
 export const resetPasswordSchema = z
   .object({
     password: requiredString("Password")
@@ -65,7 +65,7 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
-// --- CHANGE PASSWORD SCHEMA ---
+// CHANGE PASSWORD SCHEMA
 export const changePasswordSchema = z
   .object({
     currentPassword: requiredString("Current password"),
@@ -88,7 +88,7 @@ export const changePasswordSchema = z
     path: ["newPassword"],
   });
 
-// --- TYPES ---
+// TYPES
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;

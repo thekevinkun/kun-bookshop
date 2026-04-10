@@ -38,7 +38,7 @@ import {
   sendPasswordChangedEmail,
 } from "../services/email.service";
 
-// --- COOKIE OPTIONS ---
+// COOKIE OPTIONS
 // Reusable cookie settings we apply whenever we set an auth cookie
 // Defined once here so we never accidentally use different settings in different places
 const COOKIE_OPTIONS = {
@@ -48,7 +48,7 @@ const COOKIE_OPTIONS = {
   path: "/", // Cookie is sent with every request to our domain
 };
 
-// --- REGISTER ---
+// REGISTER
 // POST /api/auth/register
 // Creates a new user account and sends a verification email
 export const register = async (req: Request, res: Response): Promise<void> => {
@@ -111,7 +111,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// --- LOGIN ---
+// LOGIN
 // POST /api/auth/login
 // Validates credentials, handles account lockout, sets auth cookies
 export const login = async (req: Request, res: Response): Promise<void> => {
@@ -124,11 +124,16 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // If user doesn't exist, return a vague error
     // Saying "user not found" would tell attackers which emails are registered
     if (!user) {
-      res.status(401).json({ error: "The email or password you entered is incorrect. Please try again." });
+      res
+        .status(401)
+        .json({
+          error:
+            "The email or password you entered is incorrect. Please try again.",
+        });
       return;
     }
 
-    // --- ACCOUNT LOCKOUT CHECK ---
+    // ACCOUNT LOCKOUT CHECK
     // If lockUntil is set and is still in the future, the account is locked
     if (user.lockUntil && user.lockUntil > new Date()) {
       // Tell them how many minutes remain on the lockout
@@ -144,7 +149,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // Compare the submitted password against the stored hash
     const isPasswordValid = await comparePassword(password, user.password);
 
-    // --- WRONG PASSWORD ---
+    // WRONG PASSWORD
     if (!isPasswordValid) {
       // Increment the failure counter
       user.failedLoginAttempts += 1;
@@ -161,7 +166,12 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
       // Save the incremented failure count
       await user.save();
-      res.status(401).json({ error: "The email or password you entered is incorrect. Please try again." });
+      res
+        .status(401)
+        .json({
+          error:
+            "The email or password you entered is incorrect. Please try again.",
+        });
       return;
     }
 
@@ -173,7 +183,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // --- CORRECT PASSWORD ---
+    // CORRECT PASSWORD
     // Reset the failure counter and remove any lock — they got it right
     user.failedLoginAttempts = 0;
     user.lockUntil = undefined;
@@ -233,7 +243,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// --- LOGOUT ---
+// LOGOUT
 // POST /api/auth/logout
 // Revokes the refresh token and clears both cookies
 export const logout = async (req: Request, res: Response): Promise<void> => {
@@ -263,7 +273,7 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// --- REFRESH TOKENS ---
+// REFRESH TOKENS
 // POST /api/auth/refresh
 // Issues a new access token + new refresh token (token rotation)
 export const refreshTokens = async (
@@ -300,7 +310,7 @@ export const refreshTokens = async (
       return;
     }
 
-    // --- TOKEN ROTATION ---
+    // TOKEN ROTATION
     // Immediately revoke the OLD refresh token
     // If an attacker steals it and tries to use it after us, it'll be dead
     storedToken.isRevoked = true;
@@ -351,7 +361,7 @@ export const refreshTokens = async (
   }
 };
 
-// --- VERIFY EMAIL ---
+// VERIFY EMAIL
 // GET /api/auth/verify-email/:token
 // User clicks the link in their welcome email — this marks them as verified
 export const verifyEmail = async (
@@ -393,7 +403,7 @@ export const verifyEmail = async (
   }
 };
 
-// --- FORGOT PASSWORD ---
+// FORGOT PASSWORD
 // POST /api/auth/forgot-password
 // Generates a reset token and sends it to the user's email
 export const forgotPassword = async (
@@ -434,7 +444,7 @@ export const forgotPassword = async (
   }
 };
 
-// --- RESET PASSWORD ---
+// RESET PASSWORD
 // POST /api/auth/reset-password/:token
 // User submits their new password after clicking the reset link
 export const resetPassword = async (
@@ -486,7 +496,7 @@ export const resetPassword = async (
   }
 };
 
-// --- GET ME ---
+// GET ME
 // GET /api/auth/me
 // Returns the currently logged-in user's profile data
 // Protected by authenticate middleware — req.user is guaranteed to exist here
@@ -508,7 +518,7 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// --- UPDATE PROFILE ---
+// UPDATE PROFILE
 // PUT /api/auth/update-profile
 // Lets a logged-in user update their name and avatar
 export const updateProfile = async (
@@ -542,7 +552,7 @@ export const updateProfile = async (
   }
 };
 
-// --- CHANGE PASSWORD ---
+// CHANGE PASSWORD
 // PUT /api/auth/change-password
 // Lets a logged-in user change their password (must know current password)
 export const changePassword = async (

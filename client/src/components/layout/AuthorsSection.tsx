@@ -13,9 +13,7 @@ const AuthorsSection = () => {
           <p className="text-teal text-xs font-semibold uppercase tracking-widest mb-1">
             Meet The Popular Minds
           </p>
-          <h2 className="text-text-light text-2xl font-bold uppercase tracking-wider">
-            Authors
-          </h2>
+          <h2 className="text-text-light uppercase tracking-wider">Authors</h2>
           <div className="w-10 h-1 bg-teal rounded-full mt-2" />
         </div>
 
@@ -34,9 +32,7 @@ const AuthorsSection = () => {
         {!isLoading && authors.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <p className="text-5xl mb-4">✍️</p>
-            <h3 className="text-text-light text-lg font-semibold mb-2">
-              No authors yet
-            </h3>
+            <h3 className="text-text-light mb-2">No authors yet</h3>
             <p className="text-text-muted text-sm">
               Authors will appear here once they're added to the system.
             </p>

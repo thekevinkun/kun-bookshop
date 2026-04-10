@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 // Import Node's built-in crypto module for generating random bytes and hashing
 import crypto from "crypto";
 
-// --- ACCESS TOKEN ---
+// ACCESS TOKEN
 // Generate a short-lived access token (15 minutes)
 // This is what the user sends with every API request to prove they're logged in
 export const generateAccessToken = (
@@ -19,7 +19,7 @@ export const generateAccessToken = (
   );
 };
 
-// --- REFRESH TOKEN ---
+// REFRESH TOKEN
 // Generate a long-lived refresh token (30 days)
 // This is NOT a JWT — it's just a random string we store in the database
 // Storing it in DB means we can revoke it anytime (JWT can't be revoked)
@@ -29,7 +29,7 @@ export const generateRefreshToken = (): string => {
   return crypto.randomBytes(64).toString("hex");
 };
 
-// --- HASH TOKEN ---
+// HASH TOKEN
 // Hash a token before storing it in the database
 // Same idea as hashing passwords — if DB leaks, attackers get useless hashes
 export const hashToken = (token: string): string => {

@@ -79,10 +79,10 @@ const CTASection = () => {
             <p className="text-teal text-xs font-semibold uppercase tracking-widest mb-2">
               Our Biggest Deal
             </p>
-            <h2 className="text-white text-3xl sm:text-4xl font-black mb-1">
+            <h2 className="text-white !text-4xl mb-1">
               PDF & ePub delivered
             </h2>
-            <h2 className="text-white text-3xl sm:text-4xl font-black mb-3">
+            <h2 className="text-white mb-3">
               straight to your <span className="text-teal">inbox</span>
             </h2>
             <p className="text-white/60 text-sm mb-6 max-w-sm ml-auto">
@@ -90,8 +90,8 @@ const CTASection = () => {
               waiting. No shipping. Just reading.
             </p>
             <button
-              className="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold
-                px-7 py-3 rounded-full hover:bg-teal hover:text-white transition-all duration-200"
+              className="gap-2 bg-white text-gray-900 
+                btn btn-md rounded-full hover:bg-teal hover:text-white"
               onClick={() => navigate("/books")}
             >
               Shop Now

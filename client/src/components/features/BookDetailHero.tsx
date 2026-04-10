@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useCartStore } from "../../store/cart";
 import {
   useAddToWishlist,
@@ -8,7 +8,6 @@ import {
 } from "../../hooks/useLibrary";
 import {
   Star,
-  ArrowLeft,
   ShoppingCart,
   Heart,
   Download,
@@ -137,53 +136,58 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* LEFT: Info */}
           <div className="flex flex-col gap-5 order-2 md:order-1">
-            <button
-              className="btn-ghost btn-sm flex items-center gap-2 self-start -ml-2"
-              onClick={() => navigate(-1)}
-            >
-              <ArrowLeft size={15} /> Back
-            </button>
-
             <div className="flex flex-wrap items-center gap-2">
               {visibleCategories.map((category) => (
                 <span
                   key={category}
-                  className="badge-primary self-start text-xs uppercase tracking-widest"
+                  className="badge-primary self-start !text-[11px] uppercase tracking-widest"
                 >
                   {category}
                 </span>
               ))}
             </div>
 
-            <h1 className="text-text-light text-4xl sm:text-5xl font-bold leading-tight">
+            <h1 className="text-text-light leading-tight">
               {book.title}
             </h1>
 
             <p className="text-text-muted text-base">
               By{" "}
-              <span className="text-teal font-semibold">{book.authorName}</span>
+              <Link
+                to={`/authors/${
+                  typeof book.author === "string"
+                    ? book.author
+                    : book.author?._id
+                }`}
+                className="text-teal font-semibold"
+              >
+                {book.authorName}
+              </Link>
             </p>
 
             {/* Stars */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    size={16}
-                    className={
-                      i < Math.round(book.rating)
-                        ? "text-warning fill-warning"
-                        : "text-bg-hover fill-bg-hover"
-                    }
-                  />
-                ))}
-              </div>
-              <span className="text-text-muted text-sm">
-                {book.rating.toFixed(1)} · {book.reviewCount} reviews
-              </span>
-            </div>
+            {book.rating > 0 && (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      className={
+                        i < Math.round(book.rating)
+                          ? "text-warning fill-warning"
+                          : "text-bg-hover fill-bg-hover"
+                      }
+                    />
+                  ))}
+                </div>
 
+                <span className="text-text-muted text-sm">
+                  {book.rating.toFixed(1)} · {book.reviewCount} reviews
+                </span>
+              </div>
+            )}
+            
             {/* Meta chips */}
             <div className="flex flex-wrap gap-4 text-sm">
               <span className="flex items-center gap-1.5 text-text-muted">
@@ -194,6 +198,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 )}
                 {book.fileType.toUpperCase()}
               </span>
+
               <span className="flex items-center gap-1.5 text-text-muted">
                 <Download size={14} className="text-teal" />
                 {formatFileSize(book.fileSize)}
@@ -222,10 +227,12 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 </>
               )}
             </div>
-
-            <p className="text-text-muted text-xs">
-              {book.purchaseCount.toLocaleString()} people have bought this
-            </p>
+            
+            {book.purchaseCount > 0 && (
+              <p className="text-text-muted text-xs">
+                {book.purchaseCount.toLocaleString()} people have bought this
+              </p>
+            )}
 
             {/* Buttons */}
             <div id="book-purchase-section" className="flex gap-3 flex-wrap">
@@ -251,7 +258,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 disabled={isWishlistPending}
                 className={[
                   // Base styles — ghost button with icon
-                  "flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
+                  "flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
                   // Filled heart style if wishlisted, outline if not
                   isWishlisted
                     ? "bg-rose-500/20 border-rose-500/40 text-rose-400 hover:bg-rose-500/30" // Already wishlisted

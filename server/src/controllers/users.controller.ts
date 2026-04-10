@@ -10,7 +10,7 @@ import { Book } from "../models/Book";
 // Import our Winston logger for error logging
 import { logger } from "../utils/logger";
 
-// --- getLibrary ---
+// getLibrary
 // GET /api/users/library
 // Returns the full list of books the logged-in user has purchased
 export const getLibrary = async (
@@ -52,7 +52,7 @@ export const getLibrary = async (
   }
 };
 
-// --- getWishlist ---
+// getWishlist
 // GET /api/users/wishlist
 // Returns the full list of books the logged-in user has wishlisted
 export const getWishlist = async (
@@ -91,7 +91,7 @@ export const getWishlist = async (
   }
 };
 
-// --- addToWishlist ---
+// addToWishlist
 // POST /api/users/wishlist/:bookId
 // Adds a book to the logged-in user's wishlist
 export const addToWishlist = async (
@@ -132,7 +132,7 @@ export const addToWishlist = async (
   }
 };
 
-// --- removeFromWishlist ---
+// removeFromWishlist
 // DELETE /api/users/wishlist/:bookId
 // Removes a book from the logged-in user's wishlist
 export const removeFromWishlist = async (
@@ -157,10 +157,8 @@ export const removeFromWishlist = async (
     res.json({ message: "Book removed from wishlist" });
   } catch (error) {
     logger.error("Failed to remove from wishlist", { error, userId, bookId });
-    res
-      .status(500)
-      .json({
-        error: "Failed to remove book from wishlist. Please try again.",
-      });
+    res.status(500).json({
+      error: "Failed to remove book from wishlist. Please try again.",
+    });
   }
 };

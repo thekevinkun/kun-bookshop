@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
 import type { IBook } from "../types/book";
 
@@ -8,8 +8,6 @@ interface BookCardProps {
 }
 
 const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
-  const navigate = useNavigate();
-
   const displayPrice = book.discountPrice ?? book.price;
   const categories = Array.isArray(book.category) ? book.category : [];
 
@@ -19,9 +17,9 @@ const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
       : null;
 
   return (
-    <div
+    <Link
       className="group cursor-pointer flex flex-col"
-      onClick={() => navigate(`/books/${book._id}`)}
+      to={`/books/${book._id}`}
     >
       {/* COVER */}
       <div className="relative overflow-hidden rounded-lg mb-3 aspect-[2/3] bg-ocean">
@@ -60,8 +58,8 @@ const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
       <div className="flex flex-col gap-1 flex-1">
         {/* Title — clamp to 2 lines */}
         <h3
-          className="text-text-light text-sm font-semibold leading-snug
-              line-clamp-2 group-hover:text-teal transition-colors duration-200"
+          className="text-text-light !leading-snug line-clamp-2 
+            group-hover:text-teal transition-colors duration-200"
         >
           {book.title}
         </h3>
@@ -105,7 +103,7 @@ const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
           </div>
         )}
       </div>
-    </div>
+    </Link>
   );
 };
 

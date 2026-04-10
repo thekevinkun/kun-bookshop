@@ -106,17 +106,13 @@ const DiscountSection = () => {
       {promoCards.map((card, index) => (
         <div
           key={card.target}
-          className="relative overflow-hidden rounded-2xl cursor-pointer flex-1 flex items-center group"
+          className="relative overflow-hidden rounded-2xl flex-1 flex items-center group"
           style={{
             background:
               index === 0
                 ? "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)"
                 : "linear-gradient(135deg, #0f3d3d 0%, #134e4a 100%)",
           }}
-          onClick={() =>
-            // This opens the catalog sorted by newest books.
-            navigate(`/books?sortBy=${card.sortBy}&sortOrder=${card.sortOrder}`)
-          }
         >
           {/* This adds a soft glowing shape behind the promo card. */}
           <div
@@ -168,12 +164,17 @@ const DiscountSection = () => {
             >
               {card.sublabel}
             </p>
-            <h3 className="text-white text-4xl font-black mb-4">
+            <h3 className="text-white !text-3xl font-black mb-4">
               {card.label} <span className="text-teal">{card.target}% OFF</span>
             </h3>
             <button
-              className="flex items-center gap-2 bg-white text-gray-900 text-sm font-semibold
-                    px-5 py-2.5 rounded-full hover:bg-teal hover:text-white transition-all duration-200"
+              className="flex items-center gap-2 bg-white text-gray-900 
+                  btn btn-md rounded-full hover:bg-teal hover:text-white"
+              onClick={() =>
+                navigate(
+                  `/books?sortBy=${card.sortBy}&sortOrder=${card.sortOrder}`,
+                )
+              }
             >
               Shop Now
               <ChevronRight size={14} />

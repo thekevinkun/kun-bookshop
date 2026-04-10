@@ -40,7 +40,7 @@ const normalizeCategory = (category: string) => category.trim().toLowerCase();
 const escapeRegex = (value: string) =>
   value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-// --- HELPER: Upload buffer to Cloudinary ---
+// HELPER: Upload buffer to Cloudinary
 const uploadToCloudinary = (
   buffer: Buffer,
   folder: string,
@@ -61,7 +61,7 @@ const uploadToCloudinary = (
   });
 };
 
-// --- HELPER: Delete file from Cloudinary ---
+// HELPER: Delete file from Cloudinary
 const deleteFromCloudinary = async (
   publicId: string,
   resourceType: "image" | "raw" = "image",

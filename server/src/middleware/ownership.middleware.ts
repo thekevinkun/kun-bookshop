@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 // Import the User model so we can check the user's library array
 import { User } from "../models/User";
 
-// --- verifyBookOwnership ---
+// verifyBookOwnership
 // This middleware sits between 'authenticate' and the download handler
 // It checks that the logged-in user actually OWNS (purchased) the book they're trying to download
 // This is our BOLA (Broken Object Level Authorization) guard for downloads

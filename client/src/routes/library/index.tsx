@@ -47,7 +47,7 @@ export default function LibraryPage() {
     return null; // Return null so nothing renders while the navigation happens
   }
 
-  // --- Handle Download Click ---
+  // Handle Download Click
   const handleDownload = (bookId: string) => {
     // Mark this specific book as downloading so its card shows a spinner
     setDownloadingBookId(bookId);
@@ -61,7 +61,7 @@ export default function LibraryPage() {
     });
   };
 
-  // --- Loading State ---
+  // Loading State
   if (isLoading) {
     return (
       // Full-page centered spinner while we wait for the library to load
@@ -71,7 +71,7 @@ export default function LibraryPage() {
     );
   }
 
-  // --- Error State ---
+  // Error State
   if (isError) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-center px-4">
@@ -87,7 +87,7 @@ export default function LibraryPage() {
     );
   }
 
-  // --- Empty State ---
+  // Empty State
   // The user is logged in and the request succeeded but they haven't bought anything yet
   if (!library || library.length === 0) {
     return (
@@ -113,7 +113,7 @@ export default function LibraryPage() {
     );
   }
 
-  // --- Library Grid ---
+  // Library Grid
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">

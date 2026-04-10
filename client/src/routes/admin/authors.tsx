@@ -61,7 +61,7 @@ export default function AdminAuthors() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-white text-2xl font-bold">Authors</h1>
+          <h1 className="text-white">Authors</h1>
           <p className="text-slate-400 text-sm mt-1">
             {data?.total ?? 0} authors in the system.
           </p>

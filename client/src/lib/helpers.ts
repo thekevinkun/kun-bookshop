@@ -14,6 +14,16 @@ export const formatDate = (dateStr?: string) => {
   });
 };
 
+// Format a date string into a readable short format
+// e.g. "2026-04-06T10:00:00Z" → "Apr 6, 2026"
+export const formatShortDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
 export const resolveAuthorName = (author: IBook["author"]): string => {
   if (!author) return "Unknown";
   if (typeof author === "string") return author;
@@ -26,7 +36,7 @@ export const getDefaultValidUntil = () => {
   return date.toISOString().slice(0, 10);
 };
 
-// ── Share helpers ────────────────────────────────────────────────────────────
+// Share helpers
 // These build the pre-filled share URLs for each social platform
 // The admin clicks the button and the platform opens with the message pre-filled
 

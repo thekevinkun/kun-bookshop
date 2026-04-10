@@ -40,7 +40,7 @@ const BookGrid = ({
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
         <p className="text-6xl mb-4">📚</p>
-        <h3 className="text-text-light text-xl font-semibold mb-2">
+        <h3 className="text-text-light mb-2">
           No books found
         </h3>
         <p className="text-text-muted text-sm max-w-xs">

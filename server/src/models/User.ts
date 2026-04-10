@@ -120,7 +120,7 @@ const UserSchema = new Schema<IUser>(
   },
 );
 
-// --- INDEXES ---
+// INDEXES
 // Index on role so we can quickly query all admins
 UserSchema.index({ role: 1 });
 

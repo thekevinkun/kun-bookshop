@@ -29,7 +29,7 @@ const RecommendedSection = () => {
                 ? "Based on your purchase history"
                 : "Popular picks to get you started"}
             </p>
-            <h2 className="text-text-light text-2xl font-bold uppercase tracking-wider">
+            <h2 className="text-text-light uppercase tracking-wider">
               {/* Label switches once they have purchase history */}
               {data?.personalised ? "Recommended for You" : "Top Rated Books"}
             </h2>
@@ -41,9 +41,7 @@ const RecommendedSection = () => {
         {!isLoading && books.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <p className="text-6xl mb-4">📚</p>
-            <h3 className="text-text-light text-lg font-semibold mb-2">
-              No recommendations yet
-            </h3>
+            <h3 className="text-text-light mb-2">No recommendations yet</h3>
             <p className="text-text-muted text-sm">
               Start exploring and purchasing books to get personalised picks.
             </p>

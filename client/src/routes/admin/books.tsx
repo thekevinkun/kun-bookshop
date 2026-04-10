@@ -82,7 +82,7 @@ export default function AdminBooks() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-white text-2xl font-bold">Books</h1>
+          <h1 className="text-white">Books</h1>
           <p className="text-slate-400 text-sm mt-1">
             Manage your book catalog.
           </p>

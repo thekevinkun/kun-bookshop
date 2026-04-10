@@ -67,7 +67,7 @@ const ReviewSchema = new Schema<IReview>(
   },
 );
 
-// --- INDEXES ---
+// INDEXES
 
 // Compound index: one user can only review each book once
 // The unique constraint is enforced at the DB level, not just app level

@@ -83,7 +83,7 @@ export default function AdminDashboard() {
     <div className="space-y-8">
       {/* Page title */}
       <div>
-        <h1 className="text-white text-2xl font-bold">Dashboard</h1>
+        <h1 className="text-white">Dashboard</h1>
         <p className="text-slate-400 text-sm mt-1">
           Welcome back, here's what's happening.
         </p>
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <TrendingUp size={18} className="text-teal-400" />
-            <h2 className="text-white font-semibold">Revenue Over Time</h2>
+            <h2 className="text-white !text-base">Revenue Over Time</h2>
           </div>
           {/* Day range buttons — clicking changes the chart data */}
           <div className="flex gap-2">
@@ -184,7 +184,7 @@ export default function AdminDashboard() {
 
       {/* ── Recent orders table ── */}
       <div className="bg-[#1E293B] rounded-xl border border-slate-700/50 p-6">
-        <h2 className="text-white font-semibold mb-4">Recent Orders</h2>
+        <h2 className="text-white !text-base mb-4">Recent Orders</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

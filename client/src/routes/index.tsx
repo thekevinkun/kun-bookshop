@@ -26,7 +26,7 @@ export default function HomePage() {
         <div className="container-page">
           {/* Section header */}
           <div className="mb-8">
-            <h2 className="text-text-light text-2xl font-bold uppercase tracking-wider">
+            <h2 className="text-text-light uppercase tracking-wider">
               New Arrivals & Deals
             </h2>
             <div className="w-12 h-1 bg-teal rounded-full mt-2" />

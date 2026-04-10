@@ -31,7 +31,7 @@ import {
 // Create the router instance — we'll attach all auth routes to this
 const router = Router();
 
-// --- ZOD VALIDATION MIDDLEWARE ---
+// ZOD VALIDATION MIDDLEWARE
 // A small reusable helper that validates req.body against a Zod schema
 // If validation fails, it returns a 400 with the exact error messages
 // If validation passes, it replaces req.body with the parsed (cleaned) data
@@ -67,7 +67,7 @@ import {
   changePasswordSchema,
 } from "../validators/auth.validator";
 
-// --- PUBLIC ROUTES ---
+// PUBLIC ROUTES
 // These routes do NOT require the user to be logged in
 
 // POST /api/auth/register — create a new account
@@ -107,7 +107,7 @@ router.post(
   resetPassword,
 );
 
-// --- PROTECTED ROUTES ---
+// PROTECTED ROUTES
 // These routes require a valid access token — authenticate middleware runs first
 
 // GET /api/auth/me — get the currently logged-in user's profile
