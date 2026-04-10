@@ -1,4 +1,4 @@
-import { BookCard } from "../../cards";
+import { BookCardCompact } from "../../cards";
 import type { IBook } from "../../types/book";
 
 interface SimilarBooksProps {
@@ -17,7 +17,7 @@ const SimilarBooks = ({ books }: SimilarBooksProps) => (
       <div className="grid grid-cols-2 gap-4">
         {books.map((b) => (
           // This reuses the normal card but hides category and price text.
-          <BookCard key={b._id} book={b} compactInfo />
+          <BookCardCompact key={b._id} book={b} hideNew />
         ))}
       </div>
     ) : (

@@ -81,23 +81,45 @@ export const getAuthors = async (
     }
 
     const authors = await Author.find(filter)
-      .sort({ name: 1 }) // Alphabetical order — easiest to scan in a dropdown
       .skip((page - 1) * limit)
       .limit(limit)
       .lean();
 
-    // For each author, count how many active books they have
-    // Promise.all runs all counts in parallel — much faster than sequential awaits
+    // For each author, count books AND sum their total purchaseCount
+    // Promise.all runs all queries in parallel — fast even with many authors
     const authorsWithCount = await Promise.all(
       authors.map(async (author) => {
-        const bookCount = await Book.countDocuments({
+        // Get all active books for this author in one query
+        const books = await Book.find({
           author: author._id as any,
           isActive: true,
-        });
-        // Attach bookCount to the author object before returning
-        return { ...author, bookCount };
+        })
+          .select("purchaseCount")
+          .lean();
+
+        const bookCount = books.length;
+
+        // Sum purchaseCount across all their books — this is our ranking signal
+        // An author with 3 books each sold 10 times scores 30 — better than
+        // an author with 10 books sold once each
+        const totalPurchaseCount = books.reduce(
+          (sum, book) => sum + (book.purchaseCount ?? 0),
+          0,
+        );
+
+        return { ...author, bookCount, totalPurchaseCount };
       }),
     );
+
+    // Sort by totalPurchaseCount descending — most purchased authors first
+    // Secondary sort by bookCount — more books is a tiebreaker signal
+    // Tertiary sort by name — alphabetical as final tiebreaker (current behavior)
+    authorsWithCount.sort((a, b) => {
+      if (b.totalPurchaseCount !== a.totalPurchaseCount)
+        return b.totalPurchaseCount - a.totalPurchaseCount;
+      if (b.bookCount !== a.bookCount) return b.bookCount - a.bookCount;
+      return a.name.localeCompare(b.name);
+    });
 
     const total = await Author.countDocuments(filter);
 

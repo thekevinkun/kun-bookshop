@@ -1,5 +1,5 @@
 // Import React Router's navigation hook
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // Import our author type
 import type { IAuthor } from "../types/book";
@@ -10,14 +10,12 @@ interface AuthorCardProps {
 }
 
 const AuthorCard = ({ author }: AuthorCardProps) => {
-  const navigate = useNavigate();
-
   return (
-    <div
+    <Link
+      to={`/authors/${author._id}`}
       className="group card-base flex flex-col items-center text-center
         cursor-pointer hover:-translate-y-1 transition-all duration-300"
       // Navigate to the author's dedicated profile page — not a search URL
-      onClick={() => navigate(`/authors/${author._id}`)}
     >
       {/* Avatar — circular with teal ring on hover */}
       <div className="relative mb-3">
@@ -66,7 +64,7 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
           {author.bookCount} {author.bookCount === 1 ? "book" : "books"}
         </span>
       )}
-    </div>
+    </Link>
   );
 };
 

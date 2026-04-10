@@ -1,8 +1,13 @@
 import { Link } from "react-router-dom";
 import type { IBook } from "../types/book";
 
+interface BookCardCompactProps {
+  book: IBook;
+  hideNew?: boolean;
+}
+
 // Inline — small enough to not need its own file
-const BookCardCompact = ({ book }: { book: IBook }) => (
+const BookCardCompact = ({ book, hideNew }: BookCardCompactProps) => (
   <Link
     to={`/books/${book._id}`}
     className="group relative rounded-xl overflow-hidden block w-full h-full"
@@ -31,14 +36,22 @@ const BookCardCompact = ({ book }: { book: IBook }) => (
         {book.authorName}
       </p>
     </div>
-    <div className="absolute top-2 left-2">
-      <span
-        className="bg-teal text-white text-[10px] font-bold px-2 py-0.5
-            rounded-full uppercase tracking-wide"
-      >
-        New
-      </span>
-    </div>
+
+    {!hideNew && (
+      <div className="absolute top-2 left-2">
+        <span
+          className="bg-teal text-white text-[10px] font-bold px-2 py-0.5
+              rounded-full uppercase tracking-wide"
+        >
+          New
+        </span>
+      </div>
+    )}
+
+    <div
+      className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal
+          scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+    />
   </Link>
 );
 
