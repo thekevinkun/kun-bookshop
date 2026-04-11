@@ -15,9 +15,17 @@ import { Coupon } from "../models/Coupon";
 // Import our logger — never use console.log in this project
 import { logger } from "../utils/logger";
 
-// Initialize Stripe with our secret key from .env
-// This is the main Stripe client we use to create sessions and verify webhooks
-const stripe = Stripe(env.STRIPE_SECRET_KEY);
+// Store the stripe instance — initialized lazily on first use
+// This allows tests to mock the stripe module before the instance is created
+let _stripe: ReturnType<typeof Stripe> | null = null;
+
+function getStripe() {
+  if (!_stripe) {
+    // Call Stripe as a function (not constructor) — matches your existing usage
+    _stripe = Stripe(env.STRIPE_SECRET_KEY);
+  }
+  return _stripe!;
+}
 
 // Helper to generate a unique human-readable order number
 // Format: ORD-20260403-ABC123 — date + 6 random uppercase chars
@@ -59,7 +67,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
         .join(",");
 
       if (savedBookIdsSorted === bookIdsSorted) {
-        const existingSession = await stripe.checkout.sessions.retrieve(
+        const existingSession = await getStripe().checkout.sessions.retrieve(
           recentPendingOrder.stripeSessionId,
         );
         return res.json({
@@ -166,7 +174,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     await order.save();
 
     // CREATE STRIPE CHECKOUT SESSION
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       payment_method_types: ["card"], // Only accept card payments
 
       // Build one line item per book for Stripe's UI

@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 // Import models
 import { User } from "../models/User";
 import { Coupon } from "../models/Coupon";
+import { Order } from "../models/Order";
 
 import { sendCouponBlast } from "../services/email.service";
 
@@ -70,8 +71,24 @@ export const validateCoupon = async (
     return;
   }
 
-  // Calculate the discount amount
+  // CHECK PER-USER COUPON USAGE
+  // Look for any completed order from this user that already used this coupon
+  // We check paymentStatus 'completed' — a pending/failed order doesn't count as "used"
+  const userId = req.user!.userId; // req.user is set by the authenticate middleware
+  const previousUse = await Order.findOne({
+    userId,
+    couponCode: normalisedCode,
+    paymentStatus: "completed",
+  });
 
+  if (previousUse) {
+    res
+      .status(400)
+      .json({ error: "You have already used this coupon on a previous order" });
+    return;
+  }
+
+  // Calculate the discount amount
   let discountAmount: number;
 
   if (coupon.discountType === "percentage") {

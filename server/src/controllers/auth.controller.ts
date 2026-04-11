@@ -124,12 +124,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // If user doesn't exist, return a vague error
     // Saying "user not found" would tell attackers which emails are registered
     if (!user) {
-      res
-        .status(401)
-        .json({
-          error:
-            "The email or password you entered is incorrect. Please try again.",
-        });
+      res.status(401).json({
+        error:
+          "The email or password you entered is incorrect. Please try again.",
+      });
       return;
     }
 
@@ -166,12 +164,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
       // Save the incremented failure count
       await user.save();
-      res
-        .status(401)
-        .json({
-          error:
-            "The email or password you entered is incorrect. Please try again.",
-        });
+      res.status(401).json({
+        error:
+          "The email or password you entered is incorrect. Please try again.",
+      });
       return;
     }
 
@@ -183,12 +179,18 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // CORRECT PASSWORD
-    // Reset the failure counter and remove any lock — they got it right
-    user.failedLoginAttempts = 0;
-    user.lockUntil = undefined;
-    user.lastLogin = new Date(); // Record when they last logged in
-    await user.save();
+    // CORRECT PASSWORD — reset lockout fields atomically
+    // Split into $set (for values) and $unset (for fields we want to clear)
+    // because $set: { field: undefined } is silently ignored by MongoDB
+    await User.findByIdAndUpdate(user._id, {
+      $set: {
+        failedLoginAttempts: 0, // Reset the wrong-password counter to zero
+        lastLogin: new Date(), // Record when they last logged in successfully
+      },
+      $unset: {
+        lockUntil: "", // Remove the lockout field entirely — empty string is MongoDB's $unset syntax
+      },
+    });
 
     // Generate the 15-minute access token
     const accessToken = generateAccessToken(

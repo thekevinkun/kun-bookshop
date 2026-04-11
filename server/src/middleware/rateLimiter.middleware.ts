@@ -9,6 +9,7 @@ export const globalLimiter = rateLimit({
   max: 100, // Max 100 requests per IP per window
   standardHeaders: true, // Send rate limit info in response headers (X-RateLimit-*)
   legacyHeaders: false, // Don't use the older header format
+  skip: () => process.env.NODE_ENV === "test",
   message: {
     error: "Too many requests, please slow down.", // What we send back when limit is hit
   },
@@ -21,6 +22,7 @@ export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15-minute window
   max: 10, // Only 10 failed login attempts allowed
   skipSuccessfulRequests: true, // A successful login doesn't count against the limit
+  skip: () => process.env.NODE_ENV === "test",
   message: {
     error: "Too many attempts. Please wait 15 minutes before trying again.",
   },
@@ -56,6 +58,7 @@ export const forgotPasswordLimiter = rateLimit({
 export const downloadLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour window
   max: 10, // Max 10 downloads per hour per IP
+  skip: () => process.env.NODE_ENV === "test",
   message: {
     error: "Download limit reached. You can download more books in an hour.",
   },
