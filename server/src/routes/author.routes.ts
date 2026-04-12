@@ -9,7 +9,7 @@ import { isAdmin } from "../middleware/admin.middleware";
 
 // Import the upload middleware — same one used for books, handles avatar field
 import {
-  uploadBookFiles,
+  uploadAuthorFiles,
   verifyFileTypes,
 } from "../middleware/upload.middleware";
 
@@ -39,7 +39,7 @@ router.post(
   "/",
   authenticate,
   isAdmin,
-  uploadBookFiles, // Handles the 'avatar' file field in FormData
+  uploadAuthorFiles, // Handles the 'avatar' file field in FormData
   verifyFileTypes, // Magic byte check on the uploaded image
   createAuthor,
 );
@@ -49,7 +49,7 @@ router.put(
   "/:id",
   authenticate,
   isAdmin,
-  uploadBookFiles,
+  uploadAuthorFiles,
   verifyFileTypes,
   updateAuthor,
 );

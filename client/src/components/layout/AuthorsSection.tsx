@@ -20,7 +20,7 @@ const AuthorsSection = () => {
         {/* Loading skeleton — 9 cards matching the real grid */}
         {isLoading && (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {Array.from({ length: 9 }).map((_, i) => (
+            {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="animate-pulse">
                 <div className="skeleton aspect-[3/4] rounded-xl" />
               </div>
@@ -42,7 +42,7 @@ const AuthorsSection = () => {
         {/* 3-column grid — shows up to 9 authors sorted by total purchase count */}
         {!isLoading && authors.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {authors.map((author: IAuthor) => (
+            {authors.slice(0, 6).map((author: IAuthor) => (
               <AuthorCard key={author._id} author={author} />
             ))}
           </div>

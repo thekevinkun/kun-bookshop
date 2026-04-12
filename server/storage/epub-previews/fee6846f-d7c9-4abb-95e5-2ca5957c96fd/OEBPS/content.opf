@@ -1,0 +1,190 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" unique-identifier="isbn" version="2.0">
+<metadata>
+	<dc:creator opf:role="aut" opf:file-as="Rowling, J.K.">J.K. Rowling</dc:creator>
+<dc:publisher>Pottermore</dc:publisher>
+	<dc:rights>Copyright (c) 1997 J.K. Rowling</dc:rights>
+	<dc:identifier id="isbn">9781781100073</dc:identifier>
+	<meta name="cover" content="cover-image"/>
+	
+  <description xmlns="http://purl.org/dc/elements/1.1/">&lt;p&gt;Harry Potter thinks he is an ordinary boy. He lives with his Uncle Vernon, Aunt Petunia and cousin Dudley, who are mean to him and make him sleep in a cupboard under the stairs. (Dudley, however, has two bedrooms, one to sleep in and one for all his toys and games.) Then Harry starts receiving mysterious letters and his life is changed forever. He is whisked away by a beetle-eyed giant of a man and enrolled at Hogwarts School of Witchcraft and Wizardry. The reason: Harry Potter is a wizard! The first book in the "Harry Potter" series makes the perfect introduction to the world of Hogwarts.  &lt;/p&gt;</description>
+<dc:title>Harry Potter and the Sorcerer's Stone</dc:title>
+<meta name="calibre:title_sort" content="Harry Potter and the Sorcerer's Stone"/>
+<meta name="calibre:series" content="Harry Potter"/>
+<meta name="calibre:series_index" content="1.0"/>
+<meta name="calibre:rating" content="8.0"/>
+<dc:subject>Young Adult</dc:subject>
+<dc:subject>Childrens</dc:subject>
+<dc:subject>Science Fiction</dc:subject>
+<dc:subject>Fantasy</dc:subject>
+<dc:subject>Adventure</dc:subject>
+<dc:subject>Classics</dc:subject>
+<dc:contributor opf:role="bkp">calibre (1.25.0) [http://calibre-ebook.com]</dc:contributor>
+<dc:date>1997-01-01T00:00:00+00:00</dc:date>
+<meta name="calibre:user_categories" content="{}"/>
+<meta name="calibre:author_link_map" content="{&quot;J.K. Rowling&quot;: &quot;&quot;}"/>
+<dc:language>en</dc:language>
+<dc:identifier opf:scheme="calibre">ee479eb1-06c5-4ea1-a200-f7814c8ff38d</dc:identifier>
+<dc:identifier opf:scheme="ISBN">9781781100073</dc:identifier>
+<dc:identifier opf:scheme="GOODREADS">3</dc:identifier>
+</metadata>
+	
+			
+			<manifest>
+   
+				<item href="cover.html" id="cover" media-type="application/xhtml+xml"/>
+				
+				<item href="hp_style.css" id="css1" media-type="text/css"/>
+				<item href="hp2_style.css" id="css2" media-type="text/css"/>
+				<item href="hp01_title_en-gb.html" id="text1" media-type="application/xhtml+xml"/>
+				<item href="copyright.html" id="text2" media-type="application/xhtml+xml"/>
+				<item href="hp01_experience_en-gb.html" id="text3" media-type="application/xhtml+xml"/>
+				<item href="hp01_dedication_en-gb.html" id="text4" media-type="application/xhtml+xml"/>
+				<item href="hp01_contents_en-gb.html" id="text5" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch001_en-gb.html" id="text6" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch002_en-gb.html" id="text7" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch003_en-gb.html" id="text8" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch004_en-gb.html" id="text9" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch005_en-gb.html" id="text10" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch006_en-gb.html" id="text11" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch007_en-gb.html" id="text12" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch008_en-gb.html" id="text13" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch009_en-gb.html" id="text14" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch010_en-gb.html" id="text15" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch011_en-gb.html" id="text16" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch012_en-gb.html" id="text17" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch013_en-gb.html" id="text18" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch014_en-gb.html" id="text19" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch015_en-gb.html" id="text20" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch016_en-gb.html" id="text21" media-type="application/xhtml+xml"/>
+				<item href="hp01_ch017_en-gb.html" id="text22" media-type="application/xhtml+xml"/>
+				<item href="hp01_also_by_en-gb.html" id="text23" media-type="application/xhtml+xml"/>
+				
+				<item href="cover2.html" id="cover2" media-type="application/xhtml+xml"/>
+				<item href="hp02_title_en-gb.html" id="text24" media-type="application/xhtml+xml"/>
+				<item href="copyright2.html" id="text25" media-type="application/xhtml+xml"/>
+				<item href="hp02_experience_en-gb.html" id="text26" media-type="application/xhtml+xml"/>
+				<item href="hp02_dedication_en-gb.html" id="text27" media-type="application/xhtml+xml"/>
+				<item href="hp02_contents_en-gb.html" id="text28" media-type="application/xhtml+xml"/>
+				<item href="hp02_ch001_en-gb.html" id="text29" media-type="application/xhtml+xml"/>
+				<item href="hp02_pottermore_en-gb.html" id="text30" media-type="application/xhtml+xml"/>
+				
+				
+				<item href="images/cover.jpg" id="cover-image" media-type="image/jpeg"/>
+				<item href="images/cover2.jpg" id="cover-image2" media-type="image/jpeg"/>
+				
+				<item href="images/logo.jpg" id="img3" media-type="image/jpeg"/>
+				<item href="images/title_image.jpg" id="img4" media-type="image/jpeg"/>
+				<item href="images/title_image2.jpg" id="img5" media-type="image/jpeg"/>
+				<item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
+				   <item href="page-template.xpgt" id="page-template" media-type="application/vnd.adobe-page-template+xml"/>
+  
+			</manifest>
+  
+			<spine toc="ncx">
+				
+				<itemref idref="cover" linear="no"/>
+				<itemref idref="text1"/>
+				<itemref idref="text2"/>
+				<itemref idref="text3"/>
+				<itemref idref="text4"/>
+				<itemref idref="text5"/>
+				<itemref idref="text6"/>
+				<itemref idref="text7"/>
+				<itemref idref="text8"/>
+				<itemref idref="text9"/>
+				<itemref idref="text10"/>
+				<itemref idref="text11"/>
+				<itemref idref="text12"/>
+				<itemref idref="text13"/>
+				<itemref idref="text14"/>
+				<itemref idref="text15"/>
+				<itemref idref="text16"/>
+				<itemref idref="text17"/>
+				<itemref idref="text18"/>
+				<itemref idref="text19"/>
+				<itemref idref="text20"/>
+				<itemref idref="text21"/>
+				<itemref idref="text22"/>
+				<itemref idref="text23"/>
+				<itemref idref="cover2"/>
+				<itemref idref="text24"/>
+				<itemref idref="text25"/>
+				<itemref idref="text26"/>
+				<itemref idref="text27"/>
+				<itemref idref="text28"/>
+				<itemref idref="text29"/>
+				<itemref idref="text30"/>
+
+				
+			</spine>
+  
+	<guide>
+				
+		<reference href="cover.html" title="Cover" type="cover"/>
+		
+		<reference href="hp01_title_en-gb.html" title="Title Page" type="title-page"/>
+		
+		<reference href="copyright.html" title="Copyright" type="copyright-page"/>
+		
+		<reference href="hp01_experience_en-gb.html" title="Pottermore.com" type="other.chapter1"/>
+		
+		<reference href="hp01_dedication_en-gb.html" title="Dedication" type="dedication"/>
+		
+		<reference href="hp01_contents_en-gb.html" title="Contents" type="toc"/>
+		
+		<reference href="hp01_ch001_en-gb.html" title="Chapter 1 - The Boy Who Lived" type="text"/>
+		
+		<reference href="hp01_ch002_en-gb.html" title="Chapter 2 - The Vanishing Glass" type="other.chapter2"/>
+		
+		<reference href="hp01_ch003_en-gb.html" title="Chapter 3 - The Letters from No One" type="other.chapter3"/>
+		
+		<reference href="hp01_ch004_en-gb.html" title="Chapter 4 - The Keeper of the Keys" type="other.chapter4"/>
+		
+		<reference href="hp01_ch005_en-gb.html" title="Chapter 5 - Diagon Alley" type="other.chapter5"/>
+		
+		<reference href="hp01_ch006_en-gb.html" title="Chapter 6 - The Journey from Platform Nine and Three-Quarters" type="other.chapter6"/>
+		
+		<reference href="hp01_ch007_en-gb.html" title="Chapter 7 - The Sorting Hat" type="other.chapter7"/>
+		
+		<reference href="hp01_ch008_en-gb.html" title="Chapter 8 - The Potions Master" type="other.chapter8"/>
+		
+		<reference href="hp01_ch009_en-gb.html" title="Chapter 9 - The Midnight Duel" type="other.chapter9"/>
+		
+		<reference href="hp01_ch010_en-gb.html" title="Chapter 10 - Hallowe'en" type="other.chapter10"/>
+		
+		<reference href="hp01_ch011_en-gb.html" title="Chapter 11 - Quidditch" type="other.chapter11"/>
+		
+		<reference href="hp01_ch012_en-gb.html" title="Chapter 12 - The Mirror of Erised" type="other.chapter12"/>
+		
+		<reference href="hp01_ch013_en-gb.html" title="Chapter 13 - Nicolas Flamel" type="other.chapter13"/>
+		
+		<reference href="hp01_ch014_en-gb.html" title="Chapter 14 - Norbert the Norwegian Ridgeback" type="other.chapter14"/>
+		
+		<reference href="hp01_ch015_en-gb.html" title="Chapter 15 - The Forbidden Forest" type="other.chapter15"/>
+		
+		<reference href="hp01_ch016_en-gb.html" title="Chapter 16 - Through the Trapdoor" type="other.chapter16"/>
+		
+		<reference href="hp01_ch017_en-gb.html" title="Chapter 17 - The Man with Two Faces" type="other.chapter17"/>
+		
+		<reference href="hp01_also_by_en-gb.html" title="Also By" type="other.chapter18"/>
+		
+		<reference href="cover2.html" title="Cover" type="other.chapter19"/>
+		
+		<reference href="hp02_title_en-gb.html" title="Title Page" type="other.chapter20"/>
+
+		<reference href="copyright2.html" title="Copyright" type="other.chapter21"/>
+
+		<reference href="hp02_experience_en-gb.html" title="Pottermore.com" type="other.chapter22"/>
+
+		<reference href="hp02_dedication_en-gb.html" title="Dedication" type="other.chapter23"/>
+
+		<reference href="hp02_contents_en-gb.html" title="Contents" type="other.chapter24"/>
+		
+		<reference href="hp02_ch001_en-gb.html" title="Chapter 1 - The Worst Birthday" type="other.chapter25"/>
+
+		<reference href="hp02_pottermore_en-gb.html" title="The Pottermore Shop" type="other.chapter26"/>
+			
+	</guide>
+
+</package>

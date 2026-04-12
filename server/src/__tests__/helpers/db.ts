@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
 
 export async function connectTestDB() {
-  // If Mongoose is already connected (readyState 1), skip reconnecting
-  // This prevents the "can't call openUri() on an active connection" error
-  // when multiple test files share the same Mongoose instance
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URI || "";
+  if (uri.includes("mongodb.net") || uri.includes("kun-bookshop")) {
+    throw new Error(
+      "TEST SAFETY: Refusing to connect to a real database in tests!",
+    );
+  }
   if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(process.env.MONGO_URI!);
+    await mongoose.connect(uri);
   }
 }
 

@@ -1,0 +1,60 @@
+body{border:0;padding:0;text-align:justify;font-family:serif;line-height:1.2em;font-size:100%;font-weight:normal;}
+
+h1,h2,h3,h4,h5,h6{text-align:center;font-family:serif;font-weight:normal;line-height:1.2em;text-indent:0;}
+h1{font-size:270%;margin:0;}
+h1.chaptitle{font-size:240%;margin:0;font-style:italic;}
+h2{font-size:120%;}
+h3{font-size:240%;margin:0;font-style:italic;}
+h4{font-size:120%;margin:0;}
+h5{font-size:160%;margin:0;}
+h6{font-size:110%;margin:0;}
+
+p {text-indent:1em;margin:0 0 .2em 0;}
+
+ul{margin:0;padding:0 0 0 2em;}
+li{margin-left:1em;text-indent:-1em;}
+dd{margin-left:1em;text-indent:-1em;}
+span{font-size:150%;}
+
+ol{margin:0;padding:0 0 0 2em}
+dl{margin:0;padding:0 0 0 1em}
+.block {margin-left: 1em; margin-right: 1em; text-indent: 0}
+.topbot{margin-top: 1em;margin-bottom: 1em}
+
+.margin_half{margin-left:.5em;}
+.margin_1{margin-left:1em;margin-right:1em;}
+.margin_1_5{margin-left:1.5em;margin-right:1.5em;}
+.margin_2{margin-left:2em;margin-right:2em;}
+.margin_3{margin-left:3em;}
+.margin_4{margin-left:4em;}
+.margin_6{margin-left:6em;}
+.margin_8{margin-left:8em;}
+
+.pagebreak{page-break-before:always;}
+.center{text-align:center;text-indent:0;}
+.right{margin-left:5em;}
+.left{text-align:left;text-indent:0;margin-left:0;}
+.indent{text-indent:1em;}
+.noindent{text-indent:0;}
+.noitalic{font-style:normal;}
+
+.first{text-indent:0;margin-top:3em;}
+
+#title{margin-top:15%;}
+#dedication{text-align:center;margin-top:20%;text-indent:0;font-size:80%;}
+.dedication{text-align:center;text-indent:0;}
+#also_by{text-align:center;margin-top:5%;text-indent:0;}
+.also_by{text-align:center;text-indent:0;}
+#copyright{text-align:center;margin-top:1%;text-indent:0;}
+.copyright1{text-align:center;text-indent:0;font-size: 90%; margin-top:1em}
+.copyright2{text-align:center;text-indent:0;font-size: 90%}
+#contents{text-align:center;margin-top:5%;text-indent:0;}
+.contents{text-align:center;text-indent:0;}
+#experience{text-align:center;margin-top:25%;}
+a{text-decoration:none;color:#000;}
+.color{text-align:center;text-indent:0;}
+
+.hang{
+	text-indent: -1em;
+}
+

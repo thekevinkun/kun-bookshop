@@ -1,0 +1,28 @@
+@page {
+  margin-bottom: 5pt;
+  margin-top: 5pt;
+}
+@font-face {
+  font-family: "Free Sans";
+  font-style: normal;
+  font-weight: normal;
+  src: url(OEBPS/font/FreeSans.otf);
+}
+@font-face {
+  font-family: "Free Sans";
+  font-style: normal;
+  font-weight: bold;
+  src: url(OEBPS/font/FreeSansBold.otf);
+}
+@font-face {
+  font-family: "Free Sans";
+  font-style: italic;
+  font-weight: bold;
+  src: url(OEBPS/font/FreeSansBoldOblique.otf);
+}
+@font-face {
+  font-family: "Free Sans";
+  font-style: italic;
+  font-weight: normal;
+  src: url(OEBPS/font/FreeSansOblique.otf);
+}

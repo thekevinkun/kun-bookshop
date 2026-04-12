@@ -44,16 +44,27 @@ const fileFilter = (
   }
 };
 
-// MULTER INSTANCE
-// Accepts two fields: 'file' (the book) and 'coverImage' (the cover)
+// MULTER INSTANCE FOR BOOKS
+// Handles 'file' (book) + 'coverImage' fields with the 50MB book limit
 export const uploadBookFiles = multer({
   storage,
   fileFilter,
-  limits: { fileSize: MAX_BOOK_SIZE },
+  limits: { fileSize: MAX_BOOK_SIZE }, // 50MB — for book files
 }).fields([
   { name: "file", maxCount: 1 }, // Book file (PDF/ePub)
   { name: "coverImage", maxCount: 1 }, // Book cover image
-  { name: "avatar", maxCount: 1 }, // Author avatar image — added for Phase 6
+]);
+
+// MULTER INSTANCE FOR AUTHORS
+// Separate instance with the smaller 5MB image limit — avatars don't need 50MB headroom
+// Using uploadBookFiles for authors was applying the 50MB book limit to avatar uploads
+// which caused multer to behave unexpectedly on some image sizes
+export const uploadAuthorFiles = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: MAX_IMAGE_SIZE }, // 5MB — avatars are images only
+}).fields([
+  { name: "avatar", maxCount: 1 }, // Author avatar image
 ]);
 
 // MAGIC BYTE VERIFICATION MIDDLEWARE
@@ -70,6 +81,28 @@ export const verifyFileTypes = async (
   }
 
   const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+  // VERIFY AUTHOR AVATAR
+  // Same rules as cover images — must be a real JPEG, PNG, or WebP
+  if (files.avatar && files.avatar[0]) {
+    const avatarFile = files.avatar[0];
+
+    // Check avatar file size against the image limit
+    if (avatarFile.size > MAX_IMAGE_SIZE) {
+      return res.status(400).json({
+        error: `Avatar image too large. Maximum size is ${MAX_IMAGE_SIZE / 1024 / 1024}MB`,
+      });
+    }
+
+    // Read the magic bytes to confirm it's really an image
+    const detectedType = await fileTypeFromBuffer(avatarFile.buffer);
+
+    if (!detectedType || !ALLOWED_IMAGE_TYPES.includes(detectedType.mime)) {
+      return res.status(400).json({
+        error: "Avatar must be a valid JPEG, PNG, or WebP file",
+      });
+    }
+  }
 
   // VERIFY BOOK FILE
   if (files.file && files.file[0]) {

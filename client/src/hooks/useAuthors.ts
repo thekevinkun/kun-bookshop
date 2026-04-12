@@ -31,7 +31,7 @@ export const useAllAuthors = () => {
   return useQuery({
     queryKey: [...AUTHORS_KEY, "all"],
     queryFn: async () => {
-      const { data } = await api.get("/authors?limit=6");
+      const { data } = await api.get("/authors");
       return data.authors; // Returns a flat array, not paginated
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes — author list doesn't change often

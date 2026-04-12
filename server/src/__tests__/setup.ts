@@ -7,6 +7,10 @@ let mongoServer: MongoMemoryServer;
 
 // globalSetup must export a `setup` function — Vitest calls it automatically
 export async function setup() {
+  // Hard-override both possible env variable names so no real DB is ever touched
+  process.env.MONGO_URI = "";
+  process.env.MONGODB_URI = "";
+
   // Start an in-memory MongoDB instance — no real MongoDB needed
   // mongodb-memory-server downloads a MongoDB binary on first run (cached after that)
   mongoServer = await MongoMemoryServer.create();
@@ -17,6 +21,7 @@ export async function setup() {
   // Inject the URI into the process environment so our app's connectDB() picks it up
   // This overrides MONGO_URI from .env — tests always use the in-memory DB
   process.env.MONGO_URI = mongoUri;
+  process.env.MONGODB_URI = mongoUri; // cover the actual variable name the app uses
 
   // Set other required env vars so our app doesn't crash during tests
   process.env.JWT_SECRET =
