@@ -65,11 +65,11 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
 
   // Fetch the user's library so we can check if they own this book
   // useLibrary returns the list of purchased books — same hook from Phase 5
-  const { data: libraryData } = useLibrary();
+  const { data: libraryData } = useLibrary(isAuthenticated);
 
   // Does the logged-in user own this book?
   const ownsBook =
-    libraryData?.library?.some(
+    libraryData?.some(
       (b: { _id?: string }) => b._id?.toString() === book._id?.toString(),
     ) ?? false;
 

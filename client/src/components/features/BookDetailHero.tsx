@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCartStore } from "../../store/cart";
 import {
   useAddToWishlist,
   useRemoveFromWishlist,
   useWishlist,
 } from "../../hooks/useLibrary";
+import { toast } from "sonner";
 import {
   Star,
   ShoppingCart,
@@ -41,8 +42,6 @@ const formatDate = (dateStr?: string) => {
 };
 
 const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
-  const navigate = useNavigate();
-
   // Read cart actions and state from Zustand store
   const { addItem, isInCart } = useCartStore();
 
@@ -56,7 +55,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false); // Starts closed
 
   // Fetch the user's wishlist so we know if this book is already wishlisted
-  const { data: wishlist } = useWishlist();
+  const { data: wishlist } = useWishlist(isAuthenticated);
 
   // Check if this specific book is already in the wishlist
   // We compare string versions of the IDs to avoid ObjectId vs string mismatch
@@ -75,9 +74,9 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
 
   // Called when the user clicks "Add to Cart"
   const handleAddToCart = () => {
-    // If not logged in, send them to login first
+    // Keep guests on the page and explain why checkout actions are unavailable.
     if (!isAuthenticated) {
-      navigate("/login");
+      toast.error("Sign in to add books to your cart.");
       return;
     }
 
@@ -105,8 +104,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
   // Toggle handler — adds if not wishlisted, removes if already wishlisted
   const handleWishlistToggle = () => {
     if (!isAuthenticated) {
-      // If not logged in, redirect to login — same pattern as the cart button
-      navigate("/login");
+      toast.error("Sign in to save books to your wishlist.");
       return;
     }
 

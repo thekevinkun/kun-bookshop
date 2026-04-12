@@ -1,16 +1,9 @@
 import { useRecommendations } from "../../hooks/useBooks";
-import { useAuthStore } from "../../store/auth";
 
 import { BookGrid } from "../features";
 
 const RecommendedSection = () => {
-  const { isAuthenticated } = useAuthStore();
-
-  // Hook is disabled when user is not logged in — no request fires
-  const { data, isLoading } = useRecommendations(isAuthenticated);
-
-  // Don't render the section at all for guests
-  if (!isAuthenticated) return null;
+  const { data, isLoading } = useRecommendations();
 
   // Don't render if we finished loading and got nothing back
   if (!isLoading && (!data?.books || data.books.length === 0)) return null;
@@ -27,11 +20,10 @@ const RecommendedSection = () => {
             <p className="text-teal text-xs font-semibold uppercase tracking-widest mb-1">
               {data?.personalised
                 ? "Based on your purchase history"
-                : "Popular picks to get you started"}
+                : "Popular picks worth discovering"}
             </p>
             <h2 className="text-text-light uppercase tracking-wider">
-              {/* Label switches once they have purchase history */}
-              {data?.personalised ? "Recommended for You" : "Top Rated Books"}
+              {data?.personalised ? "Recommended for You" : "Popular Picks"}
             </h2>
             <div className="w-10 h-1 bg-teal rounded-full mt-2" />
           </div>
@@ -43,7 +35,7 @@ const RecommendedSection = () => {
             <p className="text-6xl mb-4">📚</p>
             <h3 className="text-text-light mb-2">No recommendations yet</h3>
             <p className="text-text-muted text-sm">
-              Start exploring and purchasing books to get personalised picks.
+              Explore, wishlist, and purchase books to unlock personalised picks.
             </p>
           </div>
         ) : (

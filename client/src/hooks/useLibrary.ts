@@ -14,7 +14,7 @@ const DOWNLOADS_KEY = ["downloadHistory"] as const; // Key for the user's downlo
 // --- useLibrary ---
 // Fetches the logged-in user's purchased books from GET /api/users/library
 // Use this on the library page to display all owned books
-export const useLibrary = () => {
+export const useLibrary = (enabled = true) => {
   return useQuery({
     queryKey: LIBRARY_KEY, // Cache this data under the 'library' key
     queryFn: async () => {
@@ -23,19 +23,21 @@ export const useLibrary = () => {
       // Return the library array — this becomes the 'data' property in the component
       return data.library;
     },
+    enabled,
     staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes — library doesn't change often
   });
 };
 
 // --- useWishlist ---
 // Fetches the logged-in user's wishlisted books from GET /api/users/wishlist
-export const useWishlist = () => {
+export const useWishlist = (enabled = true) => {
   return useQuery({
     queryKey: WISHLIST_KEY,
     queryFn: async () => {
       const { data } = await api.get("/users/wishlist");
       return data.wishlist;
     },
+    enabled,
     staleTime: 1000 * 60 * 5, // Fresh for 5 minutes
   });
 };

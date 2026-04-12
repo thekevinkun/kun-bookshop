@@ -4,7 +4,7 @@ import {
   Hero,
   RecommendedSection,
   AuthorsSection,
-  DiscountSection,
+  DealsSection,
   NewArrivalsSection,
   CTASection,
 } from "../components/layout";
@@ -35,7 +35,7 @@ export default function HomePage() {
           {/* Two-column layout — discount cards left, new arrivals right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
             {/* Left column — stacked discount promo cards */}
-            <DiscountSection />
+            <DealsSection />
 
             {/* Right column — 2x2 new arrival book covers */}
             <NewArrivalsSection />

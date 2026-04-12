@@ -45,7 +45,7 @@ const getDiscountPercent = (
   return Math.round(((price - discountPrice) / price) * 100);
 };
 
-const DiscountSection = () => {
+const DealsSection = () => {
   const navigate = useNavigate();
 
   // This fetches the newest books first so new discounted books win.
@@ -186,4 +186,4 @@ const DiscountSection = () => {
   );
 };
 
-export default DiscountSection;
+export default DealsSection;

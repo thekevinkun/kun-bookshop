@@ -14,7 +14,10 @@ import {
   getRecommendations,
   deleteBook,
 } from "../controllers/book.controller";
-import { authenticate } from "../middleware/auth.middleware";
+import {
+  authenticate,
+  authenticateOptional,
+} from "../middleware/auth.middleware";
 import { isAdmin } from "../middleware/admin.middleware";
 import {
   uploadBookFiles,
@@ -42,8 +45,8 @@ router.get("/categories", getCategories);
 // GET /api/books/category/:category — books by category
 router.get("/category/:category", getBooksByCategory);
 
-// GET /api/books/recommendations — recommendations for user
-router.get("/recommendations", authenticate, getRecommendations);
+// GET /api/books/recommendations — public fallback or personalized results
+router.get("/recommendations", authenticateOptional, getRecommendations);
 
 // GET /api/books/:id/preview — free preview for non-buyers
 router.get("/:id/preview", getBookPreview);

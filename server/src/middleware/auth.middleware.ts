@@ -58,3 +58,28 @@ export const authenticate = (
       .json({ error: "Invalid or expired token. Please log in again." });
   }
 };
+
+// Optional auth for public routes that can personalize when a valid token exists.
+// Missing or invalid tokens are treated as anonymous access instead of an error.
+export const authenticateOptional = (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+): void => {
+  const token =
+    req.cookies.token || req.headers.authorization?.replace("Bearer ", "");
+
+  if (!token) {
+    next();
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    req.user = decoded;
+  } catch (_error) {
+    req.user = undefined;
+  }
+
+  next();
+};

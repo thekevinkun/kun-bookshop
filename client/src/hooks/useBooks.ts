@@ -80,16 +80,15 @@ export const useBook = (id: string) => {
   });
 };
 
-// Fetches personalised book recommendations for the logged-in user
-// enabled: !!isAuthenticated ensures we only call this when logged in
-export const useRecommendations = (isAuthenticated: boolean) => {
+// Fetches homepage discovery books.
+// Guests receive fallback picks; logged-in users get personalised results when available.
+export const useRecommendations = () => {
   return useQuery({
     queryKey: ["recommendations"],
     queryFn: async (): Promise<{ books: IBook[]; personalised: boolean }> => {
       const res = await api.get("/books/recommendations");
       return res.data; // { books: [], personalised: boolean }
     },
-    enabled: isAuthenticated, // Don't fire if user is not logged in
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes — purchases don't happen that often
   });
 };

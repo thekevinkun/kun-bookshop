@@ -795,22 +795,25 @@ export const updateBook = async (req: Request, res: Response) => {
 };
 
 // GET /api/books/recommendations
-// Authenticated. Returns exactly 10 books personalised to the user.
+// Public. Returns fallback discovery books for guests and personalised results
+// for authenticated users when enough signal exists.
 // Algorithm:
-//   1. Collect categories from library (purchased) + wishlist (interested)
-//   2. Exclude books the user already owns — no point recommending owned books
-//   3. Exclude books already showing in the hero — no overlap between sections
-//   4. Score remaining books: purchaseCount * 10 + rating * 2
+//   1. Exclude books already showing in the hero — no overlap between sections
+//   2. If a valid user exists, collect categories from library + wishlist
+//   3. Personalise only when enough user signal exists
+//   4. Score remaining books: purchaseCount * 10 + rating * 2, plus category relevance
 //   5. If personalised results don't fill 10, pad with top-scored books not in result set
-// Fallback (new user with no library and no wishlist): top-scored books overall
+// Fallback (guest or new user): top-scored books overall
 export const getRecommendations = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const userId = req.user!.userId;
+  const userId = req.user?.userId;
 
-  // Fetch the user's library and wishlist — just the ID arrays, nothing else
-  const user = await User.findById(userId).select("library wishlist").lean();
+  // Fetch the user's library and wishlist when we have a valid authenticated user.
+  const user = userId
+    ? await User.findById(userId).select("library wishlist").lean()
+    : null;
 
   // Fetch the current hero books so we can exclude them from recommendations
   // This prevents the same book appearing in both sections
@@ -847,7 +850,7 @@ export const getRecommendations = async (
   // Determine whether we have enough signal for personalisation
   const hasLibrary = libraryIds.length > 0;
   const hasWishlist = (user?.wishlist ?? []).length > 0;
-  const isPersonalised = hasLibrary || hasWishlist;
+  const isPersonalised = !!userId && (hasLibrary || hasWishlist);
 
   let books;
 
@@ -965,7 +968,7 @@ export const getRecommendations = async (
   }
 
   logger.info("Recommendations served", {
-    userId,
+    userId: userId ?? null,
     personalised: isPersonalised,
     count: books.length,
   });
