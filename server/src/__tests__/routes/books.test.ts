@@ -55,6 +55,31 @@ describe("GET /api/books", () => {
     expect(res.body.books[0].title).toBe("Fiction Book");
   });
 
+  it("should filter by category bucket", async () => {
+    await createBook({
+      title: "Dystopian Book",
+      category: ["Dystopian Fiction"],
+    });
+    await createBook({
+      title: "Space Book",
+      category: ["Science Fiction"],
+    });
+    await createBook({
+      title: "History Book",
+      category: ["History"],
+    });
+
+    const res = await request(app).get(
+      "/api/books?categoryBucket=sci-fi-dystopian",
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.body.books).toHaveLength(2);
+    expect(res.body.books.map((book: { title: string }) => book.title)).toEqual(
+      expect.arrayContaining(["Dystopian Book", "Space Book"]),
+    );
+  });
+
   it("should sort by price ascending", async () => {
     await createBook({ title: "Cheap Book", price: 5.99 });
     await createBook({ title: "Expensive Book", price: 49.99 });

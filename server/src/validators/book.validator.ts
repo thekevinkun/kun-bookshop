@@ -61,6 +61,7 @@ export const updateBookSchema = createBookSchema.partial();
 export const bookQuerySchema = z.object({
   search: z.string().optional(),
   category: z.string().optional(),
+  categoryBucket: z.string().optional(),
   minPrice: z.coerce.number().min(0).optional(),
   maxPrice: z.coerce.number().min(0).optional(),
   fileType: z.enum(["pdf", "epub"]).optional(),

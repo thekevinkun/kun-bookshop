@@ -143,6 +143,20 @@ describe("useBooks", () => {
     });
   });
 
+  it("passes category bucket as a query param when provided", async () => {
+    vi.mocked(api.get).mockResolvedValue({ data: fakeBooksResponse });
+
+    renderHook(() => useBooks({ categoryBucket: "mystery-crime" }), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(api.get).toHaveBeenCalledWith(
+        expect.stringContaining("categoryBucket=mystery-crime"),
+      );
+    });
+  });
+
   it("passes search term as a query param when provided", async () => {
     vi.mocked(api.get).mockResolvedValue({ data: fakeBooksResponse });
 

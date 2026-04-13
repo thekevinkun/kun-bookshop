@@ -7,8 +7,9 @@ import { useSearchParams } from "react-router-dom";
 // Import icons for the search bar and filter panel
 import { Search, SlidersHorizontal, X } from "lucide-react";
 
-// Import our hooks — useAutocomplete for search suggestions, useCategories for real category list
-import { useAutocomplete, useCategories } from "../../hooks/useBooks";
+// Import our hooks — useAutocomplete for search suggestions
+import { useAutocomplete } from "../../hooks/useBooks";
+import { BOOK_CATEGORY_BUCKETS } from "../../constants/bookCategoryBuckets";
 
 // Import useDebouncedValue — delays search so we don't fire on every keystroke
 import { useDebouncedValue } from "@mantine/hooks";
@@ -56,10 +57,6 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
   // Fetch autocomplete suggestions from the real API
   const { data: suggestions = [] } = useAutocomplete(debouncedSearch);
 
-  // Fetch real categories from the database — replaces the hardcoded CATEGORIES array
-  const { data: categories = [], isLoading: categoriesLoading } =
-    useCategories();
-
   // When the component mounts, apply any filters that were set via URL params
   // This makes navigating from DiscountSection (?sortBy=rating) work correctly
   useEffect(() => {
@@ -71,16 +68,25 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
       | null;
     const urlSearch = searchParams.get("search");
     const urlCategory = searchParams.get("category");
+    const urlCategoryBucket = searchParams.get("categoryBucket");
     const urlAuthor = searchParams.get("author");
 
     // Only apply if any URL params are present — don't override existing filter state
-    if (urlSortBy || urlSortOrder || urlSearch || urlCategory || urlAuthor) {
+    if (
+      urlSortBy ||
+      urlSortOrder ||
+      urlSearch ||
+      urlCategory ||
+      urlCategoryBucket ||
+      urlAuthor
+    ) {
       onChange({
         ...filters,
         ...(urlSortBy && { sortBy: urlSortBy }),
         ...(urlSortOrder && { sortOrder: urlSortOrder }),
         ...(urlSearch && { search: urlSearch }),
         ...(urlCategory && { category: urlCategory }),
+        ...(urlCategoryBucket && { categoryBucket: urlCategoryBucket }),
         page: 1,
       });
       if (urlSearch) setSearchInput(urlSearch);
@@ -110,7 +116,7 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
   // Reset everything back to defaults
   const clearFilters = () => {
     setSearchInput("");
-    onChange({ page: 1, sortBy: "createdAt", sortOrder: "desc" });
+    onChange({ page: 1, limit: 15, sortBy: "createdAt", sortOrder: "desc" });
   };
 
   useEffect(() => {
@@ -129,6 +135,7 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
   // Count active non-default filters to show on the badge
   const activeFilterCount = [
     filters.category,
+    filters.categoryBucket,
     filters.fileType,
     filters.minPrice,
     filters.maxPrice,
@@ -250,53 +257,37 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
           // This makes the filter panel float instead of pushing the catalog down.
           className="absolute left-0 right-0 top-full mt-2 card-base flex flex-col sm:flex-row gap-6 z-40 shadow-2xl"
         >
-          {/* Category filter — real categories from the DB */}
+          {/* Category filter — curated browse buckets */}
           <div className="flex-1">
             <p className="text-text-muted text-xs font-semibold uppercase tracking-wider mb-2">
               Category
             </p>
-
-            {/* Loading skeleton — shown while categories are fetching */}
-            {categoriesLoading && (
-              <div className="flex flex-wrap gap-2">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="skeleton h-6 w-20 rounded-full" />
-                ))}
-              </div>
-            )}
-
-            {/* Empty state — no books in the DB yet */}
-            {!categoriesLoading && categories.length === 0 && (
-              <p className="text-text-muted text-xs">
-                No categories yet — add some books first.
-              </p>
-            )}
-
-            {/* Real category pills */}
-            {!categoriesLoading && categories.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    className={`text-xs px-3 py-1 rounded-full border transition-all duration-150
-                      ${
-                        filters.category === cat
-                          ? "bg-teal text-white border-teal"
-                          : "border-bg-hover text-text-muted hover:border-teal hover:text-teal"
-                      }`}
-                    onClick={() =>
-                      // Clicking the active category deselects it
-                      updateFilter(
-                        "category",
-                        filters.category === cat ? undefined : cat,
-                      )
-                    }
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            )}
+            <div className="flex flex-wrap gap-2">
+              {BOOK_CATEGORY_BUCKETS.map((bucket) => (
+                <button
+                  key={bucket.key}
+                  className={`text-xs px-3 py-1 rounded-full border transition-all duration-150
+                    ${
+                      filters.categoryBucket === bucket.key
+                        ? "bg-teal text-white border-teal"
+                        : "border-bg-hover text-text-muted hover:border-teal hover:text-teal"
+                    }`}
+                  onClick={() =>
+                    onChange({
+                      ...filters,
+                      category: undefined,
+                      categoryBucket:
+                        filters.categoryBucket === bucket.key
+                          ? undefined
+                          : bucket.key,
+                      page: 1,
+                    })
+                  }
+                >
+                  {bucket.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Right column: format + price range + clear */}

@@ -1,0 +1,87 @@
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="TitleID" version="2.0">
+   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <dc:title>Days at the Morisaki Bookshop</dc:title>
+      <dc:publisher>Manilla Press</dc:publisher>
+      <dc:creator>Satoshi Yagisawa</dc:creator>
+      <dc:rights>© by Satoshi Yagisawa 2010</dc:rights>
+      <dc:identifier id="TitleID">9781786583239</dc:identifier>
+      <dc:language>EN</dc:language>
+      <meta content="x1" name="cover"/>
+   </metadata>
+   <manifest>
+      <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
+      <item href="001-Cover.xhtml" id="f1" media-type="application/xhtml+xml"/>
+      <item href="002-About_the_Author.xhtml" id="f2" media-type="application/xhtml+xml"/>
+      <item href="003-Title_Page.xhtml" id="f3" media-type="application/xhtml+xml"/>
+      <item href="004-Contents.xhtml" id="f4" media-type="application/xhtml+xml"/>
+      <item href="005-Part_1.xhtml" id="f5" media-type="application/xhtml+xml"/>
+      <item href="006-Chapter_1.xhtml" id="f6" media-type="application/xhtml+xml"/>
+      <item href="007-Chapter_2.xhtml" id="f7" media-type="application/xhtml+xml"/>
+      <item href="008-Chapter_3.xhtml" id="f8" media-type="application/xhtml+xml"/>
+      <item href="009-Chapter_4.xhtml" id="f9" media-type="application/xhtml+xml"/>
+      <item href="010-Chapter_5.xhtml" id="f10" media-type="application/xhtml+xml"/>
+      <item href="011-Chapter_6.xhtml" id="f11" media-type="application/xhtml+xml"/>
+      <item href="012-Chapter_7.xhtml" id="f12" media-type="application/xhtml+xml"/>
+      <item href="013-Chapter_8.xhtml" id="f13" media-type="application/xhtml+xml"/>
+      <item href="014-Part_2.xhtml" id="f14" media-type="application/xhtml+xml"/>
+      <item href="015-Chapter_1.xhtml" id="f15" media-type="application/xhtml+xml"/>
+      <item href="016-Chapter_2.xhtml" id="f16" media-type="application/xhtml+xml"/>
+      <item href="017-Chapter_3.xhtml" id="f17" media-type="application/xhtml+xml"/>
+      <item href="018-Chapter_4.xhtml" id="f18" media-type="application/xhtml+xml"/>
+      <item href="019-Chapter_5.xhtml" id="f19" media-type="application/xhtml+xml"/>
+      <item href="020-Chapter_6.xhtml" id="f20" media-type="application/xhtml+xml"/>
+      <item href="021-Chapter_7.xhtml" id="f21" media-type="application/xhtml+xml"/>
+      <item href="022-Chapter_8.xhtml" id="f22" media-type="application/xhtml+xml"/>
+      <item href="023-Chapter_9.xhtml" id="f23" media-type="application/xhtml+xml"/>
+      <item href="024-Chapter_10.xhtml" id="f24" media-type="application/xhtml+xml"/>
+      <item href="025-Chapter_11.xhtml" id="f25" media-type="application/xhtml+xml"/>
+      <item href="026-Chapter_12.xhtml" id="f26" media-type="application/xhtml+xml"/>
+      <item href="027-Translators_Note.xhtml" id="f27" media-type="application/xhtml+xml"/>
+      <item href="028-Extract_from_The_Door-to-Door_Bookstore.xhtml" id="f28" media-type="application/xhtml+xml"/>
+      <item href="029-Advert_chapter_1.xhtml" id="f29" media-type="application/xhtml+xml"/>
+      <item href="030-Copyright.xhtml" id="f30" media-type="application/xhtml+xml"/>
+      <item href="style.css" id="x0" media-type="text/css"/>
+      <item href="images/cover.jpg" id="x1" media-type="image/jpeg"/>
+      <item href="images/title.jpg" id="x2" media-type="image/jpeg"/>
+      <item href="images/page69.jpg" id="x3" media-type="image/jpeg"/>
+      <item href="images/page151.jpg" id="x4" media-type="image/jpeg"/>
+      <item href="images/cip-img.png" id="x5" media-type="image/png"/>
+   </manifest>
+   <spine toc="ncx">
+      <itemref idref="f1"/>
+      <itemref idref="f2"/>
+      <itemref idref="f3"/>
+      <itemref idref="f4"/>
+      <itemref idref="f5"/>
+      <itemref idref="f6"/>
+      <itemref idref="f7"/>
+      <itemref idref="f8"/>
+      <itemref idref="f9"/>
+      <itemref idref="f10"/>
+      <itemref idref="f11"/>
+      <itemref idref="f12"/>
+      <itemref idref="f13"/>
+      <itemref idref="f14"/>
+      <itemref idref="f15"/>
+      <itemref idref="f16"/>
+      <itemref idref="f17"/>
+      <itemref idref="f18"/>
+      <itemref idref="f19"/>
+      <itemref idref="f20"/>
+      <itemref idref="f21"/>
+      <itemref idref="f22"/>
+      <itemref idref="f23"/>
+      <itemref idref="f24"/>
+      <itemref idref="f25"/>
+      <itemref idref="f26"/>
+      <itemref idref="f27"/>
+      <itemref idref="f28"/>
+      <itemref idref="f29"/>
+      <itemref idref="f30"/>
+   </spine>
+   <guide>
+      <reference href="001-Cover.xhtml" title="Cover" type="cover"/>
+      <reference href="003-Title_Page.xhtml" title="Title" type="text"/>
+      <reference href="004-Contents.xhtml" title="Contents" type="toc"/>
+   </guide>
+</package>

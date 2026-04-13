@@ -1,5 +1,5 @@
 // Import React hooks for state management
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 // Import navigation icons for pagination
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -14,6 +14,8 @@ import { BookGrid, BookFiltersComponent } from "../../components/features";
 import type { BookFilters } from "../../types/book";
 
 export default function BooksPage() {
+  const catalogTopRef = useRef<HTMLDivElement | null>(null);
+
   // All active filters live here as controlled state
   const [filters, setFilters] = useState<BookFilters>({
     page: 1,
@@ -30,10 +32,23 @@ export default function BooksPage() {
   const currentPage = data?.currentPage ?? 1;
   const totalCount = data?.total ?? 0;
 
-  // Scroll to top and change page
+  // Blur the clicked pagination button so the browser does not snap it back into view.
+  // Then scroll the catalog heading into view with space for the sticky navbar.
   const goToPage = (page: number) => {
+    (document.activeElement as HTMLElement | null)?.blur();
+
+    const top = catalogTopRef.current;
+    if (top) {
+      const navbarOffset = 88;
+      const y = top.getBoundingClientRect().top + window.scrollY - navbarOffset;
+
+      window.scrollTo({
+        top: Math.max(0, y),
+        behavior: "smooth",
+      });
+    }
+
     setFilters((prev) => ({ ...prev, page }));
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -68,6 +83,7 @@ export default function BooksPage() {
       </section>
 
       {/* Catalog section */}
+      <div ref={catalogTopRef} />
       <section className="section bg-bg-dark">
         <div className="container-page">
           {/* Section heading */}

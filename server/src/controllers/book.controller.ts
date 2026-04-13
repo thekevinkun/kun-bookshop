@@ -14,6 +14,10 @@ import {
   createBookSchema,
   updateBookSchema,
 } from "../validators/book.validator";
+import {
+  BOOK_CATEGORY_BUCKETS,
+  type BookCategoryBucketKey,
+} from "../constants/bookCategoryBuckets";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
 import {
@@ -178,7 +182,16 @@ export const getBooks = async (req: Request, res: Response) => {
         { authorName: { $regex: safeSearch, $options: "i" } },
       ];
     }
-    if (query.category) filter.category = query.category;
+    if (query.categoryBucket) {
+      const bucketCategories =
+        BOOK_CATEGORY_BUCKETS[query.categoryBucket as BookCategoryBucketKey];
+
+      if (bucketCategories) {
+        filter.category = { $in: bucketCategories };
+      }
+    } else if (query.category) {
+      filter.category = query.category;
+    }
     if (query.author) filter.author = query.author; // Filter by Author ObjectId
 
     if (query.minPrice !== undefined || query.maxPrice !== undefined) {

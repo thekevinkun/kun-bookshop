@@ -47,6 +47,7 @@ export interface IBook {
 
 export interface BookFilters {
   category?: string;
+  categoryBucket?: string;
   minPrice?: number;
   maxPrice?: number;
   fileType?: "pdf" | "epub";

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+   <head>
+      <meta content="9781786583239" name="dtb:uid"/>
+      <meta content="2" name="dtb:depth"/>
+      <meta content="0" name="dtb:totalPageCount"/>
+      <meta content="0" name="dtb:maxPageNumber"/>
+   </head>
+   <docTitle>
+      <text>Days at the Morisaki Bookshop</text>
+   </docTitle>
+   <docAuthor>
+      <text>Satoshi Yagisawa</text>
+   </docAuthor>
+   <navMap>
+      <navPoint id="n1" playOrder="1">
+         <navLabel>
+            <text>Cover</text>
+         </navLabel>
+         <content src="001-Cover.xhtml#cover"/>
+      </navPoint>
+      <navPoint id="n2" playOrder="2">
+         <navLabel>
+            <text>About the Author</text>
+         </navLabel>
+         <content src="002-About_the_Author.xhtml"/>
+      </navPoint>
+      <navPoint id="n3" playOrder="3">
+         <navLabel>
+            <text>Title Page</text>
+         </navLabel>
+         <content src="003-Title_Page.xhtml"/>
+      </navPoint>
+      <navPoint id="n4" playOrder="4">
+         <navLabel>
+            <text>Contents</text>
+         </navLabel>
+         <content src="004-Contents.xhtml"/>
+      </navPoint>
+      <navPoint id="n5" playOrder="5">
+         <navLabel>
+            <text>Part 1</text>
+         </navLabel>
+         <content src="005-Part_1.xhtml"/>
+         <navPoint id="n6" playOrder="6">
+            <navLabel>
+               <text>Chapter 1</text>
+            </navLabel>
+            <content src="006-Chapter_1.xhtml"/>
+         </navPoint>
+         <navPoint id="n7" playOrder="7">
+            <navLabel>
+               <text>Chapter 2</text>
+            </navLabel>
+            <content src="007-Chapter_2.xhtml"/>
+         </navPoint>
+         <navPoint id="n8" playOrder="8">
+            <navLabel>
+               <text>Chapter 3</text>
+            </navLabel>
+            <content src="008-Chapter_3.xhtml"/>
+         </navPoint>
+         <navPoint id="n9" playOrder="9">
+            <navLabel>
+               <text>Chapter 4</text>
+            </navLabel>
+            <content src="009-Chapter_4.xhtml"/>
+         </navPoint>
+         <navPoint id="n10" playOrder="10">
+            <navLabel>
+               <text>Chapter 5</text>
+            </navLabel>
+            <content src="010-Chapter_5.xhtml"/>
+         </navPoint>
+         <navPoint id="n11" playOrder="11">
+            <navLabel>
+               <text>Chapter 6</text>
+            </navLabel>
+            <content src="011-Chapter_6.xhtml"/>
+         </navPoint>
+         <navPoint id="n12" playOrder="12">
+            <navLabel>
+               <text>Chapter 7</text>
+            </navLabel>
+            <content src="012-Chapter_7.xhtml"/>
+         </navPoint>
+         <navPoint id="n13" playOrder="13">
+            <navLabel>
+               <text>Chapter 8</text>
+            </navLabel>
+            <content src="013-Chapter_8.xhtml"/>
+         </navPoint>
+      </navPoint>
+      <navPoint id="n14" playOrder="14">
+         <navLabel>
+            <text>Part 2</text>
+         </navLabel>
+         <content src="014-Part_2.xhtml"/>
+         <navPoint id="n15" playOrder="15">
+            <navLabel>
+               <text>Chapter 1</text>
+            </navLabel>
+            <content src="015-Chapter_1.xhtml"/>
+         </navPoint>
+         <navPoint id="n16" playOrder="16">
+            <navLabel>
+               <text>Chapter 2</text>
+            </navLabel>
+            <content src="016-Chapter_2.xhtml"/>
+         </navPoint>
+         <navPoint id="n17" playOrder="17">
+            <navLabel>
+               <text>Chapter 3</text>
+            </navLabel>
+            <content src="017-Chapter_3.xhtml"/>
+         </navPoint>
+         <navPoint id="n18" playOrder="18">
+            <navLabel>
+               <text>Chapter 4</text>
+            </navLabel>
+            <content src="018-Chapter_4.xhtml"/>
+         </navPoint>
+         <navPoint id="n19" playOrder="19">
+            <navLabel>
+               <text>Chapter 5</text>
+            </navLabel>
+            <content src="019-Chapter_5.xhtml"/>
+         </navPoint>
+         <navPoint id="n20" playOrder="20">
+            <navLabel>
+               <text>Chapter 6</text>
+            </navLabel>
+            <content src="020-Chapter_6.xhtml"/>
+         </navPoint>
+         <navPoint id="n21" playOrder="21">
+            <navLabel>
+               <text>Chapter 7</text>
+            </navLabel>
+            <content src="021-Chapter_7.xhtml"/>
+         </navPoint>
+         <navPoint id="n22" playOrder="22">
+            <navLabel>
+               <text>Chapter 8</text>
+            </navLabel>
+            <content src="022-Chapter_8.xhtml"/>
+         </navPoint>
+         <navPoint id="n23" playOrder="23">
+            <navLabel>
+               <text>Chapter 9</text>
+            </navLabel>
+            <content src="023-Chapter_9.xhtml"/>
+         </navPoint>
+         <navPoint id="n24" playOrder="24">
+            <navLabel>
+               <text>Chapter 10</text>
+            </navLabel>
+            <content src="024-Chapter_10.xhtml"/>
+         </navPoint>
+         <navPoint id="n25" playOrder="25">
+            <navLabel>
+               <text>Chapter 11</text>
+            </navLabel>
+            <content src="025-Chapter_11.xhtml"/>
+         </navPoint>
+         <navPoint id="n26" playOrder="26">
+            <navLabel>
+               <text>Chapter 12</text>
+            </navLabel>
+            <content src="026-Chapter_12.xhtml"/>
+         </navPoint>
+      </navPoint>
+      <navPoint id="n27" playOrder="27">
+         <navLabel>
+            <text>Translator’s Note</text>
+         </navLabel>
+         <content src="027-Translators_Note.xhtml"/>
+      </navPoint>
+      <navPoint id="n28" playOrder="28">
+         <navLabel>
+            <text>Extract from The Door-to-Door Bookstore</text>
+         </navLabel>
+         <content src="028-Extract_from_The_Door-to-Door_Bookstore.xhtml"/>
+      </navPoint>
+      <navPoint id="n29" playOrder="29">
+         <navLabel>
+            <text>Copyright</text>
+         </navLabel>
+         <content src="030-Copyright.xhtml"/>
+      </navPoint>
+   </navMap>
+</ncx>
