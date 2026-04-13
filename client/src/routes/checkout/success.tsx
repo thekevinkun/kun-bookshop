@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import { useCartStore } from "../../store/cart";
 import { CheckCircle, BookOpen, Loader2 } from "lucide-react";
+import { useCartStore } from "../../store/cart";
 
 import api from "../../lib/api";
 
@@ -74,10 +74,10 @@ export default function CheckoutSuccessPage() {
     };
   }, [sessionId, navigate]);
 
-  // --- LOADING STATE ---
+  // LOADING STATE
   if (status === "loading") {
     return (
-      <div className="container-page flex flex-col items-center justify-center min-h-[60vh] gap-4">
+      <div className="container-page flex flex-col items-center justify-center min-h-screen gap-4">
         <Loader2 size={48} className="text-teal animate-spin" />
         <p className="text-text-muted text-lg">Confirming your payment...</p>
         <p className="text-text-muted text-sm">
@@ -87,10 +87,10 @@ export default function CheckoutSuccessPage() {
     );
   }
 
-  // --- ERROR STATE ---
+  // ERROR STATE
   if (status === "error") {
     return (
-      <div className="container-page flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center">
+      <div className="container-page flex flex-col items-center justify-center min-h-screen gap-4 text-center">
         <p className="text-2xl font-bold text-text-light">
           Something went wrong
         </p>
@@ -105,9 +105,9 @@ export default function CheckoutSuccessPage() {
     );
   }
 
-  // --- SUCCESS STATE ---
+  // SUCCESS STATE
   return (
-    <div className="container-page flex flex-col items-center justify-center min-h-[60vh] gap-6 text-center">
+    <div className="container-page flex flex-col items-center justify-center min-h-screen gap-6 text-center">
       <div className="w-20 h-20 rounded-full bg-success/20 flex items-center justify-center">
         <CheckCircle size={48} className="text-success" />
       </div>

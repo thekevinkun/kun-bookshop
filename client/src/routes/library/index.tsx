@@ -65,7 +65,7 @@ export default function LibraryPage() {
   if (isLoading) {
     return (
       // Full-page centered spinner while we wait for the library to load
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="container-page min-h-screen flex items-center justify-center">
         <Loader2 className="animate-spin text-teal-400" size={40} />
       </div>
     );
@@ -74,7 +74,7 @@ export default function LibraryPage() {
   // Error State
   if (isError) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-center px-4">
+      <div className="container-page min-h-screen flex flex-col items-center justify-center gap-4 text-center px-4">
         {/* Error icon */}
         <AlertCircle className="text-red-400" size={48} />
         <h2 className="text-xl font-semibold text-white">
@@ -91,7 +91,7 @@ export default function LibraryPage() {
   // The user is logged in and the request succeeded but they haven't bought anything yet
   if (!library || library.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-6 text-center px-4">
+      <div className="container-page min-h-screen flex flex-col items-center justify-center gap-6 text-center px-4">
         {/* Empty state icon */}
         <BookOpen className="text-teal-400 opacity-50" size={64} />
         <div>

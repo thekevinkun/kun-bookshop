@@ -12,7 +12,7 @@ export default function CheckoutCancelPage() {
   const { itemCount } = useCartStore();
 
   return (
-    <div className="container-page flex flex-col items-center justify-center min-h-[60vh] gap-6 text-center">
+    <div className="container-page flex flex-col items-center justify-center min-h-screen gap-6 text-center">
       {/* Red X icon */}
       <div className="w-20 h-20 rounded-full bg-error/20 flex items-center justify-center">
         <XCircle size={48} className="text-error" />
