@@ -70,7 +70,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
               <div className="w-40 h-4 bg-bg-hover rounded" />
             </div>
           ) : (
-            <div className="flex flex-col gap-5 order-2 md:order-1">
+            <div className="mt-4 sm:mt-0 flex flex-col gap-5 order-2 md:order-1">
               {/* Category chip */}
               <span className="badge-primary self-start uppercase tracking-widest">
                 {activeBook.category[0]}
@@ -82,7 +82,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
               </h1>
 
               {/* Author and Publisher */}
-              <div className="flex items-center gap-5">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-5">
                 <p className="text-text-muted">
                   By{" "}
                   <Link
@@ -210,7 +210,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                     src={activeBook.coverImage}
                     alt=""
                     aria-hidden="true"
-                    className="absolute top-6 left-12 w-full rounded-xl object-cover aspect-[2/3]
+                    className="absolute top-6 left-9 sm:left-12 w-full rounded-xl object-cover aspect-[2/3]
                       rotate-[12deg] scale-[0.94] opacity-55 blur-[1.5px] brightness-[0.55]
                       saturate-[0.8] shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
                     onError={(e) => {
@@ -223,7 +223,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                     src={activeBook.coverImage}
                     alt=""
                     aria-hidden="true"
-                    className="absolute top-3 left-8 w-full rounded-xl object-cover aspect-[2/3]
+                    className="absolute top-3 left-5 sm:left-8 w-full rounded-xl object-cover aspect-[2/3]
                       rotate-[10deg] scale-[0.97] opacity-75 blur-[0.5px] brightness-[0.72]
                       saturate-[0.9] shadow-[0_18px_40px_rgba(0,0,0,0.38)]"
                     onError={(e) => {

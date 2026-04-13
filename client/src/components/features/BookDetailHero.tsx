@@ -133,7 +133,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
       <div className="container-page relative z-10 w-full py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* LEFT: Info */}
-          <div className="flex flex-col gap-5 order-2 md:order-1">
+          <div className="mt-4 md:mt-0 flex flex-col gap-5 order-2 md:order-1">
             <div className="flex flex-wrap items-center gap-2">
               {visibleCategories.map((category) => (
                 <span
@@ -298,8 +298,8 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 src={book.coverImage}
                 alt=""
                 aria-hidden="true"
-                className="absolute top-3 left-8 w-full rounded-xl object-cover aspect-[2/3]
-                  rotate-[10deg] scale-[0.97] opacity-75 blur-[0.5px] brightness-[0.72]
+                className="absolute top-3 left-7 sm:left-8 md:left-5 lg:left-8 w-full rounded-xl object-cover aspect-[2/3]
+                  rotate-[10deg] md:rotate-[7deg] lg:rotate-[10deg] scale-[0.97] opacity-75 blur-[0.5px] brightness-[0.72]
                   saturate-[0.9] shadow-[0_18px_40px_rgba(0,0,0,0.38)]"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =

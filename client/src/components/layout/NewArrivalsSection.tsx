@@ -14,8 +14,8 @@ const NewArrivalsSection = () => {
     return (
       // Same structure as real render — 2x2 grid, self-stretch fills parent height
       <div
-        className="grid grid-cols-2 grid-rows-2 gap-3"
-        style={{ height: "460px" }}
+        className="lg:h-[460px] grid grid-cols-2 min-[30rem]:grid-cols-4 
+          lg:grid-cols-2 lg:grid-rows-2 gap-3 order-1 lg:order-2"
       >
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="rounded-xl bg-slate-800/50 animate-pulse" />
@@ -31,8 +31,8 @@ const NewArrivalsSection = () => {
     // grid-rows-2 — splits that height into exactly 2 equal rows
     // No aspect ratio — height is dictated by the parent, not the image
     <div
-      className="grid grid-cols-2 grid-rows-2 gap-3"
-      style={{ height: "460px" }}
+      className="lg:h-[460px] grid grid-cols-2 min-[30rem]:grid-cols-4 
+        lg:grid-cols-2 lg:grid-rows-2 gap-3 order-1 lg:order-2"
     >
       {books.slice(0, 4).map((book) => (
         <BookCardCompact key={book._id} book={book} />

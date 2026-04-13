@@ -25,7 +25,7 @@ export default function BookDetailPage() {
     return (
       <div className="min-h-screen bg-navy">
         <div className="container-page py-16 animate-pulse">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center min-h-[70vh]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center min-h-[85vh]">
             <div className="flex flex-col gap-4">
               <div className="skeleton h-16 w-3/4 rounded" />
               <div className="skeleton h-6 w-1/3 rounded" />

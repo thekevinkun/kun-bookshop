@@ -1,6 +1,6 @@
 import { useRecommendations } from "../../hooks/useBooks";
 
-import { BookGrid } from "../features";
+import { RecommendedCarousel } from "../features";
 
 const RecommendedSection = () => {
   const { data, isLoading } = useRecommendations();
@@ -39,8 +39,11 @@ const RecommendedSection = () => {
             </p>
           </div>
         ) : (
-          // BookGrid handles skeleton loading state internally
-          <BookGrid books={books} isLoading={isLoading} skeletonCount={10} />
+          <RecommendedCarousel
+            books={books}
+            isLoading={isLoading}
+            skeletonCount={10}
+          />
         )}
       </div>
     </section>

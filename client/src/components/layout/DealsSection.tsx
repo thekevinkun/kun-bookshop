@@ -102,7 +102,7 @@ const DealsSection = () => {
   }).filter((card) => card.covers.length > 0);
 
   return (
-    <div className="flex flex-col gap-6" style={{ height: "460px" }}>
+    <div className="flex flex-col gap-6 order-2 lg:order-1 lg:h-[460px]">
       {promoCards.map((card, index) => (
         <div
           key={card.target}
@@ -131,7 +131,7 @@ const DealsSection = () => {
             {card.covers.map((book, coverIndex) => (
               <div
                 key={book._id}
-                className={`w-20 rounded-lg overflow-hidden shadow-2xl ${
+                className={`w-14 sm:w-20 rounded-lg overflow-hidden shadow-2xl ${
                   index === 0
                     ? coverIndex === 0
                       ? "rotate-[-8deg] translate-y-2"
@@ -158,18 +158,18 @@ const DealsSection = () => {
           {/* This is the text block shown on the left side of the card. */}
           <div className="relative z-10 p-8">
             <p
-              className={`text-xs font-semibold uppercase tracking-widest mb-2 ${
+              className={`text-[10px] sm:text-xs font-semibold uppercase tracking-widest mb-2 ${
                 index === 0 ? "text-purple-300" : "text-teal"
               }`}
             >
               {card.sublabel}
             </p>
-            <h3 className="text-white !text-3xl font-black mb-4">
+            <h3 className="text-white sm:!text-3xl font-black mb-4">
               {card.label} <span className="text-teal">{card.target}% OFF</span>
             </h3>
             <button
               className="flex items-center gap-2 bg-white text-gray-900 
-                  btn btn-md rounded-full hover:bg-teal hover:text-white"
+                  btn btn-sm sm:btn-md rounded-full hover:bg-teal hover:text-white"
               onClick={() =>
                 navigate(
                   `/books?sortBy=${card.sortBy}&sortOrder=${card.sortOrder}`,

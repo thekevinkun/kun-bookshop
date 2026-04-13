@@ -81,8 +81,8 @@ export default function EditProfilePage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-lg mx-auto">
-        <div className="section flex flex-col">
+      <div className="section">
+        <div className="container-page flex flex-col">
           <button
             className="btn-ghost btn-sm flex items-center gap-1 self-start mb-4"
             onClick={() => navigate(-1)}

@@ -5,6 +5,8 @@ import BookDetailVideo from "./BookDetailVideo";
 import BookDetailTabs from "./BookDetailTabs";
 import BookPreview from "./BookPreview";
 import SimilarBooks from "./SimilarBooks";
+import RecommendedCarousel from "./RecommendedCarousel";
+import AuthorsCarousel from "./AuthorsCarousel";
 
 import CartDrawer from "./CartDrawer";
 
@@ -16,5 +18,7 @@ export {
   BookDetailTabs,
   BookPreview,
   SimilarBooks,
+  RecommendedCarousel,
+  AuthorsCarousel,
   CartDrawer,
 };

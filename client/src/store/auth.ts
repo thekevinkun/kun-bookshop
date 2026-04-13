@@ -12,12 +12,12 @@ import type { AuthState } from "../types/auth";
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      // --- INITIAL STATE ---
+      // INITIAL STATE
       user: null,
       token: null,
       isAuthenticated: false,
 
-      // --- LOGIN ACTION ---
+      // LOGIN ACTION
       // Call this right after a successful POST /api/auth/login response
       login: (user, token) =>
         set({
@@ -26,7 +26,7 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: true, // Mark as authenticated so ProtectedRoute lets them through
         }),
 
-      // --- LOGOUT ACTION ---
+      // LOGOUT ACTION
       // Call this after POST /api/auth/logout — clears everything from the store
       logout: () =>
         set({
@@ -35,7 +35,7 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
         }),
 
-      // --- UPDATE USER ACTION ---
+      // UPDATE USER ACTION
       // Call this after PUT /api/auth/update-profile — merges new data into existing user
       // Partial<User> means any subset of User fields — we only update what changed
       updateUser: (userData) =>
@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthState>()(
           // If somehow user is null, don't create a partial user — keep it null
         })),
 
-      // --- SET TOKEN ACTION ---
+      // SET TOKEN ACTION
       // Call this after POST /api/auth/refresh — updates the token without touching user data
       setToken: (token) => set({ token }),
     }),

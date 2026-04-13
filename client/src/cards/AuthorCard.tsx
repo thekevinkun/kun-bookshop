@@ -14,7 +14,7 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
     <Link
       to={`/authors/${author._id}`}
       className="group card-base flex flex-col items-center text-center
-        cursor-pointer hover:-translate-y-1 transition-all duration-300"
+        h-full cursor-pointer hover:-translate-y-1 transition-all duration-300"
       // Navigate to the author's dedicated profile page — not a search URL
     >
       {/* Avatar — circular with teal ring on hover */}
@@ -45,14 +45,14 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
 
       {/* Author name */}
       <h3
-        className="text-text-light !text-lg !leading-tight
+        className="text-text-light !text-lg !leading-tight line-clamp-2 min-h-[3.5rem]
         group-hover:text-teal transition-colors duration-200 mb-1"
       >
         {author.name}
       </h3>
 
       {/* First specialty — italic muted text */}
-      <p className="text-text-muted text-xs italic mb-2">
+      <p className="text-text-muted text-xs italic line-clamp-1 min-h-[1rem] mb-2">
         {Array.isArray(author.specialty)
           ? author.specialty[0] // Specialty is an array — show the first one
           : author.specialty}
@@ -60,7 +60,7 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
 
       {/* Book count badge — now real data from the backend */}
       {typeof author.bookCount === "number" && (
-        <span className="badge-primary text-xs">
+        <span className="badge-primary text-xs mt-auto">
           {author.bookCount} {author.bookCount === 1 ? "book" : "books"}
         </span>
       )}

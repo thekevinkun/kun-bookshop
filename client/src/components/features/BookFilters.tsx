@@ -116,7 +116,12 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
   // Reset everything back to defaults
   const clearFilters = () => {
     setSearchInput("");
-    onChange({ page: 1, limit: 15, sortBy: "createdAt", sortOrder: "desc" });
+    onChange({
+      page: 1,
+      limit: filters.limit,
+      sortBy: "createdAt",
+      sortOrder: "desc",
+    });
   };
 
   useEffect(() => {
@@ -143,10 +148,10 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
 
   return (
     <div ref={containerRef} className="relative z-30 flex flex-col gap-4 mb-8">
-      {/* ── Top row: search + filter toggle + sort ── */}
-      <div className="flex gap-3 items-center">
+      {/* Top row: search + filter toggle + sort */}
+      <div className="flex flex-col md:flex-row gap-5 md:gap-3 items-center">
         {/* Search bar */}
-        <div className="relative flex-1">
+        <div className="w-full relative flex-1">
           <Search
             size={16}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
@@ -159,6 +164,9 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
             onChange={(e) => {
               setSearchInput(e.target.value);
               setShowSuggestions(true);
+              if (e.target.value === "") {
+                clearFilters();
+              }
             }}
             onFocus={() => setShowSuggestions(true)}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
@@ -205,53 +213,56 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
           )}
         </div>
 
-        {/* Filter toggle button */}
-        <button
-          className="btn-ghost btn-sm relative flex items-center gap-2"
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          <SlidersHorizontal size={16} />
-          <span className="hidden sm:inline">Filters</span>
-          {activeFilterCount > 0 && (
-            <span
-              className="absolute -top-1 -right-1 w-4 h-4 bg-teal text-white
-                text-xs rounded-full flex items-center justify-center"
-            >
-              {activeFilterCount}
-            </span>
-          )}
-        </button>
+        {/* Filter */}
+        <div className="flex items-center gap-3">
+          {/* Filter toggle button */}
+          <button
+            className="btn-ghost btn-sm relative flex items-center gap-2"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <SlidersHorizontal size={16} />
+            <span className="inline">Filters</span>
+            {activeFilterCount > 0 && (
+              <span
+                className="absolute -top-1 -right-1 w-4 h-4 bg-teal text-white
+                  text-xs rounded-full flex items-center justify-center"
+              >
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
 
-        {/* Sort dropdown */}
-        <select
-          className="input-field w-auto cursor-pointer"
-          value={`${filters.sortBy}-${filters.sortOrder}`}
-          onChange={(e) => {
-            const option = SORT_OPTIONS.find(
-              (o) => `${o.value}-${o.order}` === e.target.value,
-            );
-            if (option) {
-              onChange({
-                ...filters,
-                sortBy: option.value as BookFilters["sortBy"],
-                sortOrder: option.order as BookFilters["sortOrder"],
-                page: 1,
-              });
-            }
-          }}
-        >
-          {SORT_OPTIONS.map((opt) => (
-            <option
-              key={`${opt.value}-${opt.order}`}
-              value={`${opt.value}-${opt.order}`}
-            >
-              {opt.label}
-            </option>
-          ))}
-        </select>
+          {/* Sort dropdown */}
+          <select
+            className="input-field w-auto cursor-pointer"
+            value={`${filters.sortBy}-${filters.sortOrder}`}
+            onChange={(e) => {
+              const option = SORT_OPTIONS.find(
+                (o) => `${o.value}-${o.order}` === e.target.value,
+              );
+              if (option) {
+                onChange({
+                  ...filters,
+                  sortBy: option.value as BookFilters["sortBy"],
+                  sortOrder: option.order as BookFilters["sortOrder"],
+                  page: 1,
+                });
+              }
+            }}
+          >
+            {SORT_OPTIONS.map((opt) => (
+              <option
+                key={`${opt.value}-${opt.order}`}
+                value={`${opt.value}-${opt.order}`}
+              >
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {/* ── Expanded filter panel ── */}
+      {/* Expanded filter panel */}
       {showFilters && (
         <div
           // This makes the filter panel float instead of pushing the catalog down.

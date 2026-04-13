@@ -1,6 +1,8 @@
 // Import React hooks for state management
 import { useRef, useState } from "react";
 
+import { useMediaQuery } from "react-responsive";
+
 // Import navigation icons for pagination
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -16,10 +18,14 @@ import type { BookFilters } from "../../types/book";
 export default function BooksPage() {
   const catalogTopRef = useRef<HTMLDivElement | null>(null);
 
+  const isTablet = useMediaQuery({ maxWidth: 639 });
+
+  const totalBookToShow = isTablet ? 16 : 15;
+
   // All active filters live here as controlled state
   const [filters, setFilters] = useState<BookFilters>({
     page: 1,
-    limit: 15,
+    limit: totalBookToShow,
     sortBy: "createdAt",
     sortOrder: "desc",
   });
@@ -58,7 +64,7 @@ export default function BooksPage() {
         {/* Background teal glow — decorative */}
         <div className="absolute inset-0 pointer-events-none">
           <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px]
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full sm:w-[600px] h-[300px]
             bg-teal/5 rounded-full blur-3xl"
           />
         </div>
@@ -104,7 +110,7 @@ export default function BooksPage() {
 
           {/* Loading state — skeleton grid */}
           {isLoading && (
-            <BookGrid books={[]} isLoading={true} skeletonCount={15} />
+            <BookGrid books={[]} isLoading={true} skeletonCount={totalBookToShow} />
           )}
 
           {/* Empty state — no books in DB at all */}
@@ -159,7 +165,7 @@ export default function BooksPage() {
 
           {/* Book grid — only when we have results */}
           {!isLoading && books.length > 0 && (
-            <BookGrid books={books} isLoading={false} skeletonCount={15} />
+            <BookGrid books={books} isLoading={false} skeletonCount={totalBookToShow} />
           )}
 
           {/* Pagination — only when there's more than one page */}

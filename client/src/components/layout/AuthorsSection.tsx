@@ -1,6 +1,7 @@
 import { useAllAuthors } from "../../hooks/useAuthors";
 import { AuthorCard } from "../../cards";
 import type { IAuthor } from "../../types/book";
+import { AuthorsCarousel } from "../features";
 
 const AuthorsSection = () => {
   const { data: authors = [], isLoading } = useAllAuthors();
@@ -19,7 +20,7 @@ const AuthorsSection = () => {
 
         {/* Loading skeleton — 9 cards matching the real grid */}
         {isLoading && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 lg:hidden">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="animate-pulse">
                 <div className="skeleton aspect-[3/4] rounded-xl" />
@@ -41,11 +42,14 @@ const AuthorsSection = () => {
 
         {/* 3-column grid — shows up to 9 authors sorted by total purchase count */}
         {!isLoading && authors.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {authors.slice(0, 6).map((author: IAuthor) => (
-              <AuthorCard key={author._id} author={author} />
-            ))}
-          </div>
+          <>
+            <AuthorsCarousel authors={authors.slice(0, 9)} />
+            <div className="hidden lg:grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {authors.slice(0, 6).map((author: IAuthor) => (
+                <AuthorCard key={author._id} author={author} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </section>
