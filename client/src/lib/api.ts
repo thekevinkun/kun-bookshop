@@ -4,7 +4,9 @@ import axios from "axios";
 // Import our auth store so the interceptor can read and update tokens
 import { useAuthStore } from "../store/auth";
 
-// --- CREATE AXIOS INSTANCE ---
+import { useCartStore } from "../store/cart";
+
+// CREATE AXIOS INSTANCE
 // Instead of using axios directly, we create a configured instance
 // This way every request automatically gets our base URL and credentials setting
 const api = axios.create({
@@ -20,7 +22,7 @@ const api = axios.create({
   },
 });
 
-// --- REQUEST INTERCEPTOR ---
+// REQUEST INTERCEPTOR
 // Runs before every request is sent
 // We use it to attach the access token from our Zustand store to the Authorization header
 // This covers API clients and cases where cookies might not be available
@@ -42,7 +44,7 @@ api.interceptors.request.use(
   },
 );
 
-// --- RESPONSE INTERCEPTOR ---
+// RESPONSE INTERCEPTOR
 // Runs after every response comes back from the server
 // We use it to automatically handle 401 errors by attempting a token refresh
 // This means the user never sees a "session expired" error — it happens silently
@@ -131,6 +133,9 @@ api.interceptors.response.use(
 
         // Log the user out — clear the store and redirect to login
         useAuthStore.getState().logout();
+        // Load the guest cart now that the user is logged out
+        // This switches the cart key from "cart-user-{id}" back to "cart-guest"
+        useCartStore.getState().loadCart();
         window.location.href = "/login"; // Hard redirect so all state is cleared
 
         return Promise.reject(refreshError);

@@ -16,7 +16,8 @@ export interface CartState {
   removeItem: (bookId: string) => void; // Remove a book by its ID
   clearCart: () => void; // Empty the cart (called after successful checkout)
   isInCart: (bookId: string) => boolean; // Check if a book is already in the cart
-
+  loadCart: () => void; // Reloads cart items from localStorage for the current user
+  
   // Computed helpers — derived from items array
   total: () => number; // Sum of all item prices
   itemCount: () => number; // How many books are in the cart

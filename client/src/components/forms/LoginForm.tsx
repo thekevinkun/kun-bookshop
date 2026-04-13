@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 // Import useNavigate to redirect after successful login
 import { useNavigate } from "react-router-dom";
 
+import { useCartStore } from "../../store/cart";
+
 // Import lucide icons for the email and password fields
 import { Mail, Lock, Loader2 } from "lucide-react";
 
@@ -50,12 +52,17 @@ const LoginForm = () => {
       // Save the user and token to the Zustand store (also persisted to localStorage)
       login(response.data.user, response.data.token);
 
+      // Now that the user ID is set in the auth store, load their personal cart
+      // from localStorage — switches from "cart-guest" to "cart-user-{id}"
+      useCartStore.getState().loadCart();
+
       // Redirect to the home page after successful login
       navigate("/");
     } catch (error: unknown) {
       // The server returned an error — show it on the form
       const message =
-        (error as { response?: { data?: { error?: string } } }).response?.data?.error || "Login failed. Please try again.";
+        (error as { response?: { data?: { error?: string } } }).response?.data
+          ?.error || "Login failed. Please try again.";
 
       // Attach the error to the password field (most login errors relate to credentials)
       setError("password", { message });
