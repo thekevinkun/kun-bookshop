@@ -217,7 +217,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 
     // Log the session creation for audit purposes
     logger.info("Stripe checkout session created", {
-      orderId: order._id,
+      orderId: order._id.toString(),
       userId,
       total,
     });

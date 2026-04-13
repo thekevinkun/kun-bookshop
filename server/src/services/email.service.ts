@@ -191,7 +191,14 @@ export const sendOrderConfirmation = async (
 ): Promise<void> => {
   const html = compileTemplate("orderConfirmation", {
     orderNumber: order.orderNumber,
-    items: order.items, // Array of { title, author, price, coverImage }
+    // Convert each Mongoose subdocument to a plain object
+    // Handlebars v4.6+ blocks access to prototype properties — .toObject() flattens it
+    items: order.items.map((item: any) => ({
+      title: item.title,
+      author: item.author,
+      price: item.price,
+      coverImage: item.coverImage,
+    })),
     total: order.total.toFixed(2),
     libraryUrl: `${process.env.CLIENT_URL}/library`,
     supportUrl: `${process.env.CLIENT_URL}/contact`,

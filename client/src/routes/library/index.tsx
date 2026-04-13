@@ -18,6 +18,8 @@ import {
   AlertCircle, // Used for the error state
 } from "lucide-react";
 
+import { toast } from "sonner";
+
 import type { IBook } from "../../types/book"; // Import the IBook type for type-checking the library data
 
 // The main Library page component
@@ -48,17 +50,30 @@ export default function LibraryPage() {
   }
 
   // Handle Download Click
-  const handleDownload = (bookId: string) => {
+  const handleDownload = (bookId: string, title: string, fileType: string) => {
     // Mark this specific book as downloading so its card shows a spinner
     setDownloadingBookId(bookId);
 
-    // Trigger the download mutation
-    downloadBook(bookId, {
-      onSettled: () => {
-        // Clear the downloading state whether the download succeeded or failed
-        setDownloadingBookId(null);
+    // Trigger the download mutation — pass title and fileType so we can build a clean filename
+    downloadBook(
+      { bookId, title, fileType },
+      {
+        onSettled: () => {
+          // Clear the downloading state whether the download succeeded or failed
+          setDownloadingBookId(null);
+        },
+        onError: (error: unknown) => {
+          // Extract the error message from the server response
+          // The rate limiter returns { error: "Download limit reached..." } as the body
+          const message =
+            (error as { response?: { data?: { error?: string } } }).response
+              ?.data?.error ?? "Download failed. Please try again.";
+
+          // Show a toast notification so the user knows what happened
+          toast.error(message);
+        },
       },
-    });
+    );
   };
 
   // Loading State
@@ -176,7 +191,9 @@ export default function LibraryPage() {
 
                   {/* Download button */}
                   <button
-                    onClick={() => handleDownload(book._id)}
+                    onClick={() =>
+                      handleDownload(book._id, book.title, book.fileType)
+                    }
                     // Disable the button while any download is in progress to prevent double-clicks
                     disabled={isDownloading}
                     className="btn-primary w-full flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
