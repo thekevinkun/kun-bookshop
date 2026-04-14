@@ -60,6 +60,26 @@ export default function ProfilePage() {
     isError: isHistoryError,
   } = useDownloadHistory();
 
+  // Deduplicate download history — one entry per book per day
+  // Used for display counts and the history list itself
+  const deduplicatedHistory = downloadHistory
+    ? downloadHistory.filter(
+        (record: IDownloadRecord, index: number, self: IDownloadRecord[]) => {
+          const dateKey = new Date(record.downloadedAt).toLocaleDateString();
+          const bookId = record.bookId?._id ?? record.bookId;
+          const key = `${bookId}-${dateKey}`;
+          return (
+            index ===
+            self.findIndex((r: IDownloadRecord) => {
+              const rDateKey = new Date(r.downloadedAt).toLocaleDateString();
+              const rBookId = r.bookId?._id ?? r.bookId;
+              return `${rBookId}-${rDateKey}` === key;
+            })
+          );
+        },
+      )
+    : [];
+
   // Mutation to remove a book from the wishlist
   const { mutate: removeFromWishlist, isPending: isRemoving } =
     useRemoveFromWishlist();
@@ -155,7 +175,9 @@ export default function ProfilePage() {
                       Downloads
                     </div>
                     <p className="text-white font-bold text-xl">
-                      {isHistoryLoading ? "—" : (downloadHistory?.length ?? 0)}
+                      {isHistoryLoading
+                        ? "—"
+                        : (deduplicatedHistory?.length ?? 0)}
                     </p>
                   </div>
                 </div>
@@ -286,8 +308,8 @@ export default function ProfilePage() {
                 Download History
                 {/* Count badge for history tab */}
                 {!isHistoryLoading &&
-                  downloadHistory &&
-                  downloadHistory.length > 0 && (
+                  deduplicatedHistory &&
+                  deduplicatedHistory.length > 0 && (
                     <span
                       className={[
                         "text-xs font-bold px-1.5 py-0.5 rounded-full",
@@ -296,7 +318,7 @@ export default function ProfilePage() {
                           : "bg-white/10 text-gray-400",
                       ].join(" ")}
                     >
-                      {downloadHistory.length}
+                      {deduplicatedHistory.length}
                     </span>
                   )}
               </button>
@@ -428,7 +450,8 @@ export default function ProfilePage() {
                 {/* Empty */}
                 {!isHistoryLoading &&
                   !isHistoryError &&
-                  (!downloadHistory || downloadHistory.length === 0) && (
+                  (!deduplicatedHistory ||
+                    deduplicatedHistory.length === 0) && (
                     <div className="flex flex-col items-center gap-4 py-20 text-center">
                       <div className="w-16 h-16 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center">
                         <Clock className="text-teal-400 opacity-60" size={28} />
@@ -443,11 +466,42 @@ export default function ProfilePage() {
 
                 {/* Download history list */}
                 {!isHistoryLoading &&
-                  downloadHistory &&
-                  downloadHistory.length > 0 && (
+                  deduplicatedHistory &&
+                  deduplicatedHistory.length > 0 && (
                     <div className="space-y-3">
-                      {downloadHistory.map(
-                        (record: IDownloadRecord, index: number) => (
+                      {/* Deduplicate records — keep only one entry per book per day
+                          If the user downloads the same book 10 times today, show it once.
+                          If they download it again tomorrow, that gets its own row.
+                          We do this on the frontend so the backend audit log stays complete. */}
+                      {deduplicatedHistory
+                        .filter(
+                          (
+                            record: IDownloadRecord,
+                            index: number,
+                            self: IDownloadRecord[],
+                          ) => {
+                            // Build a key that combines the book ID + the calendar date of the download
+                            const dateKey = new Date(
+                              record.downloadedAt,
+                            ).toLocaleDateString();
+                            const bookId = record.bookId?._id ?? record.bookId;
+                            const key = `${bookId}-${dateKey}`;
+
+                            // Keep this record only if it's the FIRST occurrence of this key
+                            // findIndex returns the index of the first match — if it matches our current index, keep it
+                            return (
+                              index ===
+                              self.findIndex((r: IDownloadRecord) => {
+                                const rDateKey = new Date(
+                                  r.downloadedAt,
+                                ).toLocaleDateString();
+                                const rBookId = r.bookId?._id ?? r.bookId;
+                                return `${rBookId}-${rDateKey}` === key;
+                              })
+                            );
+                          },
+                        )
+                        .map((record: IDownloadRecord, index: number) => (
                           <div
                             key={record._id}
                             className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:border-white/20 transition-colors duration-200"
@@ -482,8 +536,7 @@ export default function ProfilePage() {
                               </p>
                             </div>
                           </div>
-                        ),
-                      )}
+                        ))}
                     </div>
                   )}
               </div>

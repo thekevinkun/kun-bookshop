@@ -5,6 +5,8 @@ import { useCreateReview, useUpdateReview } from "../../hooks/useReviews";
 
 import { Star } from "lucide-react";
 
+import { toast } from "sonner";
+
 // StarPicker — interactive star rating input
 const StarPicker = ({
   value,
@@ -82,11 +84,18 @@ const ReviewForm = ({ bookId, existingReview, onCancel }: ReviewFormProps) => {
       updateReview(
         { reviewId: existingReview._id, rating, comment },
         {
-          onError: (err: unknown) =>
-            setError(
+          onSuccess: () => {
+            toast.success("Review updated successfully");
+            onCancel?.();
+          },
+          onError: (err: unknown) => {
+            const message =
               (err as { response?: { data?: { error?: string } } }).response
-                ?.data?.error ?? "Failed to update review",
-            ),
+                ?.data?.error ?? "Failed to update review";
+
+            toast.error(message);
+            setError(message);
+          },
         },
       );
       onCancel?.(); // Close edit mode after submitting
@@ -96,15 +105,20 @@ const ReviewForm = ({ bookId, existingReview, onCancel }: ReviewFormProps) => {
         { rating, comment },
         {
           onSuccess: () => {
+            toast.success("Review submitted successfully");
+
             // Reset form after successful submission
             setRating(0);
             setComment("");
           },
-          onError: (err: unknown) =>
-            setError(
+          onError: (err: unknown) => {
+            const message =
               (err as { response?: { data?: { error?: string } } }).response
-                ?.data?.error ?? "Failed to submit review",
-            ),
+                ?.data?.error ?? "Failed to submit review";
+
+            toast.error(message);
+            setError(message);
+          },
         },
       );
     }

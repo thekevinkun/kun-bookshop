@@ -194,8 +194,10 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
           {/* Rating summary card */}
           <div className="flex items-center gap-4 p-4 bg-[#0F172A] rounded-xl">
             <div className="text-center">
+              {/* Use avgRating and total from the live reviews query — not book.rating from props */}
+              {/* book.rating only updates after a full page refresh, reviewsData updates immediately */}
               <p className="text-teal-400 text-5xl font-black leading-none">
-                {(book.rating ?? 0).toFixed(1)}
+                {(reviewsData?.avgRating ?? book.rating ?? 0).toFixed(1)}
               </p>
               <div className="flex gap-0.5 justify-center mt-1">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -203,7 +205,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
                     key={i}
                     size={12}
                     className={
-                      i < Math.round(book.rating ?? 0)
+                      i < Math.round(reviewsData?.avgRating ?? book.rating ?? 0)
                         ? "text-amber-400 fill-amber-400"
                         : "text-slate-600"
                     }
@@ -211,30 +213,59 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
                 ))}
               </div>
               <p className="text-slate-500 text-xs mt-1">
-                {book.reviewCount ?? 0} reviews
+                {/* reviewsData.total is the full count across all pages — accurate after submission */}
+                {reviewsData?.total ?? book.reviewCount ?? 0} reviews
               </p>
             </div>
             <div className="flex-1 flex flex-col gap-1.5">
-              {[5, 4, 3, 2, 1].map((star) => (
-                <div key={star} className="flex items-center gap-2">
-                  <span className="text-slate-500 text-xs w-3">{star}</span>
-                  <div className="flex-1 bg-slate-700 rounded-full h-1.5 overflow-hidden">
-                    {/* Distribution bar — real data would need a separate aggregate endpoint */}
-                    {/* For now we approximate from the average rating */}
-                    <div
-                      className="h-full bg-teal-400 rounded-full"
-                      style={{
-                        width:
-                          star === Math.round(book.rating ?? 0)
-                            ? "60%"
-                            : star > Math.round(book.rating ?? 0)
-                              ? `${Math.max(5, 60 - (star - Math.round(book.rating ?? 0)) * 20)}%`
-                              : `${Math.max(3, 40 - (Math.round(book.rating ?? 0) - star) * 15)}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
+              {(() => {
+                // Count how many reviews exist per star rating from the loaded reviews
+                // This gives us real distribution data instead of a fake approximation
+                const reviews = reviewsData?.reviews ?? [];
+                const total = reviews.length;
+
+                // Build a map: { 5: 3, 4: 1, 3: 0, 2: 0, 1: 0 } from the actual review ratings
+                const counts: Record<number, number> = {
+                  5: 0,
+                  4: 0,
+                  3: 0,
+                  2: 0,
+                  1: 0,
+                };
+                reviews.forEach((r: IReview) => {
+                  if (r.rating >= 1 && r.rating <= 5) {
+                    counts[r.rating] = (counts[r.rating] ?? 0) + 1;
+                  }
+                });
+
+                return [5, 4, 3, 2, 1].map((star) => {
+                  // Calculate this star's percentage of all loaded reviews
+                  const percentage =
+                    total > 0 ? (counts[star] / total) * 100 : 0;
+
+                  return (
+                    <div key={star} className="flex items-center gap-2">
+                      <span className="text-slate-500 text-xs w-3">{star}</span>
+                      <div className="flex-1 bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                        {/* Only render the bar if there are actual reviews — no fake placeholder bars */}
+                        {total > 0 ? (
+                          <div
+                            className="h-full bg-teal-400 rounded-full transition-all duration-500"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        ) : (
+                          // Empty state — no bar at all, just the grey track
+                          <div className="h-full w-0" />
+                        )}
+                      </div>
+                      {/* Show the count number next to each bar so the user can see exact numbers */}
+                      <span className="text-slate-600 text-xs w-3 text-right">
+                        {total > 0 ? counts[star] : ""}
+                      </span>
+                    </div>
+                  );
+                });
+              })()}
             </div>
           </div>
 
@@ -286,15 +317,6 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
           {isAuthenticated && ownsBook && !hasReviewed && (
             // Show the create form — user owns the book and hasn't reviewed yet
             <ReviewForm bookId={book._id} />
-          )}
-
-          {isAuthenticated && ownsBook && hasReviewed && (
-            <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-xl">
-              <p className="text-green-400 text-sm text-center">
-                You've reviewed this book. Find your review below to edit or
-                delete it.
-              </p>
-            </div>
           )}
 
           {/* Reviews list */}

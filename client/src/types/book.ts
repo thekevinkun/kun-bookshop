@@ -84,6 +84,7 @@ export interface IReview {
   comment: string;
   isPurchaseVerified: boolean;
   helpfulCount: number;
+  helpfulVoters?: []
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

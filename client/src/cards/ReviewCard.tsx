@@ -34,6 +34,10 @@ const ReviewCard = ({
   // Is the logged-in user the one who wrote this review?
   const isOwner = currentUserId && review.userId?._id === currentUserId;
   const isAdmin = currentUserRole === "admin";
+  const hasVoted = !!(
+    currentUserId &&
+    review.helpfulVoters?.some((id) => String(id) === currentUserId)
+  );
 
   const handleDelete = () => {
     if (window.confirm("Delete this review?")) {
@@ -71,7 +75,7 @@ const ReviewCard = ({
           ) : (
             <div
               className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-500/30
-                            flex items-center justify-center text-teal-400 text-xs font-bold"
+                  flex items-center justify-center text-teal-400 text-xs font-bold"
             >
               {review.userId?.firstName?.[0]}
               {review.userId?.lastName?.[0]}
@@ -83,9 +87,9 @@ const ReviewCard = ({
                 {review.userId?.firstName} {review.userId?.lastName}
               </p>
               {/* Verified badge — only shown if the reviewer purchased the book */}
-              {review.isPurchaseVerified && (
+              {isOwner && (
                 <span className="px-1.5 py-0.5 bg-green-500/20 text-green-400 text-xs rounded">
-                  Verified Purchase
+                  You
                 </span>
               )}
             </div>
@@ -123,8 +127,14 @@ const ReviewCard = ({
         {/* Helpful button */}
         <button
           onClick={() => markHelpful(review._id)}
-          className="flex items-center gap-1.5 text-slate-500 hover:text-teal-400
-            text-xs transition-colors"
+          title={hasVoted ? "You already voted" : ""}
+          className={`flex items-center gap-1.5 text-xs transition-colors
+            ${
+              hasVoted
+                ? "text-teal-400 hover:text-slate-500"
+                : "text-slate-500 hover:text-teal-400"
+            }
+          `}
         >
           <ThumbsUp size={13} />
           Helpful ({review.helpfulCount})
