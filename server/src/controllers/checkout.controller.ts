@@ -93,20 +93,33 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     }
 
     // STALE ORDER CLEANUP
-    // If we reach here, the duplicate guard didn't find a reusable session.
-    // That means either: cart changed, coupon changed, or session expired.
-    // Cancel any lingering pending orders for this user so they don't pile up.
-    // We only cancel — we never delete — so admin can still see the history.
+    // We only mark the previous pending order as failed if the books are IDENTICAL.
+    // Identical books + different coupon or expired session = stale, mark failed.
+    // Different books entirely = unrelated cart, leave it alone and let the 24h
+    // expiry job handle it. This way abandoning Book A doesn't poison Book A's
+    // pending order when the user later checks out Book B separately.
     if (recentPendingOrder) {
-      recentPendingOrder.paymentStatus = "failed";
-      await recentPendingOrder.save();
-      logger.info(
-        "Marked stale pending order as failed before creating new session",
-        {
-          orderId: recentPendingOrder._id.toString(),
-          userId,
-        },
-      );
+      const savedBookIdsSorted = recentPendingOrder.items
+        .map((item) => item.bookId.toString())
+        .sort()
+        .join(",");
+
+      if (savedBookIdsSorted === bookIdsSorted) {
+        // Same books — this is a retry with a different coupon or an expired session.
+        // The old order is now superseded by this new one, so mark it failed.
+        recentPendingOrder.paymentStatus = "failed";
+        await recentPendingOrder.save();
+        logger.info(
+          "Marked stale pending order as failed before creating new session",
+          {
+            orderId: recentPendingOrder._id.toString(),
+            userId,
+            reason: "same books, coupon changed or session expired",
+          },
+        );
+      }
+      // Different books — unrelated abandoned cart, leave it for the 24h expiry job.
+      // No log needed — silence is correct here.
     }
 
     // Fetch the books from OUR database — we never trust prices from the client
