@@ -21,6 +21,7 @@ export interface AuthState {
   user: User | null; // null means not logged in
   token: string | null; // The access token — also stored in httpOnly cookie, but we keep it here for easy access
   isAuthenticated: boolean; // Convenience flag so components don't have to check user !== null
+  isHydrated: boolean; // true once Zustand finishes reading from localStorage
 
   // Actions — functions that update the store
   login: (user: User, token: string) => void; // Called after a successful login API response

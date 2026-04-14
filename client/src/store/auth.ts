@@ -16,6 +16,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      isHydrated: false,
 
       // LOGIN ACTION
       // Call this right after a successful POST /api/auth/login response
@@ -56,6 +57,11 @@ export const useAuthStore = create<AuthState>()(
         token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
+      onRehydrateStorage: () => (state) => {
+        // Zustand calls this callback after it finishes loading from localStorage.
+        // Flipping isHydrated here tells the rest of the app "auth is ready, fire your queries".
+        if (state) state.isHydrated = true;
+      },
     },
   ),
 );

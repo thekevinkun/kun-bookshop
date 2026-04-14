@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "../store/auth";
 import api from "../lib/api";
 import type { IBook, BookFilters, PaginatedBooks } from "../types/book";
 
@@ -83,13 +84,23 @@ export const useBook = (id: string) => {
 // Fetches homepage discovery books.
 // Guests receive fallback picks; logged-in users get personalised results when available.
 export const useRecommendations = () => {
+  // Read both the user and the hydration flag from the auth store
+  const user = useAuthStore((s) => s.user);
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+
   return useQuery({
-    queryKey: ["recommendations"],
+    // Include the userId in the key so a logged-in user never gets a cached
+    // guest result, and logging out immediately triggers a fresh fetch
+    queryKey: ["recommendations", user?.id ?? "guest"],
     queryFn: async (): Promise<{ books: IBook[]; personalised: boolean }> => {
       const res = await api.get("/books/recommendations");
-      return res.data; // { books: [], personalised: boolean }
+      return res.data;
     },
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes — purchases don't happen that often
+    // Don't fire AT ALL until Zustand has finished reading from localStorage.
+    // This guarantees the access token is attached to the request before
+    // the first fetch, so the backend sees the real user on first load.
+    enabled: isHydrated,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
