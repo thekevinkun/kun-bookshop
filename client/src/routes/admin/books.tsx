@@ -38,7 +38,11 @@ export default function AdminBooks() {
   const { data, isLoading } = useQuery({
     queryKey: ["books", debouncedSearch],
     queryFn: async () => {
-      const params = new URLSearchParams({ limit: "50" });
+      const params = new URLSearchParams({
+        limit: "50",
+        sortBy: "purchaseCount", // Sort by number of purchases — most sold first
+        sortOrder: "desc", // Highest purchase count at the top
+      });
       if (debouncedSearch) params.set("search", debouncedSearch);
       const { data } = await api.get(`/books?${params}`);
       return data;

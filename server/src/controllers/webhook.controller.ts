@@ -7,6 +7,7 @@ import Stripe from "stripe";
 import { env } from "../config/env";
 
 // Import our models
+import { Book } from "../models/Book";
 import { Order } from "../models/Order";
 import { User } from "../models/User";
 import { Coupon } from "../models/Coupon";
@@ -144,6 +145,14 @@ const handleCheckoutCompleted = async (
   await User.findByIdAndUpdate(userId, {
     $addToSet: { library: { $each: bookIds } }, // $each adds multiple items at once
   });
+
+  // Increment purchaseCount on every book that was just bought
+  // $inc is atomic — safe if two webhooks somehow fire simultaneously
+  // We use updateMany so all books in the order are updated in a single DB call
+  await Book.updateMany(
+    { _id: { $in: bookIds } }, // Match all books in this order
+    { $inc: { purchaseCount: 1 } }, // Increment each book's purchaseCount by 1
+  );
 
   // Fetch the user so we can send them a confirmation email
   const user = await User.findById(userId);
