@@ -22,6 +22,9 @@ import compression from "compression";
 // Import our database connection function
 import connectDB from "./config/database";
 
+// Import the stale order expiry job — runs on startup and every hour
+import { expireStaleOrders } from "./jobs/expireOrders";
+
 // Import the auth routes so we can mount them on the Express app
 import authRoutes from "./routes/auth.routes";
 
@@ -154,6 +157,14 @@ app.get("/api/health", (req, res) => {
 const startServer = async () => {
   // Connect to MongoDB first — if this fails, the app exits (see database.ts)
   await connectDB();
+
+  // Run the stale order cleanup once on startup — catches anything that expired
+  // while the server was down (e.g. overnight, after a deploy)
+  await expireStaleOrders();
+
+  // Then schedule it to run every hour going forward
+  // 60 * 60 * 1000 = 3,600,000 ms = 1 hour
+  setInterval(expireStaleOrders, 60 * 60 * 1000);
 
   // Start the Apollo Server so it's ready to handle GraphQL requests
   const apolloServer = new ApolloServer({ typeDefs, resolvers });

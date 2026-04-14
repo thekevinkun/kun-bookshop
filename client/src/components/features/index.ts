@@ -9,6 +9,7 @@ import RecommendedCarousel from "./RecommendedCarousel";
 import AuthorsCarousel from "./AuthorsCarousel";
 
 import CartDrawer from "./CartDrawer";
+import CouponInput from "./CouponInput";
 
 export {
   BookGrid,
@@ -21,4 +22,5 @@ export {
   RecommendedCarousel,
   AuthorsCarousel,
   CartDrawer,
+  CouponInput,
 };

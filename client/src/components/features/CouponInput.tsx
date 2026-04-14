@@ -11,21 +11,17 @@ import { toast } from "sonner";
 import { Tag, X, Loader2 } from "lucide-react";
 
 // This type describes the validated coupon data the parent (CartDrawer) needs to know about
-export interface AppliedCoupon {
-  code: string;
-  discountAmount: number; // How much is being saved
-  finalTotal: number; // Cart total after discount
-}
+import type { IAppliedCoupon } from "../../types/order";
 
 // Props this component accepts
 interface CouponInputProps {
   cartTotal: number; // Current cart total before any discount
-  appliedCoupon: AppliedCoupon | null; // The currently applied coupon (or null)
-  onApply: (coupon: AppliedCoupon) => void; // Called when a valid coupon is applied
+  appliedCoupon: IAppliedCoupon | null; // The currently applied coupon (or null)
+  onApply: (coupon: IAppliedCoupon) => void; // Called when a valid coupon is applied
   onRemove: () => void; // Called when user removes the coupon
 }
 
-export const CouponInput = ({
+const CouponInput = ({
   cartTotal,
   appliedCoupon,
   onApply,
@@ -50,6 +46,9 @@ export const CouponInput = ({
           // Tell the parent component about the applied coupon
           onApply({
             code: data.coupon.code,
+            discountType: data.coupon.discountType, // needed by checkout controller
+            discountValue: data.coupon.discountValue, // needed by checkout controller
+            maxDiscount: data.coupon.maxDiscount, // optional cap
             discountAmount: data.discountAmount,
             finalTotal: data.finalTotal,
           });
@@ -75,7 +74,7 @@ export const CouponInput = ({
     if (e.key === "Enter") handleApply();
   };
 
-  // ── If a coupon is already applied, show the applied pill instead of the input ──
+  // If a coupon is already applied, show the applied pill instead of the input
   if (appliedCoupon) {
     return (
       <div className="flex items-center justify-between rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-2">
@@ -100,7 +99,7 @@ export const CouponInput = ({
     );
   }
 
-  // ── Default state: show the coupon code input + Apply button ──
+  // Default state: show the coupon code input + Apply button
   return (
     <div className="flex gap-2">
       {/* Text input for the coupon code */}
@@ -137,3 +136,5 @@ export const CouponInput = ({
     </div>
   );
 };
+
+export default CouponInput;

@@ -40,6 +40,9 @@ const generateOrderNumber = (): string => {
 // POST /api/checkout/create-session
 // Creates a Stripe checkout session and returns the URL to redirect the user to
 export const createCheckoutSession = async (req: Request, res: Response) => {
+  // Declare order outside try so the catch block can clean it up on Stripe failure
+  let order: InstanceType<typeof Order> | null = null;
+
   try {
     // Extract the items array and optional coupon code from the validated request body
     const { items, couponCode } = req.body;
@@ -66,16 +69,44 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
         .sort()
         .join(",");
 
-      if (savedBookIdsSorted === bookIdsSorted) {
+      // Also check the coupon matches — different coupon = different total = need new session
+      const couponMatches =
+        (recentPendingOrder.couponCode ?? null) ===
+        (couponCode?.toUpperCase().trim() ?? null);
+
+      if (savedBookIdsSorted === bookIdsSorted && couponMatches) {
         const existingSession = await getStripe().checkout.sessions.retrieve(
           recentPendingOrder.stripeSessionId,
         );
-        return res.json({
-          sessionId: existingSession.id,
-          url: existingSession.url,
-        });
+
+        // Only reuse if the Stripe session is still open — expired sessions have no usable URL
+        // Stripe sessions expire after 24 hours, after which status becomes 'expired'
+        if (existingSession.status === "open") {
+          return res.json({
+            sessionId: existingSession.id,
+            url: existingSession.url, // Same Stripe page the user was on before
+          });
+        }
+        // Session expired — fall through to create a fresh order and session
       }
-      // Cart changed — fall through to create a fresh order and session
+      // Cart or coupon changed — fall through to create a fresh order and session
+    }
+
+    // STALE ORDER CLEANUP
+    // If we reach here, the duplicate guard didn't find a reusable session.
+    // That means either: cart changed, coupon changed, or session expired.
+    // Cancel any lingering pending orders for this user so they don't pile up.
+    // We only cancel — we never delete — so admin can still see the history.
+    if (recentPendingOrder) {
+      recentPendingOrder.paymentStatus = "failed";
+      await recentPendingOrder.save();
+      logger.info(
+        "Marked stale pending order as failed before creating new session",
+        {
+          orderId: recentPendingOrder._id.toString(),
+          userId,
+        },
+      );
     }
 
     // Fetch the books from OUR database — we never trust prices from the client
@@ -154,7 +185,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 
     // CREATE ORDER IN DB
     // We create the order BEFORE the Stripe session so we have an orderId for the metadata
-    const order = new Order({
+    order = new Order({
       orderNumber: generateOrderNumber(), // Human-readable unique ID
       userId,
       items: books.map((book) => ({
@@ -173,24 +204,39 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 
     await order.save();
 
+    // Calculate the discount ratio so we can distribute it proportionally across items
+    // e.g. if subtotal is $17 and discount is $3.40, ratio is 0.2 (20% off)
+    const discountRatio = discount > 0 ? discount / subtotal : 0;
+
     // CREATE STRIPE CHECKOUT SESSION
     const session = await getStripe().checkout.sessions.create({
       payment_method_types: ["card"], // Only accept card payments
 
       // Build one line item per book for Stripe's UI
-      line_items: books.map((book) => ({
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: book.title,
-            description: `by ${book.authorName}`,
-            images: [book.coverImage], // Stripe shows this in their checkout UI
+      line_items: books.map((book) => {
+        // Get this book's base price
+        const basePrice = book.discountPrice ?? book.price;
+        // Reduce it by the discount ratio so all items together sum to the correct total
+        const discountedPrice = basePrice * (1 - discountRatio);
+        // Convert to cents and round — Stripe requires a non-negative integer
+        const unitAmount = Math.max(1, Math.round(discountedPrice * 100));
+
+        return {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: book.title,
+              // Show the coupon code in the description so user sees it on Stripe page
+              description: appliedCouponCode
+                ? `by ${book.authorName} • Coupon ${appliedCouponCode} applied`
+                : `by ${book.authorName}`,
+              images: [book.coverImage],
+            },
+            unit_amount: unitAmount,
           },
-          // Stripe requires amounts in cents — multiply by 100
-          unit_amount: Math.round((book.discountPrice ?? book.price) * 100),
-        },
-        quantity: 1, // Digital books are always quantity 1
-      })),
+          quantity: 1,
+        };
+      }),
 
       mode: "payment", // One-time payment (not a subscription)
 
@@ -226,8 +272,14 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     // The frontend will redirect the user to session.url (Stripe's hosted checkout page)
     res.json({ sessionId: session.id, url: session.url });
   } catch (error) {
-    // Log the full error internally but don't expose details to the client
     logger.error("Checkout session creation failed", { error });
+
+    // Clean up the orphaned pending order if Stripe rejected the session
+    // Without this, failed checkout attempts leave stale pending orders in the DB
+    if (order?._id) {
+      await Order.findByIdAndDelete(order._id).catch(() => {}); // Best-effort cleanup
+    }
+
     res.status(500).json({ error: "Checkout failed. Please try again." });
   }
 };

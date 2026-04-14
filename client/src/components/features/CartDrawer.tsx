@@ -16,7 +16,7 @@ import { useCartStore } from "../../store/cart";
 // Import auth store to check if user is logged in before checkout
 import { useAuthStore } from "../../store/auth";
 
-import { CouponInput, type AppliedCoupon } from "./CouponInput";
+import CouponInput from "./CouponInput";
 
 // Import our configured Axios instance to call the backend
 import api from "../../lib/api";
@@ -32,18 +32,24 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   const navigate = useNavigate();
 
   // Read cart state and actions from our Zustand store
-  const { items, removeItem, total, itemCount } = useCartStore();
+  const {
+    items,
+    removeItem,
+    total,
+    itemCount,
+    appliedCoupon,
+    applyCoupon,
+    removeCoupon,
+  } = useCartStore();
+
   // Read auth state — we need to know if user is logged in before checkout
   const { isAuthenticated } = useAuthStore();
+
   // Local loading state — shows spinner while Stripe session is being created
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+
   // Local error state — shows an error message if checkout fails
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
-
-  // Holds the currently applied coupon — null means no coupon has been applied
-  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(
-    null,
-  );
 
   const clearCheckoutState = () => {
     setCheckoutError(null);
@@ -117,7 +123,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
           className="cart-drawer fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-card shadow-2xl"
           style={{ borderLeft: "1px solid rgba(51,65,85,0.5)" }}
         >
-          {/* --- HEADER --- */}
+          {/* HEADER */}
           <div
             className="flex items-center justify-between p-6"
             style={{ borderBottom: "1px solid rgba(51,65,85,0.5)" }}
@@ -145,7 +151,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             </Dialog.Close>
           </div>
 
-          {/* --- BODY --- */}
+          {/* BODY */}
           {/* flex-1 makes this section grow to fill available space */}
           {/* overflow-y-auto adds a scrollbar if there are many items */}
           <div className="flex-1 overflow-y-auto p-6">
@@ -213,7 +219,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             )}
           </div>
 
-          {/* --- FOOTER (only shown when cart has items) --- */}
+          {/* FOOTER (only shown when cart has items) */}
           {items.length > 0 && (
             <div
               className="p-6 flex flex-col gap-4"
@@ -223,8 +229,8 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
               <CouponInput
                 cartTotal={total()}
                 appliedCoupon={appliedCoupon}
-                onApply={(coupon) => setAppliedCoupon(coupon)}
-                onRemove={() => setAppliedCoupon(null)}
+                onApply={applyCoupon}
+                onRemove={removeCoupon}
               />
 
               {/* Order summary */}

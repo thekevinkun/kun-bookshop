@@ -7,9 +7,20 @@ export interface ICartItem {
   coverImage: string; // Cover URL — shown as thumbnail in the cart
 }
 
+// The applied coupon stored in the cart — mirrors what the backend returns on validation
+export interface IAppliedCoupon {
+  code: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  maxDiscount?: number;
+  discountAmount: number; // The actual dollar amount saved
+  finalTotal: number; // What the user pays after discount
+}
+
 // Define the full shape of the cart store — state + actions
 export interface CartState {
   items: ICartItem[]; // All items currently in the cart
+  appliedCoupon: IAppliedCoupon | null; // null means no coupon applied
 
   // Actions the UI can call
   addItem: (item: ICartItem) => void; // Add a book to the cart
@@ -17,7 +28,9 @@ export interface CartState {
   clearCart: () => void; // Empty the cart (called after successful checkout)
   isInCart: (bookId: string) => boolean; // Check if a book is already in the cart
   loadCart: () => void; // Reloads cart items from localStorage for the current user
-  
+  applyCoupon: (coupon: IAppliedCoupon) => void; // Save validated coupon to store + localStorage
+  removeCoupon: () => void; // Clear the coupon
+
   // Computed helpers — derived from items array
   total: () => number; // Sum of all item prices
   itemCount: () => number; // How many books are in the cart
