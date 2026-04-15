@@ -19,7 +19,7 @@ const AuthLayout = () => {
           <div className="flex items-center gap-5">
             <p className="text-text-muted text-xs text-center">
               Digital books delivered instantly · PDF & ePub formats · Powered
-              by <span className="text-teal font-medium">Stripe</span>
+              by <span className="text-emerald-500 font-medium">Stripe</span>
             </p>
 
             <div className="flex gap-3">
@@ -38,7 +38,7 @@ const AuthLayout = () => {
                   aria-label={social.label}
                   className="w-6 h-6 rounded-full border border-bg-hover
                       flex items-center justify-center text-text-muted
-                      hover:border-teal hover:text-teal transition-all duration-200"
+                      hover:border-golden hover:text-golden transition-all duration-200"
                 >
                   {social.icon}
                 </a>

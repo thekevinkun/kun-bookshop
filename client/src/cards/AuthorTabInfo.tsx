@@ -14,20 +14,20 @@ const AuthorTabInfo = ({ book, authorName }: AuthorTabInfoProps) => {
           <img
             src={book.author.avatar}
             alt={authorName}
-            className="w-16 h-16 rounded-full object-cover border-2 border-teal-500/30 flex-shrink-0"
+            className="w-16 h-16 rounded-full object-cover border-2 border-golden/75 flex-shrink-0"
           />
         ) : (
           <div
-            className="w-16 h-16 rounded-full bg-teal-500/20 border-2 border-teal-500/30
+            className="w-16 h-16 rounded-full bg-golden/70 border-2 border-golden/75
                 flex items-center justify-center flex-shrink-0"
           >
-            <User size={28} className="text-teal-400" />
+            <User size={28} className="text-golden/80" />
           </div>
         )}
 
         <div className="flex flex-col gap-1">
           <h3 className="text-slate-100 font-bold text-lg">{authorName}</h3>
-          <p className="text-teal-400 text-xs font-semibold uppercase tracking-wider">
+          <p className="text-golden/80 text-xs font-semibold uppercase tracking-wider">
             {typeof book.author === "object" && book.author?.specialty?.length
               ? book.author.specialty[0]
               : book.category[0]}{" "}
@@ -50,7 +50,7 @@ const AuthorTabInfo = ({ book, authorName }: AuthorTabInfoProps) => {
                   <p className="text-slate-200 font-bold text-sm">
                     {stat.value}
                   </p>
-                  <p className="text-slate-500 text-xs">{stat.label}</p>
+                  <p className="text-text-muted text-xs">{stat.label}</p>
                 </div>
                 {i < arr.length - 1 && (
                   <div className="w-px h-8 bg-slate-700" />

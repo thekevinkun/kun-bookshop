@@ -61,7 +61,7 @@ const Navbar = () => {
     <nav
       className={`sticky top-0 z-40 w-full transition-all duration-300 ${
         isScrolled
-          ? "border-b border-teal/15 bg-navy/88 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.28)]"
+          ? "border-b border-golden/15 bg-navy/88 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.28)]"
           : "bg-navy"
       }`}
     >
@@ -69,11 +69,11 @@ const Navbar = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-text-light hover:text-teal transition-colors"
+          className="flex items-center gap-2 text-text-light hover:text-golden transition-colors"
         >
-          <BookOpen size={24} className="text-teal" />
+          <BookOpen size={24} className="text-golden" />
           <span className="font-bold text-lg">
-            Kun <span className="text-teal">Bookshop</span>
+            Kun <span className="text-golden">Bookshop</span>
           </span>
         </Link>
 
@@ -81,14 +81,14 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-6">
           <Link
             to="/books"
-            className="text-text-muted hover:text-teal text-sm font-medium transition-colors"
+            className="text-text-muted hover:text-golden text-sm font-medium transition-colors"
           >
             Browse
           </Link>
           {user?.role === "admin" && (
             <Link
               to="/admin"
-              className="text-text-muted hover:text-teal text-sm font-medium transition-colors"
+              className="text-text-muted hover:text-golden text-sm font-medium transition-colors"
             >
               Dashboard
             </Link>
@@ -102,14 +102,16 @@ const Navbar = () => {
               {/* Cart button */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative inline-flex h-9 items-center justify-center pr-1 text-text-muted hover:text-text-light transition-colors cursor-pointer"
+                className="relative inline-flex h-9 items-center justify-center pr-1 
+                  text-text-muted hover:text-text-light transition-colors cursor-pointer"
                 aria-label="Open cart"
               >
                 <ShoppingCart size={20} strokeWidth={2.1} />
                 {/* Badge showing how many books are in the cart */}
                 {itemCount() > 0 && (
                   <span
-                    className="absolute -top-1 -right-1.5 min-w-4.5 h-4.5 px-1 bg-teal text-white text-[10px] font-bold 
+                    className="absolute -top-1 -right-1.5 min-w-4.5 h-4.5 px-1 
+                    bg-burgundy text-text-light text-[10px] font-bold 
                     rounded-full flex items-center justify-center leading-none"
                   >
                     {itemCount()}
@@ -122,9 +124,9 @@ const Navbar = () => {
                 {/* The button that opens the dropdown */}
                 <DropdownMenu.Trigger asChild>
                   <button
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10
-                      bg-white/[0.03] text-text-light transition-colors hover:border-teal/35 hover:bg-white/[0.06]
-                      focus-visible:border-teal cursor-pointer"
+                    className="flex h-9 w-9 items-center justify-center rounded-full
+                      text-text-light transition-colors hover:border-golden/35 
+                      hover:bg-text-light/[0.06] focus-visible:border-white cursor-pointer"
                     aria-label="Open account menu"
                   >
                     {/* Avatar or initials */}
@@ -136,8 +138,9 @@ const Navbar = () => {
                       />
                     ) : (
                       <div
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-teal
-                          text-[11px] font-bold tracking-[0.08em] text-white"
+                        className="flex h-8 w-8 items-center justify-center rounded-full 
+                          backdrop-blur-md border-2 border-golden/80
+                          text-[11px] font-bold tracking-[0.08em] text-text-light"
                       >
                         {user?.firstName?.[0]}
                         {user?.lastName?.[0]}
@@ -171,7 +174,7 @@ const Navbar = () => {
                         to="/library"
                         className="flex items-center gap-2 px-3 py-2 text-sm
                         text-text-muted rounded-lg cursor-pointer hover:bg-bg-hover
-                        hover:text-teal focus:outline-none focus:bg-bg-hover focus:text-teal
+                        hover:text-golden focus:outline-none focus:bg-bg-hover focus:text-golden
                         transition-colors duration-150"
                       >
                         <Library size={15} />
@@ -185,8 +188,8 @@ const Navbar = () => {
                         to="/profile"
                         className="flex items-center gap-2 px-3 py-2 text-sm
                         text-text-muted rounded-lg cursor-pointer
-                        hover:bg-bg-hover hover:text-teal focus:outline-none focus:bg-bg-hover 
-                        focus:text-teal transition-colors duration-150"
+                        hover:bg-bg-hover hover:text-golden focus:outline-none focus:bg-bg-hover 
+                        focus:text-golden transition-colors duration-150"
                       >
                         <User size={15} />
                         Profile
@@ -200,8 +203,8 @@ const Navbar = () => {
                           to="/admin"
                           className="flex items-center gap-2 px-3 py-2 text-sm
                           text-text-muted rounded-lg cursor-pointer
-                          hover:bg-bg-hover hover:text-teal
-                            focus:outline-none focus:bg-bg-hover focus:text-teal
+                          hover:bg-bg-hover hover:text-golden
+                            focus:outline-none focus:bg-bg-hover focus:text-golden
                             transition-colors duration-150"
                         >
                           <LayoutDashboard size={15} />
@@ -256,7 +259,8 @@ const Navbar = () => {
             {/* Badge showing how many books are in the cart */}
             {itemCount() > 0 && (
               <span
-                className="absolute -top-1 -right-1.5 min-w-4.5 h-4.5 px-1 bg-teal text-white text-[10px] font-bold 
+                className="absolute -top-1 -right-1.5 min-w-4.5 h-4.5 px-1 bg-burgundy 
+                text-text-light text-[10px] font-bold 
                 rounded-full flex items-center justify-center leading-none"
               >
                 {itemCount()}
@@ -283,7 +287,7 @@ const Navbar = () => {
         >
           <Link
             to="/books"
-            className="text-text-muted hover:text-teal text-sm font-medium py-2"
+            className="text-text-muted hover:text-golden text-sm font-medium py-2"
             onClick={() => setMobileOpen(false)}
           >
             Browse
@@ -293,14 +297,14 @@ const Navbar = () => {
             <>
               <Link
                 to="/library"
-                className="text-text-muted hover:text-teal text-sm font-medium py-2"
+                className="text-text-muted hover:text-golden text-sm font-medium py-2"
                 onClick={() => setMobileOpen(false)}
               >
                 My Library
               </Link>
               <Link
                 to="/profile"
-                className="text-text-muted hover:text-teal text-sm font-medium py-2"
+                className="text-text-muted hover:text-golden text-sm font-medium py-2"
                 onClick={() => setMobileOpen(false)}
               >
                 Profile
@@ -308,7 +312,7 @@ const Navbar = () => {
               {user?.role === "admin" && (
                 <Link
                   to="/admin"
-                  className="text-text-muted hover:text-teal text-sm font-medium py-2"
+                  className="text-text-muted hover:text-golden text-sm font-medium py-2"
                   onClick={() => setMobileOpen(false)}
                 >
                   Admin Dashboard

@@ -77,7 +77,9 @@ const CouponInput = ({
   // If a coupon is already applied, show the applied pill instead of the input
   if (appliedCoupon) {
     return (
-      <div className="flex items-center justify-between rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-2">
+      <div className="flex items-center justify-between rounded-lg 
+        bg-emerald-50 border border-emerald-200 px-3 py-2"
+      >
         {/* Left side: tag icon + coupon summary */}
         <div className="flex items-center gap-2 text-emerald-700">
           <Tag className="h-4 w-4 shrink-0" />
@@ -110,7 +112,7 @@ const CouponInput = ({
         onKeyDown={handleKeyDown}
         placeholder="Coupon code"
         className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm
-          focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent
+          focus:outline-none focus:ring-2 focus:ring-golden/70 focus:border-transparent
           placeholder:text-gray-400 uppercase"
         disabled={isPending} // Disable while the request is in-flight
       />
@@ -119,9 +121,9 @@ const CouponInput = ({
       <button
         onClick={handleApply}
         disabled={isPending || !inputValue.trim()}
-        className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white
-        hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed
-          transition-colors flex items-center gap-1.5"
+        className="rounded-lg bg-burgundy/75 px-4 py-2 text-sm font-medium 
+          text-text-light hover:bg-burgundy disabled:opacity-50 
+          disabled:cursor-not-allowed transition-colors flex items-center gap-1.5"
       >
         {/* Show a spinner while validating */}
         {isPending ? (

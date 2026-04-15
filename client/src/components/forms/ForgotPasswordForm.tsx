@@ -112,7 +112,7 @@ const ForgotPasswordForm = () => {
       </button>
 
       <div className="text-center">
-        <a href="/login" className="text-sm text-teal hover:underline">
+        <a href="/login" className="text-sm text-golden hover:underline">
           Back to sign in
         </a>
       </div>

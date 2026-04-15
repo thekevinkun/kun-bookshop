@@ -81,7 +81,7 @@ export default function LibraryPage() {
     return (
       // Full-page centered spinner while we wait for the library to load
       <div className="container-page min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin text-teal-400" size={40} />
+        <Loader2 className="animate-spin text-golden/75" size={40} />
       </div>
     );
   }
@@ -108,7 +108,7 @@ export default function LibraryPage() {
     return (
       <div className="container-page min-h-screen flex flex-col items-center justify-center gap-6 text-center px-4">
         {/* Empty state icon */}
-        <BookOpen className="text-teal-400 opacity-50" size={64} />
+        <BookOpen className="text-golden/75 opacity-50" size={64} />
         <div>
           <h2 className="text-2xl font-bold text-text-light mb-2">
             Your library is empty
@@ -135,7 +135,7 @@ export default function LibraryPage() {
         {/* Page header */}
         <div className="mb-10">
           <h1 className="text-text-light">My Library</h1>
-          <p className="text-text-muted mt-1">
+          <p className="text-golden/85 text-sm mt-1">
             {/* Show how many books they own */}
             {library.length} {library.length === 1 ? "book" : "books"} in your
             collection
@@ -152,7 +152,7 @@ export default function LibraryPage() {
               <div
                 key={book._id}
                 // Card styling — dark surface matching our design system
-                className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden flex flex-col hover:border-teal-500/40 transition-colors duration-200"
+                className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden flex flex-col hover:border-golden-500/40 transition-colors duration-200"
               >
                 {/* Book cover image */}
                 <div className="aspect-[1/1] overflow-hidden bg-white/5">
@@ -182,7 +182,7 @@ export default function LibraryPage() {
                   </p>
 
                   {/* File type badge — shows PDF or EPUB */}
-                  <span className="text-xs text-teal-400 uppercase font-medium tracking-wide mb-4">
+                  <span className="text-xs text-golden/75 uppercase font-medium tracking-wide mb-4">
                     {book.fileType}
                   </span>
 
@@ -196,7 +196,8 @@ export default function LibraryPage() {
                     }
                     // Disable the button while any download is in progress to prevent double-clicks
                     disabled={isDownloading}
-                    className="btn-primary w-full flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary w-full flex items-center justify-center gap-2 text-sm 
+                      disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isThisDownloading ? (
                       // Show spinner only on the card that is actively downloading

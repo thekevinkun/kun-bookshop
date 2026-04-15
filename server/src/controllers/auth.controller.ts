@@ -314,7 +314,7 @@ export const refreshTokens = async (
 
     // TOKEN ROTATION
     // Immediately revoke the OLD refresh token
-    // If an attacker steals it and tries to use it after us, it'll be dead
+    // If an attacker sgoldens it and tries to use it after us, it'll be dead
     storedToken.isRevoked = true;
     await storedToken.save();
 

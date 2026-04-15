@@ -82,42 +82,42 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
 
   const bookMoreDetails = [
     {
-      icon: <FileText size={14} className="text-teal-400" />,
+      icon: <FileText size={14} className="text-golden/80" />,
       label: "Format",
       value: book.fileType.toUpperCase(),
     },
     {
-      icon: <Download size={14} className="text-teal-400" />,
+      icon: <Download size={14} className="text-golden/80" />,
       label: "File Size",
       value: formatFileSize(book.fileSize),
     },
     {
-      icon: <BookOpen size={14} className="text-teal-400" />,
+      icon: <BookOpen size={14} className="text-golden/80" />,
       label: "Category",
       value: book.category[0],
     },
     {
-      icon: <Calendar size={14} className="text-teal-400" />,
+      icon: <Calendar size={14} className="text-golden/80" />,
       label: "Published",
       value: book.publishedDate ? formatDate(book.publishedDate) : "N/A",
     },
     {
-      icon: <Tag size={14} className="text-teal-400" />,
+      icon: <Tag size={14} className="text-golden/80" />,
       label: "ISBN",
       value: book.isbn ?? "N/A",
     },
     {
-      icon: <Building2 size={14} className="text-teal-400" />,
+      icon: <Building2 size={14} className="text-golden/80" />,
       label: "Publisher",
       value: book.publisher ?? "N/A",
     },
     {
-      icon: <Star size={14} className="text-teal-400" />,
+      icon: <Star size={14} className="text-golden/80" />,
       label: "Purchases",
       value: book.purchaseCount.toLocaleString(),
     },
     {
-      icon: <BookOpen size={14} className="text-teal-400" />,
+      icon: <BookOpen size={14} className="text-golden/80" />,
       label: "Preview",
       // Only show the page count if previewPages exists, otherwise show N/A
       value: book.previewPages ? `${book.previewPages} pages` : "N/A",
@@ -140,12 +140,12 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
             key={tab.value}
             value={tab.value}
             className="relative px-5 py-3 text-sm font-semibold transition-all duration-200
-              text-slate-500 hover:text-slate-200 data-[state=active]:text-teal-400
+              text-text-muted hover:text-slate-200 data-[state=active]:text-golden/80
               focus:outline-none"
           >
             {tab.label}
             <span
-              className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-teal-400
+              className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-golden/80
                 scale-x-0 transition-transform duration-200 [[data-state=active]_&]:scale-x-100"
             />
           </RadixTabs.Trigger>
@@ -167,7 +167,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
               >
                 {item.icon}
                 <div>
-                  <p className="text-slate-500 text-xs">{item.label}</p>
+                  <p className="text-text-muted text-xs">{item.label}</p>
                   <p className="text-slate-200 text-xs font-semibold">
                     {item.value}
                   </p>
@@ -196,7 +196,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
             <div className="text-center">
               {/* Use avgRating and total from the live reviews query — not book.rating from props */}
               {/* book.rating only updates after a full page refresh, reviewsData updates immediately */}
-              <p className="text-teal-400 text-5xl font-black leading-none">
+              <p className="text-teal/80 text-5xl font-black leading-none">
                 {(reviewsData?.avgRating ?? book.rating ?? 0).toFixed(1)}
               </p>
               <div className="flex gap-0.5 justify-center mt-1">
@@ -207,12 +207,12 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
                     className={
                       i < Math.round(reviewsData?.avgRating ?? book.rating ?? 0)
                         ? "text-amber-400 fill-amber-400"
-                        : "text-slate-600"
+                        : "text-bg-hover fill-bg-hover"
                     }
                   />
                 ))}
               </div>
-              <p className="text-slate-500 text-xs mt-1">
+              <p className="text-text-muted text-xs mt-1">
                 {/* reviewsData.total is the full count across all pages — accurate after submission */}
                 {reviewsData?.total ?? book.reviewCount ?? 0} reviews
               </p>
@@ -245,12 +245,12 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
 
                   return (
                     <div key={star} className="flex items-center gap-2">
-                      <span className="text-slate-500 text-xs w-3">{star}</span>
+                      <span className="text-text-muted text-xs w-3">{star}</span>
                       <div className="flex-1 bg-slate-700 rounded-full h-1.5 overflow-hidden">
                         {/* Only render the bar if there are actual reviews — no fake placeholder bars */}
                         {total > 0 ? (
                           <div
-                            className="h-full bg-teal-400 rounded-full transition-all duration-500"
+                            className="h-full bg-teal/80 rounded-full transition-all duration-500"
                             style={{ width: `${percentage}%` }}
                           />
                         ) : (
@@ -297,7 +297,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
               <p className="text-slate-400 text-sm">
                 <button
                   onClick={() => navigate("/login")}
-                  className="text-teal-400 hover:underline"
+                  className="text-golden/80 hover:underline"
                 >
                   Sign in
                 </button>{" "}
@@ -321,11 +321,11 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
 
           {/* Reviews list */}
           {reviewsLoading ? (
-            <div className="text-center text-slate-500 text-sm py-8">
+            <div className="text-center text-text-muted text-sm py-8">
               Loading reviews...
             </div>
           ) : reviewsData?.reviews?.length === 0 ? (
-            <div className="text-center text-slate-500 text-sm py-8">
+            <div className="text-center text-text-muted text-sm py-8">
               No reviews yet. Be the first to review this book!
             </div>
           ) : (
@@ -353,7 +353,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
               >
                 Previous
               </button>
-              <span className="text-slate-500 text-sm">
+              <span className="text-text-muted text-sm">
                 {reviewsData.currentPage} / {reviewsData.totalPages}
               </span>
               <button

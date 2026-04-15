@@ -41,8 +41,8 @@ const CTASection = () => {
           {/* ── Left side — fanned book covers ── */}
           {/* Only rendered on md+ screens — decorative, not functional */}
           <div className="absolute left-8 top-1/2 hidden h-[240px] w-[380px] -translate-y-1/2 md:block">
-            {/* Teal ambient glow behind the books */}
-            <div className="absolute inset-0 rounded-full bg-teal/15 blur-3xl" />
+            {/* golden ambient glow behind the books */}
+            <div className="absolute inset-0 rounded-full bg-golden/15 blur-3xl" />
 
             {/* Render real book covers — up to 4 */}
             {coverStyles.map((style, i) => {
@@ -76,22 +76,22 @@ const CTASection = () => {
 
           {/* ── Right side — CTA text ── */}
           <div className="relative z-10 ml-auto w-full md:w-3/5 p-10 md:pr-16 text-right">
-            <p className="text-teal text-xs font-semibold uppercase tracking-widest mb-2">
+            <p className="text-golden text-xs font-semibold uppercase tracking-widest mb-2">
               Our Biggest Deal
             </p>
-            <h2 className="text-white !text-4xl mb-1">
+            <h2 className="text-text-light !text-4xl mb-1">
               PDF & ePub delivered
             </h2>
-            <h2 className="text-white mb-3">
-              straight to your <span className="text-teal">inbox</span>
+            <h2 className="text-text-light mb-3">
+              straight to your <span className="text-golden">inbox</span>
             </h2>
-            <p className="text-white/60 text-sm mb-6 max-w-sm ml-auto">
+            <p className="text-text-light/60 text-sm mb-6 max-w-sm ml-auto">
               Purchase any book and receive your file instantly via email. No
               waiting. No shipping. Just reading.
             </p>
             <button
-              className="gap-2 bg-white text-gray-900 
-                btn btn-md rounded-full hover:bg-teal hover:text-white"
+              className="gap-2 bg-text-light text-text-dark
+                btn btn-md rounded-full hover:bg-golden hover:text-text-dark"
               onClick={() => navigate("/books")}
             >
               Shop Now

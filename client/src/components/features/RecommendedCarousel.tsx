@@ -48,7 +48,7 @@ const RecommendedCarousel = ({
         <button
           type="button"
           className="w-10 h-10 rounded-full border border-bg-hover bg-card/40 text-text-muted
-            flex items-center justify-center hover:border-teal hover:text-teal transition-colors"
+            flex items-center justify-center hover:border-golden hover:text-golden transition-colors"
           onClick={() => scrollByPage("prev")}
           aria-label="Scroll recommended books left"
         >
@@ -57,7 +57,7 @@ const RecommendedCarousel = ({
         <button
           type="button"
           className="w-10 h-10 rounded-full border border-bg-hover bg-card/40 text-text-muted
-            flex items-center justify-center hover:border-teal hover:text-teal transition-colors"
+            flex items-center justify-center hover:border-golden hover:text-golden transition-colors"
           onClick={() => scrollByPage("next")}
           aria-label="Scroll recommended books right"
         >

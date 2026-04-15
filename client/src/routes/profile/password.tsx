@@ -59,7 +59,7 @@ const PasswordField = ({
       <input
         {...register(fieldKey)} // Register with RHF
         type={show ? "text" : "password"} // Toggle between plain text and masked input
-        className="w-full px-3 py-2 pr-10 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+        className="w-full px-3 py-2 pr-10 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-golden-500/50"
       />
       {/* Show/hide toggle button */}
       <button

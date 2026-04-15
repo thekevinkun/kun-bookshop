@@ -209,7 +209,7 @@ export default function AdminBooks() {
                         {/* Edit button — opens modal pre-filled with this book */}
                         <button
                           onClick={() => setEditingBook(book)}
-                          className="p-2 text-slate-400 hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 hover:text-text-dark hover:bg-golden/80 rounded-lg transition-colors"
                         >
                           <Pencil size={15} />
                         </button>

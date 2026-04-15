@@ -82,7 +82,7 @@ export default function AuthorProfilePage() {
               <img
                 src={author.avatar}
                 alt={author.name}
-                className="w-34 h-42 object-cover border-4 border-teal/30"
+                className="w-34 h-42 object-cover border-4 border-golden/30"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =
                     "/images/placeholder-author.webp";
@@ -95,7 +95,7 @@ export default function AuthorProfilePage() {
               {/* Name */}
               <h1 className="text-text-light">{author.name}</h1>
 
-              {/* Specialties as teal pills */}
+              {/* Specialties as golden pills */}
               {author.specialty?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {author.specialty.map((s: string) => (
@@ -114,7 +114,7 @@ export default function AuthorProfilePage() {
                     href={author.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-teal hover:underline"
+                    className="flex items-center gap-1 text-golden hover:underline"
                   >
                     <Globe size={13} />
                     Website
@@ -159,7 +159,7 @@ export default function AuthorProfilePage() {
             <h2 className="text-text-light uppercase tracking-wider">
               Books by {author.name}
             </h2>
-            <div className="w-10 h-1 bg-teal rounded-full mt-1" />
+            <div className="w-10 h-1 bg-golden rounded-full mt-1" />
             <p className="text-text-muted text-xs mt-2">
               {books.length} {books.length === 1 ? "book" : "books"} available
             </p>

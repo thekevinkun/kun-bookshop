@@ -22,17 +22,17 @@ const BookCardCompact = ({ book, hideNew }: BookCardCompactProps) => (
       }}
     />
     <div
-      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10
+      className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25
         to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
     />
     <div
       className="absolute bottom-0 left-0 right-0 p-2 translate-y-2 opacity-0
         group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
     >
-      <p className="text-white text-xs font-semibold line-clamp-1 leading-tight">
+      <p className="text-golden text-xs font-semibold line-clamp-1 leading-tight">
         {book.title}
       </p>
-      <p className="text-slate-300 text-[10px] mt-0.5 line-clamp-1">
+      <p className="text-text-light text-[10px] mt-0.5 line-clamp-1">
         {book.authorName}
       </p>
     </div>
@@ -40,7 +40,7 @@ const BookCardCompact = ({ book, hideNew }: BookCardCompactProps) => (
     {!hideNew && (
       <div className="absolute top-2 left-2">
         <span
-          className="bg-teal text-white text-[10px] font-bold px-2 py-0.5
+          className="bg-burgundy text-text-light text-[10px] font-bold px-2 py-0.5
               rounded-full uppercase tracking-wide"
         >
           New
@@ -49,7 +49,7 @@ const BookCardCompact = ({ book, hideNew }: BookCardCompactProps) => (
     )}
 
     <div
-      className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal
+      className="absolute bottom-0 left-0 right-0 h-0.5 bg-golden
           scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
     />
   </Link>

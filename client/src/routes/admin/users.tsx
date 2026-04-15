@@ -170,7 +170,7 @@ export default function AdminUsers() {
                               {u.firstName} {u.lastName}
                               {/* Show 'You' badge next to the logged-in admin's row */}
                               {isSelf && (
-                                <span className="ml-2 px-1.5 py-0.5 bg-teal-500/20 text-teal-400 text-xs rounded">
+                                <span className="ml-2 px-1.5 py-0.5 bg-burgundy/80 text-text-light text-xs rounded">
                                   You
                                 </span>
                               )}
@@ -180,10 +180,10 @@ export default function AdminUsers() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        {/* Role badge — teal for admin, grey for regular user */}
+                        {/* Role badge — golden for admin, grey for regular user */}
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-medium
-                          ${u.role === "admin" ? "bg-teal-500/20 text-teal-400" : "bg-slate-700 text-slate-300"}`}
+                          ${u.role === "admin" ? "bg-golden/80 text-black" : "bg-slate-700 text-slate-300"}`}
                         >
                           {u.role}
                         </span>
@@ -200,7 +200,7 @@ export default function AdminUsers() {
                             title={
                               u.role === "admin" ? "Revoke admin" : "Make admin"
                             }
-                            className="p-2 text-slate-400 hover:text-teal-400 hover:bg-teal-500/10
+                            className="p-2 text-slate-400 hover:text-text-dark hover:bg-golden/80
                               rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                           >
                             {u.role === "admin" ? (

@@ -70,12 +70,12 @@ const ReviewCard = ({
             <img
               src={review.userId.avatar}
               alt={review.userId.firstName}
-              className="w-8 h-8 rounded-full object-cover border border-teal-500/30"
+              className="w-8 h-8 rounded-full object-cover border border-golden/85"
             />
           ) : (
             <div
-              className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-500/30
-                  flex items-center justify-center text-teal-400 text-xs font-bold"
+              className="w-8 h-8 rounded-full bg-golden/50 border border-golden/85
+                text-text-light flex items-center justify-center text-xs font-bold"
             >
               {review.userId?.firstName?.[0]}
               {review.userId?.lastName?.[0]}
@@ -88,12 +88,12 @@ const ReviewCard = ({
               </p>
               {/* Verified badge — only shown if the reviewer purchased the book */}
               {isOwner && (
-                <span className="px-1.5 py-0.5 bg-green-500/20 text-green-400 text-xs rounded">
+                <span className="px-1.5 py-0.5 bg-teal/85 text-text-white text-xs rounded">
                   You
                 </span>
               )}
             </div>
-            <p className="text-slate-500 text-xs">
+            <p className="text-text-muted text-xs">
               {new Date(review.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "short",
@@ -112,7 +112,7 @@ const ReviewCard = ({
               className={
                 i < review.rating
                   ? "text-amber-400 fill-amber-400"
-                  : "text-slate-600"
+                  : "text-bg-hover fill-bg-hover"
               }
             />
           ))}
@@ -131,8 +131,8 @@ const ReviewCard = ({
           className={`flex items-center gap-1.5 text-xs transition-colors
             ${
               hasVoted
-                ? "text-teal-400 hover:text-slate-500"
-                : "text-slate-500 hover:text-teal-400"
+                ? "text-teal/80 hover:text-text-muted"
+                : "text-text-muted hover:text-teal/80"
             }
           `}
         >
@@ -146,7 +146,7 @@ const ReviewCard = ({
             {isOwner && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-1 text-slate-500 hover:text-teal-400
+                className="flex items-center gap-1 text-text-muted hover:text-golden/80
                   text-xs transition-colors"
               >
                 <Pencil size={12} />
@@ -155,7 +155,7 @@ const ReviewCard = ({
             )}
             <button
               onClick={handleDelete}
-              className="flex items-center gap-1 text-slate-500 hover:text-red-400
+              className="flex items-center gap-1 text-text-muted hover:text-error
                 text-xs transition-colors"
             >
               <Trash2 size={12} />

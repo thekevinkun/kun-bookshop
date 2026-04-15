@@ -229,8 +229,8 @@ export default function GraphQLDemoPage() {
       {/* Page header */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center">
-            <Zap className="w-4 h-4 text-teal-500" />{" "}
+          <div className="w-8 h-8 rounded-lg bg-golden-500/10 flex items-center justify-center">
+            <Zap className="w-4 h-4 text-golden-500" />{" "}
             {/* GraphQL lightning bolt vibe */}
           </div>
           <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
@@ -240,8 +240,8 @@ export default function GraphQLDemoPage() {
         <p className="text-sm text-[var(--color-text-muted)] max-w-xl">
           This page demonstrates the GraphQL API layer running alongside the
           REST API. Queries and mutations are sent to{" "}
-          <code className="font-mono text-teal-400">/graphql</code> via plain{" "}
-          <code className="font-mono text-teal-400">fetch</code> — no Apollo
+          <code className="font-mono text-golden-400">/graphql</code> via plain{" "}
+          <code className="font-mono text-golden-400">fetch</code> — no Apollo
           Client required.
         </p>
       </div>
@@ -259,7 +259,7 @@ export default function GraphQLDemoPage() {
             setMutResult(null);
           }}
           className="w-full max-w-sm px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] 
-            text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+            text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-golden-500/50"
         >
           <option value="" className="text-[var(--color-text-dark)]">
             Choose a book
@@ -280,10 +280,10 @@ export default function GraphQLDemoPage() {
       {/* Panel 1: bookReviews query */}
       <section className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <Code2 className="w-4 h-4 text-teal-500" />
+          <Code2 className="w-4 h-4 text-golden-500" />
           <h2 className="text-base font-semibold text-[var(--color-text-primary)]">
             Query:{" "}
-            <code className="font-mono text-teal-400 text-sm">bookReviews</code>
+            <code className="font-mono text-golden-400 text-sm">bookReviews</code>
           </h2>
         </div>
 
@@ -293,7 +293,7 @@ export default function GraphQLDemoPage() {
         <button
           onClick={runReviewsQuery}
           disabled={!selectedBookId || reviewsLoading} // Disable if no book selected or loading
-          className="self-start flex items-center gap-2 px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+          className="self-start flex items-center gap-2 px-4 py-2 rounded-lg bg-golden-500 hover:bg-golden-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
         >
           {reviewsLoading && <Loader2 className="w-4 h-4 animate-spin" />}
           Run Query
@@ -374,10 +374,10 @@ export default function GraphQLDemoPage() {
       {/* Panel 2: createReview mutation */}
       <section className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <Code2 className="w-4 h-4 text-teal-500" />
+          <Code2 className="w-4 h-4 text-golden-500" />
           <h2 className="text-base font-semibold text-[var(--color-text-primary)]">
             Mutation:{" "}
-            <code className="font-mono text-teal-400 text-sm">
+            <code className="font-mono text-golden-400 text-sm">
               createReview
             </code>
           </h2>
@@ -385,7 +385,7 @@ export default function GraphQLDemoPage() {
         <p className="text-xs text-[var(--color-text-muted)]">
           Requires authentication. JWT is read from the Zustand auth store and
           sent as{" "}
-          <code className="font-mono text-teal-400">
+          <code className="font-mono text-golden-400">
             Authorization: Bearer TOKEN
           </code>
           .
@@ -432,7 +432,7 @@ export default function GraphQLDemoPage() {
               onChange={(e) => setMutComment(e.target.value)} // Controlled input
               rows={3}
               placeholder="Min. 10 characters…"
-              className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-teal-500/50 resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-golden-500/50 resize-none"
             />
           </div>
         </div>
@@ -442,7 +442,7 @@ export default function GraphQLDemoPage() {
           disabled={
             !selectedBookId || !mutComment.trim() || mutLoading || !token
           }
-          className="self-start flex items-center gap-2 px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+          className="self-start flex items-center gap-2 px-4 py-2 rounded-lg bg-golden-500 hover:bg-golden-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
         >
           {mutLoading && <Loader2 className="w-4 h-4 animate-spin" />}
           Run Mutation

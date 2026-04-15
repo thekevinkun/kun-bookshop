@@ -29,7 +29,7 @@ const SimilarBooks = ({ books }: SimilarBooksProps) => {
       <h2 className="text-text-light uppercase tracking-wider">
         Similar Books
       </h2>
-      <div className="w-8 h-0.5 bg-teal rounded-full -mt-2 mb-2" />
+      <div className="w-8 h-0.5 bg-golden rounded-full -mt-2 mb-2" />
 
       {books.length > 0 ? (
         <>
@@ -37,7 +37,7 @@ const SimilarBooks = ({ books }: SimilarBooksProps) => {
             <button
               type="button"
               className="w-10 h-10 rounded-full border border-bg-hover bg-card/40 text-text-muted
-                flex items-center justify-center hover:border-teal hover:text-teal transition-colors"
+                flex items-center justify-center hover:border-golden hover:text-golden transition-colors"
               onClick={() => scrollByPage("prev")}
               aria-label="Scroll similar books left"
             >
@@ -46,7 +46,7 @@ const SimilarBooks = ({ books }: SimilarBooksProps) => {
             <button
               type="button"
               className="w-10 h-10 rounded-full border border-bg-hover bg-card/40 text-text-muted
-                flex items-center justify-center hover:border-teal hover:text-teal transition-colors"
+                flex items-center justify-center hover:border-golden hover:text-golden transition-colors"
               onClick={() => scrollByPage("next")}
               aria-label="Scroll similar books right"
             >

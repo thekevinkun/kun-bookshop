@@ -61,23 +61,23 @@ export default function BooksPage() {
     <div className="min-h-screen">
       {/* Hero search section */}
       <section className="relative bg-navy pt-12 overflow-visible">
-        {/* Background teal glow — decorative */}
+        {/* Background golden glow — decorative */}
         <div className="absolute inset-0 pointer-events-none">
           <div
             className="absolute top-0 left-1/2 -translate-x-1/2 w-full sm:w-[600px] h-[300px]
-            bg-teal/5 rounded-full blur-3xl"
+            bg-golden/5 rounded-full blur-3xl"
           />
         </div>
 
         <div className="container-page relative z-10 text-center">
-          <p className="text-teal text-xs font-semibold uppercase tracking-widest mb-3">
+          <p className="text-golden text-xs font-semibold uppercase tracking-widest mb-3">
             Discover Your Next Great Read
           </p>
           <h1 className="text-text-light leading-tight mb-2">
             Explore and Search for
           </h1>
           <h1 className="leading-tight mb-10">
-            <span className="text-teal">Any Book</span>
+            <span className="text-golden">Any Book</span>
             <span className="text-text-light"> In Our Library</span>
           </h1>
 
@@ -98,7 +98,7 @@ export default function BooksPage() {
               All Library Books
             </h2>
 
-            <div className="w-10 h-1 bg-teal rounded-full mt-1" />
+            <div className="w-10 h-1 bg-golden rounded-full mt-1" />
 
             {!isLoading && (
               <p className="text-text-muted text-xs mt-2">
@@ -212,7 +212,7 @@ export default function BooksPage() {
                       className={`w-9 h-9 rounded-lg text-sm font-medium transition-all
                         ${
                           currentPage === page
-                            ? "bg-teal text-white"
+                            ? "bg-golden text-white"
                             : "btn-ghost text-text-muted"
                         }`}
                       onClick={() => goToPage(page as number)}

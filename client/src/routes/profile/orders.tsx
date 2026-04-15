@@ -38,7 +38,7 @@ export default function OrdersPage() {
     return (
       // Full-page centered spinner while we wait for the library to load
       <div className="container-page min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin text-teal-400" size={40} />
+        <Loader2 className="animate-spin text-golden/75" size={40} />
       </div>
     );
   }
@@ -59,7 +59,7 @@ export default function OrdersPage() {
   if (orders.length === 0) {
     return (
       <div className="container-page min-h-screen flex flex-col items-center justify-center gap-6 text-center px-4">
-        <ShoppingBag className="text-teal-400 opacity-50" size={64} />
+        <ShoppingBag className="text-golden/75 opacity-50" size={64} />
 
         <div>
           <h2 className="text-white mb-2">No orders yet</h2>
@@ -85,7 +85,7 @@ export default function OrdersPage() {
         {/* Page header */}
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-text-light">Order History</h2>
-          <span className="text-xs text-text-muted">
+          <span className="text-xs text-golden/85">
             {orders.length} order{orders.length !== 1 ? "s" : ""}{" "}
             {/* Pluralise correctly */}
           </span>
@@ -186,13 +186,13 @@ export default function OrdersPage() {
               {/* Coupon discount row — only shown if a coupon was applied */}
               {order.couponCode && (
                 <div className="flex items-center justify-between px-5 py-2.5 bg-emerald-500/5 border-t border-text-light">
-                  <span className="text-xs text-teal">
+                  <span className="text-xs text-emerald-500">
                     Coupon applied:{" "}
                     <span className="font-mono font-medium">
                       {order.couponCode}
                     </span>
                   </span>
-                  <span className="text-xs font-medium text-teal">
+                  <span className="text-xs font-medium text-emerald-500">
                     −${order.discount.toFixed(2)} {/* Show savings */}
                   </span>
                 </div>

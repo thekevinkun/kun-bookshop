@@ -117,7 +117,7 @@ describe("CartDrawer", () => {
 
   it("shows the item count badge in the header", () => {
     renderCartDrawer();
-    // itemCount() returns 2 — shown as a teal badge next to "Cart"
+    // itemCount() returns 2 — shown as a golden badge next to "Cart"
     expect(screen.getByText("2")).toBeInTheDocument();
   });
 

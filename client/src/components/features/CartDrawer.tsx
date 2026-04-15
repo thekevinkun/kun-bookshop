@@ -132,11 +132,11 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
           >
             <Dialog.Title className="flex items-center gap-2 text-xl font-bold text-text-light">
               {/* Cart icon with item count badge */}
-              <ShoppingCart size={22} className="text-teal" />
+              <ShoppingCart size={22} className="text-golden" />
               Cart
               {/* Only show the badge if there's something in the cart */}
               {itemCount() > 0 && (
-                <span className="bg-teal text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                <span className="bg-burgundy text-white text-xs font-bold px-2 py-0.5 rounded-full">
                   {itemCount()}
                 </span>
               )}
@@ -207,7 +207,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                       <p className="text-sm text-text-muted truncate">
                         {item.author}
                       </p>
-                      <p className="text-teal font-bold mt-1">
+                      <p className="text-golden font-bold mt-1">
                         ${item.price.toFixed(2)}
                       </p>
                     </div>
@@ -314,7 +314,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
 
               {/* Reassure the user their payment is handled by Stripe */}
               <p className="text-xs text-text-muted text-center">
-                Secure checkout powered by Stripe
+                Secure checkout powered by <span className="text-emerald-400">Stripe</span>
               </p>
             </div>
           )}

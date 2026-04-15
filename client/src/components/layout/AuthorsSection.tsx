@@ -11,11 +11,11 @@ const AuthorsSection = () => {
       <div className="container-page">
         {/* Section header */}
         <div className="mb-8">
-          <p className="text-teal text-xs font-semibold uppercase tracking-widest mb-1">
+          <p className="text-golden text-xs font-semibold uppercase tracking-widest mb-1">
             Meet The Popular Minds
           </p>
           <h2 className="text-text-light uppercase tracking-wider">Authors</h2>
-          <div className="w-10 h-1 bg-teal rounded-full mt-2" />
+          <div className="w-10 h-1 bg-golden rounded-full mt-2" />
         </div>
 
         {/* Loading skeleton — 9 cards matching the real grid */}

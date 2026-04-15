@@ -118,7 +118,7 @@ const DealsSection = () => {
           <div
             className={`absolute w-48 h-48 rounded-full blur-2xl ${
               index === 0
-                ? "-right-8 -top-8 bg-white/5"
+                ? "-right-8 -top-8 bg-text-light/5"
                 : "-right-8 -bottom-8 bg-teal/10"
             }`}
           />
@@ -159,17 +159,17 @@ const DealsSection = () => {
           <div className="relative z-10 p-8">
             <p
               className={`text-[10px] sm:text-xs font-semibold uppercase tracking-widest mb-2 ${
-                index === 0 ? "text-purple-300" : "text-teal"
+                index === 0 ? "text-purple-300" : "text-emerald-400"
               }`}
             >
               {card.sublabel}
             </p>
-            <h3 className="text-white sm:!text-3xl font-black mb-4">
-              {card.label} <span className="text-teal">{card.target}% OFF</span>
+            <h3 className="text-text-light sm:!text-3xl font-black mb-4">
+              {card.label} <span className="text-burgundy">{card.target}% OFF</span>
             </h3>
             <button
-              className="flex items-center gap-2 bg-white text-gray-900 
-                  btn btn-sm sm:btn-md rounded-full hover:bg-teal hover:text-white"
+              className="flex items-center gap-2 bg-text-light text-text-dark
+                  btn btn-sm sm:btn-md rounded-full hover:bg-golden hover:text-text-dark"
               onClick={() =>
                 navigate(
                   `/books?sortBy=${card.sortBy}&sortOrder=${card.sortOrder}`,

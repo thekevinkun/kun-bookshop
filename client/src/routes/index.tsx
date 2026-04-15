@@ -29,7 +29,7 @@ export default function HomePage() {
             <h2 className="text-text-light uppercase tracking-wider">
               New Arrivals & Deals
             </h2>
-            <div className="w-12 h-1 bg-teal rounded-full mt-2" />
+            <div className="w-12 h-1 bg-golden rounded-full mt-2" />
           </div>
 
           {/* Two-column layout — discount cards left, new arrivals right */}

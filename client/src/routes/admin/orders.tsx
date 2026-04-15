@@ -50,7 +50,7 @@ export default function AdminOrders() {
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize
               ${
                 status === s
-                  ? "bg-teal-500 text-white"
+                  ? "bg-golden/85 text-white"
                   : "bg-slate-700 text-slate-400 hover:text-white"
               }`}
           >
@@ -97,7 +97,7 @@ export default function AdminOrders() {
                     className="hover:bg-slate-700/20 transition-colors"
                   >
                     {/* Order number */}
-                    <td className="px-6 py-4 text-teal-400 font-mono text-xs">
+                    <td className="px-6 py-4 text-golden font-mono text-xs">
                       {order.orderNumber}
                     </td>
 

@@ -85,7 +85,7 @@ export default function AdminLayout() {
         {/* Sidebar header — logo + close button (mobile only) */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-700/50">
           <div className="flex items-center gap-2">
-            <BookMarked size={22} className="text-teal-400" />
+            <BookMarked size={22} className="text-golden" />
             <span className="font-bold text-white text-lg">Admin Panel</span>
           </div>
           {/* Close button — only visible on mobile */}
@@ -109,7 +109,7 @@ export default function AdminLayout() {
                 `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200
                 ${
                   isActive
-                    ? "bg-teal-500/20 text-teal-400 border border-teal-500/30"
+                    ? "bg-golden/75 text-black border border-golden/90"
                     : "text-slate-400 hover:bg-slate-700/50 hover:text-white"
                 }`
               }
@@ -124,7 +124,7 @@ export default function AdminLayout() {
         <div className="px-4 py-5 border-t border-slate-700/50">
           <div className="flex items-center gap-3 mb-4">
             {/* Avatar circle showing user's initials */}
-            <div className="w-8 h-8 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-400 text-sm font-bold">
+            <div className="w-8 h-8 rounded-lg bg-golden/85 flex items-center justify-center text-black text-sm font-bold">
               {user?.firstName?.charAt(0)}
               {user?.lastName?.charAt(0)}
             </div>

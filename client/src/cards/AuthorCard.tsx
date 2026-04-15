@@ -17,11 +17,11 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
         h-full cursor-pointer hover:-translate-y-1 transition-all duration-300"
       // Navigate to the author's dedicated profile page — not a search URL
     >
-      {/* Avatar — circular with teal ring on hover */}
+      {/* Avatar — circular with golden ring on hover */}
       <div className="relative mb-3">
         <div
           className="w-20 h-20 rounded-full overflow-hidden border-2
-          border-bg-hover group-hover:border-teal transition-colors duration-300"
+          border-bg-hover group-hover:border-golden transition-colors duration-300"
         >
           <img
             src={author.avatar}
@@ -36,17 +36,17 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
           />
         </div>
 
-        {/* Teal glow ring on hover */}
+        {/* golden glow ring on hover */}
         <div
-          className="absolute inset-0 rounded-full bg-teal/0
-          group-hover:bg-teal/10 transition-all duration-300"
+          className="absolute inset-0 rounded-full bg-golden/0
+          group-hover:bg-golden/10 transition-all duration-300"
         />
       </div>
 
       {/* Author name */}
       <h3
         className="text-text-light !text-lg !leading-tight line-clamp-2 mb-1
-          min-h-[3.5rem] md:min-h-0 group-hover:text-teal transition-colors duration-200"
+          min-h-[3.5rem] md:min-h-0 group-hover:text-golden transition-colors duration-200"
       >
         {author.name}
       </h3>

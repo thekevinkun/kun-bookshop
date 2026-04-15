@@ -224,7 +224,7 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
             <span className="inline">Filters</span>
             {activeFilterCount > 0 && (
               <span
-                className="absolute -top-1 -right-1 w-4 h-4 bg-teal text-white
+                className="absolute -top-1 -right-1 w-4 h-4 bg-golden text-white
                   text-xs rounded-full flex items-center justify-center"
               >
                 {activeFilterCount}
@@ -280,8 +280,8 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
                   className={`text-xs px-3 py-1 rounded-full border transition-all duration-150
                     ${
                       filters.categoryBucket === bucket.key
-                        ? "bg-teal text-white border-teal"
-                        : "border-bg-hover text-text-muted hover:border-teal hover:text-teal"
+                        ? "bg-golden text-white border-golden"
+                        : "border-bg-hover text-text-muted hover:border-golden hover:text-golden"
                     }`}
                   onClick={() =>
                     onChange({
@@ -315,8 +315,8 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
                     className={`flex-1 text-xs py-1.5 rounded-lg border uppercase transition-all duration-150
                       ${
                         filters.fileType === type
-                          ? "bg-teal text-white border-teal"
-                          : "border-bg-hover text-text-muted hover:border-teal hover:text-teal"
+                          ? "bg-golden text-white border-golden"
+                          : "border-bg-hover text-text-muted hover:border-golden hover:text-golden"
                       }`}
                     onClick={() =>
                       updateFilter(

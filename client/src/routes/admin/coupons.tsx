@@ -6,11 +6,12 @@ import {
   Plus,
   Trash2,
   Mail,
-  Share2,
   Copy,
   ToggleLeft,
   ToggleRight,
 } from "lucide-react";
+
+import { FaTwitter, FaInstagram, FaFacebook } from "react-icons/fa";
 
 // Toast notifications
 import { toast } from "sonner";
@@ -158,7 +159,7 @@ export default function AdminCoupons() {
                           </span>
                           <button
                             onClick={() => handleCopyCode(coupon.code)}
-                            className="p-1 text-slate-400 hover:text-teal-400 hover:bg-teal-500/10 rounded transition-colors"
+                            className="p-1 text-slate-400 hover:text-text-dark hover:bg-golden/80 rounded transition-colors"
                             title="Copy code"
                           >
                             <Copy size={13} />
@@ -193,7 +194,7 @@ export default function AdminCoupons() {
                             className={`h-1.5 rounded-full ${
                               coupon.usedCount / coupon.usageLimit >= 0.9
                                 ? "bg-red-400"
-                                : "bg-teal-400"
+                                : "bg-emerald-400"
                             }`}
                             style={{
                               width: `${Math.min(
@@ -236,7 +237,7 @@ export default function AdminCoupons() {
                           <button
                             onClick={() => handleToggle(coupon)}
                             title={coupon.isActive ? "Deactivate" : "Activate"}
-                            className="p-2 text-slate-400 hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"
+                            className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors"
                           >
                             {coupon.isActive ? (
                               <ToggleRight size={15} />
@@ -250,7 +251,7 @@ export default function AdminCoupons() {
                             onClick={() => handleEmailBlast(coupon)}
                             disabled={!coupon.isActive || isExpired}
                             title="Email all verified users"
-                            className="p-2 text-slate-400 hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                            className="p-2 text-slate-400 hover:text-golden hover:bg-golden/45 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                           >
                             <Mail size={15} />
                           </button>
@@ -259,9 +260,9 @@ export default function AdminCoupons() {
                           <button
                             onClick={() => shareOnX(coupon)}
                             title="Share on X"
-                            className="p-2 text-slate-400 hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"
+                            className="p-2 text-slate-400 hover:text-text-dark hover:bg-golden/80 rounded-lg transition-colors"
                           >
-                            <Share2 size={15} />
+                            <FaTwitter size={15} />
                           </button>
 
                           {/* Share on Facebook */}
@@ -270,7 +271,7 @@ export default function AdminCoupons() {
                             title="Share on Facebook"
                             className="p-2 text-slate-400 hover:text-sky-400 hover:bg-sky-500/10 rounded-lg transition-colors"
                           >
-                            <Share2 size={15} />
+                            <FaFacebook size={15} />
                           </button>
 
                           {/* Copy caption for Instagram */}
@@ -279,7 +280,7 @@ export default function AdminCoupons() {
                             title="Copy Instagram caption"
                             className="p-2 text-slate-400 hover:text-pink-400 hover:bg-pink-500/10 rounded-lg transition-colors"
                           >
-                            <Copy size={15} />
+                            <FaInstagram size={15} />
                           </button>
 
                           {/* Delete */}

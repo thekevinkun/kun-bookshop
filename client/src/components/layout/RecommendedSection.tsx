@@ -21,7 +21,7 @@ const RecommendedSection = () => {
       <div className="container-page">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <p className="text-teal text-xs font-semibold uppercase tracking-widest mb-1">
+            <p className="text-golden text-xs font-semibold uppercase tracking-widest mb-1">
               {data?.personalised
                 ? "Based on your purchase history"
                 : "Popular picks worth discovering"}
@@ -29,7 +29,7 @@ const RecommendedSection = () => {
             <h2 className="text-text-light uppercase tracking-wider">
               {data?.personalised ? "Recommended for You" : "Popular Picks"}
             </h2>
-            <div className="w-10 h-1 bg-teal rounded-full mt-2" />
+            <div className="w-10 h-1 bg-golden rounded-full mt-2" />
           </div>
         </div>
 

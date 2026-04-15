@@ -100,7 +100,7 @@ export default function AdminReviews() {
             setPage(1);
           }}
           className="bg-[#1E293B] border border-slate-700 text-slate-300 text-sm 
-            rounded-lg px-3 py-2 focus:outline-none focus:border-teal-500"
+            rounded-lg px-3 py-2 focus:outline-none focus:border-golden/80"
         >
           <option value="">All Ratings</option>
           <option value="1">1★ and above</option>
@@ -150,7 +150,7 @@ export default function AdminReviews() {
                           {" "}
                           reviewed{" "}
                         </span>
-                        <span className="text-teal-400 text-sm font-medium">
+                        <span className="text-golden text-sm font-medium">
                           {review.bookId?.title ?? "Unknown Book"}
                         </span>
                       </div>

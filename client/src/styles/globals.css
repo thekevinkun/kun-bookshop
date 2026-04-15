@@ -1,4 +1,4 @@
-/* ── GOOGLE FONTS ── */
+/* GOOGLE FONTS */
 
 /* Inter — main body font, clean and readable */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
@@ -6,46 +6,48 @@
 /* Import Tailwind v4 — this single line replaces the old @tailwind base/components/utilities */
 @import "tailwindcss";
 
-/* ── DESIGN TOKENS (@theme) ── */
+/* DESIGN TOKENS (@theme) */
 /* These automatically become Tailwind utility classes.
-   e.g. --color-teal → bg-teal, text-teal, border-teal */
+   e.g. --color-golden → bg-golden, text-golden, border-golden */
 
 @theme {
-  /* ── Brand Colors ── */
+  /* Brand Colors */
   --color-navy: #0a1628; /* deepest dark — main page background */
   --color-ocean: #1e3a5f; /* slightly lighter — card/section backgrounds */
-  --color-teal: #14b8a6; /* primary accent — buttons, links, highlights */
+  --color-golden: #e6be77; /* primary accent — buttons, links, highlights */
+  --color-teal: #14b8a6;
+  --color-burgundy: #c73a52; /* secondary accent — buttons, links, highlights */
   --color-dark: #0f172a; /* near-black — used for overlays */
   --color-card: #1e293b; /* card surface background */
 
-  /* ── Text Colors ── */
+  /* Text Colors */
   --color-text-light: #f8fafc; /* primary text on dark backgrounds */
   --color-text-dark: #1f2937; /* text on light backgrounds */
   --color-text-muted: #9ca3af; /* secondary/helper text */
 
-  /* ── Status Colors ── */
+  /* Status Colors */
   --color-success: #10b981; /* success states — completed orders, verified */
   --color-error: #ef4444; /* error states — failed payments, validation */
   --color-warning: #f59e0b; /* warning states — pending, expiring soon */
   --color-info: #3b82f6; /* info states — neutral notifications */
 
-  /* ── Background Shades ── */
+  /* Background Shades */
   --color-bg-dark: #0f172a; /* page-level background */
   --color-bg-card: #1e293b; /* card-level background */
   --color-bg-hover: #334155; /* hover state background */
 
-  /* ── Typography ── */
+  /* Typography */
   --font-sans:
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  /* ── Border Radius ── */
+  /* Border Radius */
   --radius-sm: 0.375rem; /* 6px — small elements like badges */
   --radius-md: 0.5rem; /* 8px — inputs, small cards */
   --radius-lg: 0.75rem; /* 12px — buttons, larger cards */
   --radius-xl: 1rem; /* 16px — modals, big sections */
 }
 
-/* ── BASE STYLES ── */
+/* BASE STYLES */
 
 *,
 *::before,
@@ -74,7 +76,7 @@ body {
   min-height: 100vh;
 }
 
-/* ── SCROLLBAR ── */
+/* SCROLLBAR */
 
 /* Custom scrollbar to match our dark theme */
 ::-webkit-scrollbar {
@@ -86,17 +88,17 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(20, 184, 166, 0.3); /* teal accent, semi-transparent */
+  background: rgba(230, 190, 119, 0.3); /* golden accent, semi-transparent */
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(20, 184, 166, 0.6); /* brighter on hover */
+  background: rgba(230, 190, 119, 0.6); /* brighter on hover */
 }
 
 .admin-modal-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(20, 184, 166, 0.3) #0f172a;
+  scrollbar-color: rgba(230, 190, 119, 0.3) #0f172a;
 }
 
 .admin-modal-scroll::-webkit-scrollbar {
@@ -108,22 +110,22 @@ body {
 }
 
 .admin-modal-scroll::-webkit-scrollbar-thumb {
-  background: rgba(20, 184, 166, 0.3);
+  background: rgba(230, 190, 119, 0.3);
   border-radius: 9999px;
 }
 
 .admin-modal-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(20, 184, 166, 0.6);
+  background: rgba(230, 190, 119, 0.6);
 }
 
-/* ── TEXT SELECTION ── */
+/* TEXT SELECTION */
 
 ::selection {
-  background: rgba(20, 184, 166, 0.3); /* teal highlight when selecting text */
+  background: rgba(230, 190, 119, 0.3); /* golden highlight when selecting text */
   color: #f8fafc;
 }
 
-/* ── FOCUS MANAGEMENT ── */
+/* FOCUS MANAGEMENT */
 
 /* Remove focus ring on mouse clicks, keep it for keyboard navigation only */
 :focus:not(:focus-visible) {
@@ -131,11 +133,11 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid #14b8a6; /* teal outline for keyboard users */
+  outline: 2px solid #e6be77; /* golden outline for keyboard users */
   outline-offset: 2px;
 }
 
-/* ── TYPOGRAPHY ── */
+/* TYPOGRAPHY */
 
 h1 {
   font-size: 2.75rem;
@@ -165,10 +167,10 @@ h6 {
   font-weight: 600;
 }
 
-/* ── REUSABLE COMPONENT CLASSES ── */
+/* REUSABLE COMPONENT CLASSES */
 
 @layer components {
-  /* ── LAYOUT ── */
+  /* LAYOUT */
 
   /* Standard page container with responsive horizontal padding */
   .container-page {
@@ -180,7 +182,7 @@ h6 {
     @apply py-16 sm:py-20;
   }
 
-  /* ── CARDS ── */
+  /* CARDS */
 
   /* Base card — dark surface with subtle border */
   .card-base {
@@ -197,10 +199,10 @@ h6 {
   }
 
   .book-card:hover {
-    border-color: rgba(20, 184, 166, 0.5); /* teal border glow on hover */
+    border-color: rgba(20, 184, 166, 0.5); /* golden border glow on hover */
   }
 
-  /* ── BUTTONS ── */
+  /* BUTTONS */
 
   /* Shared base for all buttons */
   .btn,
@@ -216,26 +218,26 @@ h6 {
     @apply cursor-pointer;
   }
 
-  /* Primary — teal fill, main CTAs like "Buy Now" and "Checkout" */
+  /* Primary — golden fill, main CTAs like "Buy Now" and "Checkout" */
   .btn-primary {
-    @apply bg-teal text-white;
+    @apply bg-golden text-dark;
     @apply hover:opacity-90 active:scale-95;
-    @apply focus-visible:ring-teal;
+    @apply focus-visible:ring-golden;
   }
 
   /* Secondary — dark fill, less prominent actions */
   .btn-secondary {
-    @apply bg-bg-hover text-white;
-    @apply hover:bg-card active:scale-95;
-    @apply focus-visible:ring-teal;
+    @apply bg-golden/75 text-text-light;
+    @apply hover:bg-golden/60 active:scale-95;
+    @apply focus-visible:ring-golden;
   }
 
   /* Ghost — transparent with border, for "Add to Wishlist" type actions */
   .btn-ghost {
     @apply bg-transparent text-text-light;
     @apply border-2 border-bg-hover;
-    @apply hover:bg-bg-card hover:border-teal;
-    @apply focus-visible:ring-teal;
+    @apply hover:bg-bg-card hover:border-golden;
+    @apply focus-visible:ring-golden;
   }
 
   /* Destructive — red fill, for delete/remove actions */
@@ -253,7 +255,7 @@ h6 {
     @apply px-8 py-4 text-lg;
   }
 
-  /* ── INPUTS ── */
+  /* INPUTS */
 
   /* Standard form field style used across all forms */
   .input-field {
@@ -266,11 +268,11 @@ h6 {
   }
 
   .input-field:focus {
-    border-color: #14b8a6; /* teal border on focus */
-    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2); /* soft teal glow */
+    border-color: #e6be77; /* golden border on focus */
+    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2); /* soft golden glow */
   }
 
-  /* ── BADGES ── */
+  /* BADGES */
 
   /* Base badge — small status chip used on book cards */
   .badge,
@@ -279,21 +281,20 @@ h6 {
     @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
   }
 
-  /* Teal badge — "New", "Featured" */
+  /* golden badge — "New", "Featured" */
   .badge-primary {
     background: rgba(20, 184, 166, 0.2);
     color: #14b8a6;
     border: 1px solid rgba(20, 184, 166, 0.3);
   }
 
-  /* Gray badge — "ePub", "PDF", neutral labels */
   .badge-secondary {
-    background: rgba(51, 65, 85, 0.5);
-    color: #cbd5e1;
-    border: 1px solid rgba(51, 65, 85, 1);
+    background: rgba(199, 58, 82, 0.2);
+    color: #c73a52;
+    border: 1px solid rgba(199, 58, 82, 0.3);
   }
 
-  /* ── GRADIENT TEXT ── */
+  /* GRADIENT TEXT */
 
   /* Used for hero headings and brand moments */
   .text-gradient {
@@ -301,20 +302,20 @@ h6 {
       135deg,
       #14b8a6 0%,
       #3b82f6 100%
-    ); /* teal → blue */
+    ); /* golden → blue */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* ── SKELETON LOADING ── */
+  /* SKELETON LOADING */
 
   /* Animated placeholder while content is loading */
   .skeleton {
     @apply bg-bg-hover rounded-lg animate-pulse;
   }
 
-  /* ── DIVIDER ── */
+  /* DIVIDER */
 
 .divider {
   @apply border-t my-6;

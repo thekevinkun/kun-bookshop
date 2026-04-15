@@ -172,7 +172,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                     ? book.author
                     : book.author?._id
                 }`}
-                className="text-teal font-semibold"
+                className="text-golden font-semibold"
               >
                 {book.authorName}
               </Link>
@@ -188,7 +188,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                       size={16}
                       className={
                         i < Math.round(book.rating)
-                          ? "text-warning fill-warning"
+                          ? "text-amber-400 fill-amber-400"
                           : "text-bg-hover fill-bg-hover"
                       }
                     />
@@ -205,20 +205,20 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
             <div className="flex flex-wrap gap-4 text-sm">
               <span className="flex items-center gap-1.5 text-text-muted">
                 {book.fileType === "pdf" ? (
-                  <FileText size={14} className="text-teal" />
+                  <FileText size={14} className="text-golden" />
                 ) : (
-                  <BookOpen size={14} className="text-teal" />
+                  <BookOpen size={14} className="text-golden" />
                 )}
                 {book.fileType.toUpperCase()}
               </span>
 
               <span className="flex items-center gap-1.5 text-text-muted">
-                <Download size={14} className="text-teal" />
+                <Download size={14} className="text-golden" />
                 {formatFileSize(book.fileSize)}
               </span>
               {book.publishedDate && (
                 <span className="flex items-center gap-1.5 text-text-muted">
-                  <Calendar size={14} className="text-teal" />
+                  <Calendar size={14} className="text-golden" />
                   {formatDate(book.publishedDate)}
                 </span>
               )}
@@ -226,7 +226,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
 
             {/* Price */}
             <div className="flex items-baseline gap-3">
-              <span className="text-teal text-4xl font-bold">
+              <span className="text-golden text-4xl font-bold">
                 ${displayPrice.toFixed(2)}
               </span>
               {book.discountPrice && (
@@ -234,7 +234,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                   <span className="text-text-muted text-xl line-through">
                     ${book.price.toFixed(2)}
                   </span>
-                  <span className="badge-primary font-bold">
+                  <span className="badge-secondary font-bold">
                     -{discountPercent}% OFF
                   </span>
                 </>
@@ -243,7 +243,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
 
             {book.purchaseCount > 0 && (
               <p className="text-text-muted text-xs flex items-center gap-1.5">
-                <Users size={14} className="text-teal" />
+                <Users size={14} className="text-golden" />
                 Bought by {book.purchaseCount.toLocaleString()} readers
               </p>
             )}
@@ -289,14 +289,14 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                   "flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
                   // Filled heart style if wishlisted, outline if not
                   isWishlisted
-                    ? "bg-rose-500/20 border-rose-500/40 text-rose-400 hover:bg-rose-500/30" // Already wishlisted
-                    : "bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20", // Not wishlisted
+                    ? "bg-burgundy/30 border-burgundy/85 text-text-light hover:bg-burgundy/80" // Already wishlisted
+                    : "bg-text-light/5 border-text-light/10 text-gray-400 hover:text-text-light hover:border-text-light/20", // Not wishlisted
                 ].join(" ")}
               >
                 <Heart
                   size={16}
                   // Fill the heart icon solid when wishlisted, outline when not
-                  className={isWishlisted ? "fill-rose-400" : ""}
+                  className={isWishlisted ? "fill-burgundy text-burgundy" : ""}
                 />
                 {isWishlistPending
                   ? "Updating..."
@@ -350,8 +350,8 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 }}
               />
 
-              {/* Teal glow beneath the cover — our design touch */}
-              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 h-12 bg-teal/20 blur-2xl rounded-full z-0" />
+              {/* golden glow beneath the cover — our design touch */}
+              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 h-12 bg-golden/20 blur-2xl rounded-full z-0" />
             </div>
           </div>
         </div>

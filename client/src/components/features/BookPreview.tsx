@@ -211,7 +211,7 @@ const BookPreview = ({
             </h2>
             <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
               {/* Show the file type badge and preview limit */}
-              <span className="uppercase tracking-wide font-medium text-teal-500 mr-1.5">
+              <span className="uppercase tracking-wide font-medium text-golden-500 mr-1.5">
                 {fileType} {/* 'pdf' or 'epub' */}
               </span>
               Preview — first {allowedPages} pages
@@ -233,7 +233,7 @@ const BookPreview = ({
             {/* Shared loading state — shown while the backend URL is being fetched */}
             {isLoading && (
               <div className="h-full flex flex-col items-center justify-center gap-3 text-[var(--color-text-muted)]">
-                <Loader2 className="w-8 h-8 animate-spin text-teal-500" />
+                <Loader2 className="w-8 h-8 animate-spin text-golden-500" />
                 <p className="text-sm">Loading preview…</p>
               </div>
             )}
@@ -283,7 +283,7 @@ const BookPreview = ({
                 {/* ePub loading spinner — shown while epubjs initialises */}
                 {epubLoading && (
                   <div className="h-full flex flex-col items-center justify-center gap-3 text-[var(--color-text-muted)]">
-                    <Loader2 className="w-8 h-8 animate-spin text-teal-500" />
+                    <Loader2 className="w-8 h-8 animate-spin text-golden-500" />
                     <p className="text-sm">Loading ePub…</p>
                   </div>
                 )}
@@ -318,8 +318,8 @@ const BookPreview = ({
         >
           <div className="hidden sm:flex items-center gap-3 text-center">
             <div className="flex items-center gap-2 text-center">
-              <div className="w-7 h-7 rounded-full bg-teal-500/10 flex items-center justify-center">
-                <Lock className="w-3.5 h-3.5 text-teal-500" />
+              <div className="w-7 h-7 rounded-full bg-golden-500/10 flex items-center justify-center">
+                <Lock className="w-3.5 h-3.5 text-golden-500" />
               </div>
               <div>
                 <p className="text-xs font-medium text-[var(--color-text-primary)]">
@@ -336,7 +336,7 @@ const BookPreview = ({
                 onBuy();
                 onClose();
               }}
-              className="px-3.5 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-600 
+              className="px-3.5 py-1.5 rounded-lg bg-golden-500 hover:bg-golden-600 
                 text-white text-sm font-medium transition-colors whitespace-nowrap"
             >
               Unlock Full Book
@@ -349,7 +349,7 @@ const BookPreview = ({
               {fileType === "pdf" &&
                 numPages &&
                 numPages > maxAccessiblePage && (
-                  <span className="text-teal-500 ml-1">({numPages} total)</span>
+                  <span className="text-golden-500 ml-1">({numPages} total)</span>
                 )}
             </span>
 

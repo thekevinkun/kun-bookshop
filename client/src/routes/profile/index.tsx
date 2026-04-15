@@ -109,15 +109,15 @@ export default function ProfilePage() {
               LEFT — Profile Card
            */}
           <div className="w-full lg:w-82 flex-shrink-0">
-            <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
-              {/* Card top banner — decorative teal gradient strip like the reference image */}
-              <div className="h-24 bg-gradient-to-br from-teal-600/40 via-teal-500/20 to-transparent relative">
+            <div className="bg-text-light/5 border border-text-light/10 rounded-2xl overflow-hidden">
+              {/* Card top banner — decorative golden gradient strip like the reference image */}
+              <div className="z-10 h-24 bg-gradient-to-br from-golden/75 via-golden/50 to-transparent relative">
                 {/* Subtle dot pattern overlay for texture */}
                 <div
                   className="absolute inset-0 opacity-10"
                   style={{
                     backgroundImage:
-                      "radial-gradient(circle, white 1px, transparent 1px)",
+                      "radial-gradient(circle, text-light 1px, transparent 1px)",
                     backgroundSize: "16px 16px",
                   }}
                 />
@@ -125,11 +125,11 @@ export default function ProfilePage() {
 
               {/* Avatar — overlaps the banner by pulling it up with negative margin */}
               <div className="px-6 pb-6">
-                <div className="flex items-end justify-between -mt-10 mb-4">
+                <div className="z-20 relative flex items-end justify-between -mt-10 mb-4">
                   {/* Avatar circle with initials */}
                   <div
-                    className="w-20 h-20 rounded-2xl bg-gradient-to-br from-teal-400 
-                      to-teal-600 flex items-center justify-center text-text-light font-bold 
+                    className="w-20 h-20 rounded-2xl bg-golden 
+                      flex items-center justify-center text-black font-bold 
                       text-2xl border-4 border-dark shadow-xl"
                   >
                     {initials}
@@ -138,7 +138,7 @@ export default function ProfilePage() {
                   {/* Role badge — top right of avatar row */}
                   <div
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full 
-                    bg-teal-500/15 border border-teal-500/30 text-teal-400 text-xs font-medium capitalize"
+                    bg-golden/20 border border-golden text-golden/80 text-xs font-medium capitalize"
                   >
                     <BadgeCheck size={13} />
                     {user.role}
@@ -152,12 +152,12 @@ export default function ProfilePage() {
                 <p className="text-gray-400 text-sm mt-0.5">{user.email}</p>
 
                 {/* Divider */}
-                <div className="border-t border-white/10 my-5" />
+                <div className="border-t border-text-light/10 my-5" />
 
                 {/* Stats row — wishlist count and download count */}
                 <div className="grid grid-cols-2 gap-3">
                   {/* Wishlist count stat */}
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-3 flex flex-col gap-1">
+                  <div className="bg-text-light/5 border border-text-light/10 rounded-xl p-3 flex flex-col gap-1">
                     <div className="flex items-center gap-1.5 text-gray-500 text-xs">
                       <Heart size={12} />
                       Wishlist
@@ -169,7 +169,7 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Download history count stat */}
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-3 flex flex-col gap-1">
+                  <div className="bg-text-light/5 border border-text-light/10 rounded-xl p-3 flex flex-col gap-1">
                     <div className="flex items-center gap-1.5 text-gray-500 text-xs">
                       <Download size={12} />
                       Downloads
@@ -183,7 +183,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-white/10 my-5" />
+                <div className="border-t border-text-light/10 my-5" />
 
                 {/* Profile detail rows */}
                 <div className="space-y-4">
@@ -221,7 +221,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-white/10 my-5" />
+                <div className="border-t border-text-light/10 my-5" />
 
                 {/* Go to Library CTA */}
                 <button
@@ -236,7 +236,7 @@ export default function ProfilePage() {
                 <div className="flex flex-col gap-2 w-full mt-2">
                   <Link
                     to="/profile/edit"
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-text-light text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-text-light text-sm text-text-muted hover:bg-navy transition-colors"
                   >
                     <Pencil className="w-4 h-4" />{" "}
                     {/* Import Pencil from lucide-react */}
@@ -244,7 +244,9 @@ export default function ProfilePage() {
                   </Link>
                   <Link
                     to="/profile/orders"
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-text-light text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg 
+                      border border-text-light text-sm text-text-muted 
+                      hover:bg-navy transition-colors"
                   >
                     <ShoppingBag className="w-4 h-4" />{" "}
                     {/* Import ShoppingBag from lucide-react */}
@@ -252,7 +254,7 @@ export default function ProfilePage() {
                   </Link>
                   <Link
                     to="/profile/password"
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-text-light text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-text-light text-sm text-text-muted hover:bg-navy transition-colors"
                   >
                     <KeyRound className="w-4 h-4" />{" "}
                     {/* Import KeyRound from lucide-react */}
@@ -266,15 +268,15 @@ export default function ProfilePage() {
           {/* RIGHT — Tabbed Content Panel */}
           <div className="flex-1 w-full lg:min-w-0">
             {/* Tab bar */}
-            <div className="flex gap-1 bg-white/5 border border-white/10 rounded-xl p-1 mb-6">
+            <div className="flex gap-1 bg-text-light/5 border border-text-light/10 rounded-xl p-1 mb-6">
               {/* Wishlist tab */}
               <button
                 onClick={() => setActiveTab("wishlist")}
                 className={[
                   "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
                   activeTab === "wishlist"
-                    ? "bg-teal-500 text-text-light shadow-sm"
-                    : "text-gray-400 hover:text-text-light hover:bg-white/5",
+                    ? "bg-golden/85 text-black shadow-sm"
+                    : "text-gray-400 hover:text-text-light hover:bg-text-light/5",
                 ].join(" ")}
               >
                 <Heart size={15} />
@@ -285,8 +287,8 @@ export default function ProfilePage() {
                     className={[
                       "text-xs font-bold px-1.5 py-0.5 rounded-full",
                       activeTab === "wishlist"
-                        ? "bg-white/20 text-text-light"
-                        : "bg-white/10 text-gray-400",
+                        ? "bg-text-light/20 text-text-light"
+                        : "bg-text-light/10 text-gray-400",
                     ].join(" ")}
                   >
                     {wishlist.length}
@@ -300,8 +302,8 @@ export default function ProfilePage() {
                 className={[
                   "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
                   activeTab === "history"
-                    ? "bg-teal-500 text-text-light shadow-sm"
-                    : "text-gray-400 hover:text-text-light hover:bg-white/5",
+                    ? "bg-golden/85 text-black shadow-sm"
+                    : "text-gray-400 hover:text-text-light hover:bg-text-light/5",
                 ].join(" ")}
               >
                 <Clock size={15} />
@@ -314,8 +316,8 @@ export default function ProfilePage() {
                       className={[
                         "text-xs font-bold px-1.5 py-0.5 rounded-full",
                         activeTab === "history"
-                          ? "bg-white/20 text-text-light"
-                          : "bg-white/10 text-gray-400",
+                          ? "bg-text-light/20 text-text-light"
+                          : "bg-text-light/10 text-gray-400",
                       ].join(" ")}
                     >
                       {deduplicatedHistory.length}
@@ -330,14 +332,14 @@ export default function ProfilePage() {
                 {/* Loading */}
                 {isWishlistLoading && (
                   <div className="flex justify-center py-20">
-                    <Loader2 className="animate-spin text-teal-400" size={36} />
+                    <Loader2 className="animate-spin text-golden/80" size={36} />
                   </div>
                 )}
 
                 {/* Error */}
                 {isWishlistError && (
                   <div className="flex flex-col items-center gap-3 py-20 text-center">
-                    <AlertCircle className="text-red-400" size={40} />
+                    <AlertCircle className="text-error" size={40} />
                     <p className="text-gray-400">
                       Failed to load your wishlist. Please try again.
                     </p>
@@ -349,8 +351,8 @@ export default function ProfilePage() {
                   !isWishlistError &&
                   (!wishlist || wishlist.length === 0) && (
                     <div className="flex flex-col items-center gap-4 py-20 text-center">
-                      <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
-                        <Heart className="text-rose-400 opacity-60" size={28} />
+                      <div className="w-16 h-16 rounded-2xl bg-burgundy-500/10 border border-burgundy flex items-center justify-center">
+                        <Heart className="text-burgundy opacity-60" size={28} />
                       </div>
                       <h3 className="text-text-light">Your wishlist is empty</h3>
                       <p className="text-gray-500 text-sm max-w-xs">
@@ -372,7 +374,8 @@ export default function ProfilePage() {
                     {wishlist.map((book: IBook) => (
                       <div
                         key={book._id}
-                        className="group bg-white/5 border border-white/10 rounded-2xl p-4 flex gap-4 hover:border-teal-500/30 hover:bg-white/[0.07] transition-all duration-200"
+                        className="group bg-text-light/5 border border-text-light/10 rounded-2xl p-4 
+                          flex gap-4 hover:border-golden hover:bg-text-light/[0.07] transition-all duration-200"
                       >
                         {/* Cover thumbnail */}
                         <img
@@ -395,7 +398,7 @@ export default function ProfilePage() {
                           </p>
 
                           {/* Price */}
-                          <p className="text-teal-400 font-bold text-base mt-auto pt-2">
+                          <p className="text-golden/80 font-bold text-base mt-auto pt-2">
                             ${(book.discountPrice ?? book.price).toFixed(2)}
                           </p>
 
@@ -414,7 +417,9 @@ export default function ProfilePage() {
                               onClick={() => removeFromWishlist(book._id)}
                               disabled={isRemoving}
                               title="Remove from wishlist"
-                              className="w-8 h-8 flex items-center justify-center rounded-lg border border-white/10 text-gray-500 hover:text-rose-400 hover:border-rose-500/30 hover:bg-rose-500/10 disabled:opacity-50 transition-all duration-200"
+                              className="w-8 h-8 flex items-center justify-center rounded-lg border 
+                                border-text-light/10 text-gray-500 hover:text-burgundy-400 hover:border-burgundy-500/30 
+                                hover:bg-burgundy-500/10 disabled:opacity-50 transition-all duration-200"
                             >
                               <Trash2 size={14} />
                             </button>
@@ -433,14 +438,14 @@ export default function ProfilePage() {
                 {/* Loading */}
                 {isHistoryLoading && (
                   <div className="flex justify-center py-20">
-                    <Loader2 className="animate-spin text-teal-400" size={36} />
+                    <Loader2 className="animate-spin text-golden/80" size={36} />
                   </div>
                 )}
 
                 {/* Error */}
                 {isHistoryError && (
                   <div className="flex flex-col items-center gap-3 py-20 text-center">
-                    <AlertCircle className="text-red-400" size={40} />
+                    <AlertCircle className="text-error" size={40} />
                     <p className="text-gray-400">
                       Failed to load download history. Please try again.
                     </p>
@@ -453,8 +458,8 @@ export default function ProfilePage() {
                   (!deduplicatedHistory ||
                     deduplicatedHistory.length === 0) && (
                     <div className="flex flex-col items-center gap-4 py-20 text-center">
-                      <div className="w-16 h-16 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center">
-                        <Clock className="text-teal-400 opacity-60" size={28} />
+                      <div className="w-16 h-16 rounded-2xl bg-golden border border-golden flex items-center justify-center">
+                        <Clock className="text-text-dark" size={28} />
                       </div>
                       <h3 className="text-text-light">No downloads yet</h3>
                       <p className="text-gray-500 text-sm max-w-xs">
@@ -504,7 +509,8 @@ export default function ProfilePage() {
                         .map((record: IDownloadRecord, index: number) => (
                           <div
                             key={record._id}
-                            className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:border-white/20 transition-colors duration-200"
+                            className="bg-text-light/5 border border-text-light/10 rounded-xl p-4 flex 
+                              items-center gap-4 hover:border-text-light/20 transition-colors duration-200"
                           >
                             {/* Index number — gives it a ranked list feel */}
                             <span className="text-gray-600 text-xs font-mono w-5 text-right flex-shrink-0">
@@ -512,8 +518,10 @@ export default function ProfilePage() {
                             </span>
 
                             {/* Download icon badge */}
-                            <div className="w-9 h-9 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center flex-shrink-0">
-                              <Download size={15} className="text-teal-400" />
+                            <div className="w-9 h-9 rounded-xl bg-golden border border-golden 
+                              flex items-center justify-center flex-shrink-0"
+                            >
+                              <Download size={15} className="text-golden/80" />
                             </div>
 
                             {/* Book info */}

@@ -18,11 +18,11 @@ const Footer = () => {
             {/* Logo — reuses same markup as Navbar */}
             <Link
               to="/"
-              className="flex items-center gap-2 text-text-light hover:text-teal transition-colors w-fit"
+              className="flex items-center gap-2 text-text-light hover:text-golden transition-colors w-fit"
             >
-              <BookOpen size={22} className="text-teal" />
+              <BookOpen size={22} className="text-golden" />
               <span className="font-bold text-lg">
-                Kun <span className="text-teal">Bookshop</span>
+                Kun <span className="text-golden">Bookshop</span>
               </span>
             </Link>
 
@@ -35,9 +35,9 @@ const Footer = () => {
             <div className="flex flex-col gap-3 pt-1">
               <a
                 href={`mailto:${FOOTER_CONTACT.email}`}
-                className="inline-flex items-center gap-2 text-sm text-text-light hover:text-teal transition-colors w-fit"
+                className="inline-flex items-center gap-2 text-sm text-text-light hover:text-golden transition-colors w-fit"
               >
-                <Mail size={14} className="text-teal flex-shrink-0" />
+                <Mail size={14} className="text-golden flex-shrink-0" />
                 {FOOTER_CONTACT.email}
               </a>
               <p className="text-text-muted text-sm">
@@ -56,7 +56,7 @@ const Footer = () => {
                   aria-label={social.label}
                   className="w-9 h-9 rounded-full border border-bg-hover/80 bg-card/30
                     flex items-center justify-center text-text-muted
-                    hover:border-teal hover:text-teal transition-all duration-200"
+                    hover:border-golden hover:text-golden transition-all duration-200"
                 >
                   {social.label === "Twitter" && <FaTwitter size={15} />}
                   {social.label === "Instagram" && <FaInstagram size={15} />}
@@ -95,7 +95,7 @@ const Footer = () => {
               </p>
               <a
                 href={`mailto:${FOOTER_CONTACT.email}`}
-                className="inline-flex items-center gap-2 mt-4 text-sm text-teal hover:text-white transition-colors"
+                className="inline-flex items-center gap-2 mt-4 text-sm text-golden hover:text-white transition-colors"
               >
                 Contact support
                 <ArrowRight size={14} />
@@ -117,7 +117,7 @@ const Footer = () => {
           </p>
           <p className="text-text-muted text-xs text-center">
             Digital books delivered instantly · PDF & ePub formats · Powered by{" "}
-            <span className="text-teal font-medium">Stripe</span>
+            <span className="text-emerald-500 font-medium">Stripe</span>
           </p>
         </div>
       </div>

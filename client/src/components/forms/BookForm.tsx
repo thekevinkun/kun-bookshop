@@ -311,7 +311,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
             id="isFeatured"
             checked={isFeatured}
             onChange={(e) => setIsFeatured(e.target.checked)}
-            className="w-4 h-4 accent-teal-500"
+            className="w-4 h-4 accent-golden-500"
           />
           <label htmlFor="isFeatured" className="text-slate-400 text-sm">
             Feature on homepage carousel

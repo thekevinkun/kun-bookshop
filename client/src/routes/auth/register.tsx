@@ -18,7 +18,7 @@ export default function RegisterPage() {
           <div className="divider" />
           <p className="text-center text-sm text-text-muted">
             Already have an account?{" "}
-            <a href="/login" className="text-teal hover:underline font-medium">
+            <a href="/login" className="text-golden hover:underline font-medium">
               Sign in
             </a>
           </p>

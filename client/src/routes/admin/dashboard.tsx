@@ -94,8 +94,8 @@ export default function AdminDashboard() {
         <StatCard
           title="Total Revenue"
           value={`$${stats?.totalRevenue?.toFixed(2) ?? "0.00"}`}
-          icon={<DollarSign size={22} className="text-teal-400" />}
-          color="bg-teal-500/20"
+          icon={<DollarSign size={22} className="text-emerald-400" />}
+          color="bg-emerald-500/20"
         />
         <StatCard
           title="Total Books"
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
         {/* Chart header — title + day range selector */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <TrendingUp size={18} className="text-teal-400" />
+            <TrendingUp size={18} className="text-emerald-400" />
             <h2 className="text-white !text-base">Revenue Over Time</h2>
           </div>
           {/* Day range buttons — clicking changes the chart data */}
@@ -134,7 +134,7 @@ export default function AdminDashboard() {
                 className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors
                   ${
                     days === d
-                      ? "bg-teal-500 text-white"
+                      ? "bg-emerald-500 text-white"
                       : "bg-slate-700 text-slate-400 hover:text-white"
                   }`}
               >
@@ -212,8 +212,8 @@ export default function AdminDashboard() {
                   key={order._id}
                   className="hover:bg-slate-700/20 transition-colors"
                 >
-                  {/* Order number in teal so it stands out */}
-                  <td className="py-3 text-teal-400 font-mono text-xs">
+                  {/* Order number in golden so it stands out */}
+                  <td className="py-3 text-golden font-mono text-xs">
                     {order.orderNumber}
                   </td>
                   <td className="py-3 text-slate-300">

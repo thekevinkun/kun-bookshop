@@ -49,7 +49,7 @@ export default function LoginPage() {
               Don't have an account?{" "}
               <a
                 href="/register"
-                className="text-teal hover:underline font-medium"
+                className="text-golden hover:underline font-medium"
               >
                 Create one
               </a>

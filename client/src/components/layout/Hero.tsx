@@ -91,7 +91,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                         ? activeBook.author
                         : activeBook.author?._id
                     }`}
-                    className="text-teal font-semibold"
+                    className="text-golden font-semibold"
                   >
                     {activeBook.authorName}
                   </Link>
@@ -140,7 +140,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
               {/* Price + CTA */}
               <div className="flex items-center gap-6 mt-2">
                 <div className="flex flex-col">
-                  <span className="text-teal text-3xl font-bold">
+                  <span className="text-golden text-3xl font-bold">
                     ${displayPrice.toFixed(2)}
                   </span>
                   {activeBook.discountPrice && (
@@ -167,8 +167,8 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                     className={`transition-all duration-300 rounded-full
                     ${
                       i === activeIndex
-                        ? "w-8 h-2 bg-teal" // Active dot is wider
-                        : "w-2 h-2 bg-bg-hover hover:bg-teal/50"
+                        ? "w-8 h-2 bg-golden" // Active dot is wider
+                        : "w-2 h-2 bg-bg-hover hover:bg-golden/50"
                     }`}
                     aria-label={`Go to slide ${i + 1}`}
                   />
@@ -179,7 +179,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                   <button
                     onClick={prev}
                     className="w-8 h-8 rounded-full border border-bg-hover flex items-center justify-center 
-                    text-text-muted hover:border-teal hover:text-teal transition-all duration-200"
+                    text-text-muted hover:border-golden hover:text-golden transition-all duration-200"
                     aria-label="Previous book"
                   >
                     <ChevronLeft size={16} />
@@ -187,7 +187,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                   <button
                     onClick={next}
                     className="w-8 h-8 rounded-full border border-bg-hover flex items-center justify-center 
-                    text-text-muted hover:border-teal hover:text-teal transition-all duration-200"
+                    text-text-muted hover:border-golden hover:text-golden transition-all duration-200"
                     aria-label="Next book"
                   >
                     <ChevronRight size={16} />
@@ -247,8 +247,8 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                 </>
               )}
 
-              {/* Teal glow beneath the cover — our design touch */}
-              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 h-12 bg-teal/20 blur-2xl rounded-full z-0" />
+              {/* golden glow beneath the cover — our design touch */}
+              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 h-12 bg-golden/20 blur-2xl rounded-full z-0" />
             </div>
           </div>
         </div>

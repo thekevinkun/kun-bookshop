@@ -17,7 +17,7 @@ const BookDetailVideo = ({ videoUrl }: Props) => {
   return (
     <div>
       <h2 className="text-text-light mb-4 flex items-center gap-2">
-        <Play size={22} className="text-teal" />
+        <Play size={22} className="text-golden" />
         Video
       </h2>
       <div className="rounded-xl overflow-hidden bg-dark aspect-video border border-bg-hover">

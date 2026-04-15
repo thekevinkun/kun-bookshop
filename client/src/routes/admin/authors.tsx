@@ -152,7 +152,7 @@ export default function AdminAuthors() {
                         {author.specialty?.slice(0, 2).map((s: string) => (
                           <span
                             key={s}
-                            className="px-2 py-0.5 bg-teal-500/20 text-teal-400 rounded text-xs border border-teal-500/20"
+                            className="px-2 py-0.5 bg-burgundy/75 text-text-light rounded text-xs border border-burgundy/85"
                           >
                             {s}
                           </span>
@@ -170,8 +170,8 @@ export default function AdminAuthors() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => setEditingAuthor(author)}
-                          className="p-2 text-slate-400 hover:text-teal-400
-                          hover:bg-teal-500/10 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 hover:text-text-dark
+                          hover:bg-golden/80 rounded-lg transition-colors"
                         >
                           <Pencil size={15} />
                         </button>

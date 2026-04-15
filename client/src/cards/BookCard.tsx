@@ -42,14 +42,14 @@ const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
 
         {/* Discount badge — top left */}
         {discountPercent && (
-          <span className="absolute top-2 left-2 bg-teal text-white text-xs font-bold px-2 py-0.5 rounded-md">
+          <span className="absolute top-2 left-2 bg-burgundy text-text-light text-xs font-bold px-2 py-0.5 rounded-md">
             -{discountPercent}%
           </span>
         )}
 
-        {/* Teal bottom border glow — slides up on hover, our design touch */}
+        {/* golden bottom border glow — slides up on hover, our design touch */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal
+          className="absolute bottom-0 left-0 right-0 h-0.5 bg-golden
               scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
         />
       </div>
@@ -59,7 +59,7 @@ const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
         {/* Title — clamp to 2 lines */}
         <h3
           className="text-text-light !leading-snug line-clamp-2 
-            group-hover:text-teal transition-colors duration-200"
+            group-hover:text-golden transition-colors duration-200"
         >
           {book.title}
         </h3>
@@ -92,7 +92,7 @@ const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
         {/* This keeps the price hidden in the compact sidebar version. */}
         {!compactInfo && (
           <div className="flex items-baseline gap-2 mt-auto pt-2">
-            <span className="text-teal text-sm font-bold">
+            <span className="text-golden text-sm font-bold">
               ${displayPrice.toFixed(2)}
             </span>
             {book.discountPrice && (
