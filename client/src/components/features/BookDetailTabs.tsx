@@ -99,7 +99,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
     {
       icon: <Calendar size={14} className="text-teal-400" />,
       label: "Published",
-      value: formatDate(book.publishedDate) ?? "N/A",
+      value: book.publishedDate ? formatDate(book.publishedDate) : "N/A",
     },
     {
       icon: <Tag size={14} className="text-teal-400" />,

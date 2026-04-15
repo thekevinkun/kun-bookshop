@@ -6,7 +6,7 @@ export const formatFileSize = (bytes: number) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-export const formatDate = (dateStr?: string) => {
+export const formatShortDate = (dateStr?: string) => {
   if (!dateStr) return null;
   return new Date(dateStr).toLocaleDateString("en-US", {
     year: "numeric",
@@ -16,10 +16,10 @@ export const formatDate = (dateStr?: string) => {
 
 // Format a date string into a readable short format
 // e.g. "2026-04-06T10:00:00Z" → "Apr 6, 2026"
-export const formatShortDate = (dateString: string) => {
+export const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString("en-US", {
     year: "numeric",
-    month: "short",
+    month: "long",
     day: "numeric",
   });
 };

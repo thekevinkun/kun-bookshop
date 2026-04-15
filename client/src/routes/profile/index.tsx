@@ -129,8 +129,8 @@ export default function ProfilePage() {
                   {/* Avatar circle with initials */}
                   <div
                     className="w-20 h-20 rounded-2xl bg-gradient-to-br from-teal-400 
-                      to-teal-600 flex items-center justify-center text-white font-bold 
-                      text-2xl border-4 border-[#0d1117] shadow-xl"
+                      to-teal-600 flex items-center justify-center text-text-light font-bold 
+                      text-2xl border-4 border-dark shadow-xl"
                   >
                     {initials}
                   </div>
@@ -146,7 +146,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Name and email */}
-                <h2 className="text-white leading-tight">
+                <h2 className="text-text-light leading-tight">
                   {user.firstName} {user.lastName}
                 </h2>
                 <p className="text-gray-400 text-sm mt-0.5">{user.email}</p>
@@ -162,7 +162,7 @@ export default function ProfilePage() {
                       <Heart size={12} />
                       Wishlist
                     </div>
-                    <p className="text-white font-bold text-xl">
+                    <p className="text-text-light font-bold text-xl">
                       {/* Show count or dash while loading */}
                       {isWishlistLoading ? "—" : (wishlist?.length ?? 0)}
                     </p>
@@ -174,7 +174,7 @@ export default function ProfilePage() {
                       <Download size={12} />
                       Downloads
                     </div>
-                    <p className="text-white font-bold text-xl">
+                    <p className="text-text-light font-bold text-xl">
                       {isHistoryLoading
                         ? "—"
                         : (deduplicatedHistory?.length ?? 0)}
@@ -192,7 +192,7 @@ export default function ProfilePage() {
                     <p className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-0.5">
                       First Name
                     </p>
-                    <p className="text-white text-sm">{user.firstName}</p>
+                    <p className="text-text-light text-sm">{user.firstName}</p>
                   </div>
 
                   {/* Last name */}
@@ -200,7 +200,7 @@ export default function ProfilePage() {
                     <p className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-0.5">
                       Last Name
                     </p>
-                    <p className="text-white text-sm">{user.lastName}</p>
+                    <p className="text-text-light text-sm">{user.lastName}</p>
                   </div>
 
                   {/* Email */}
@@ -208,7 +208,7 @@ export default function ProfilePage() {
                     <p className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-0.5">
                       Email
                     </p>
-                    <p className="text-white text-sm break-all">{user.email}</p>
+                    <p className="text-text-light text-sm break-all">{user.email}</p>
                   </div>
 
                   {/* Account type */}
@@ -216,7 +216,7 @@ export default function ProfilePage() {
                     <p className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-0.5">
                       Account Type
                     </p>
-                    <p className="text-white text-sm capitalize">{user.role}</p>
+                    <p className="text-text-light text-sm capitalize">{user.role}</p>
                   </div>
                 </div>
 
@@ -236,7 +236,7 @@ export default function ProfilePage() {
                 <div className="flex flex-col gap-2 w-full mt-2">
                   <Link
                     to="/profile/edit"
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-text-light text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
                   >
                     <Pencil className="w-4 h-4" />{" "}
                     {/* Import Pencil from lucide-react */}
@@ -244,7 +244,7 @@ export default function ProfilePage() {
                   </Link>
                   <Link
                     to="/profile/orders"
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-text-light text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
                   >
                     <ShoppingBag className="w-4 h-4" />{" "}
                     {/* Import ShoppingBag from lucide-react */}
@@ -252,7 +252,7 @@ export default function ProfilePage() {
                   </Link>
                   <Link
                     to="/profile/password"
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-text-light text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
                   >
                     <KeyRound className="w-4 h-4" />{" "}
                     {/* Import KeyRound from lucide-react */}
@@ -273,8 +273,8 @@ export default function ProfilePage() {
                 className={[
                   "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
                   activeTab === "wishlist"
-                    ? "bg-teal-500 text-white shadow-sm"
-                    : "text-gray-400 hover:text-white hover:bg-white/5",
+                    ? "bg-teal-500 text-text-light shadow-sm"
+                    : "text-gray-400 hover:text-text-light hover:bg-white/5",
                 ].join(" ")}
               >
                 <Heart size={15} />
@@ -285,7 +285,7 @@ export default function ProfilePage() {
                     className={[
                       "text-xs font-bold px-1.5 py-0.5 rounded-full",
                       activeTab === "wishlist"
-                        ? "bg-white/20 text-white"
+                        ? "bg-white/20 text-text-light"
                         : "bg-white/10 text-gray-400",
                     ].join(" ")}
                   >
@@ -300,8 +300,8 @@ export default function ProfilePage() {
                 className={[
                   "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
                   activeTab === "history"
-                    ? "bg-teal-500 text-white shadow-sm"
-                    : "text-gray-400 hover:text-white hover:bg-white/5",
+                    ? "bg-teal-500 text-text-light shadow-sm"
+                    : "text-gray-400 hover:text-text-light hover:bg-white/5",
                 ].join(" ")}
               >
                 <Clock size={15} />
@@ -314,7 +314,7 @@ export default function ProfilePage() {
                       className={[
                         "text-xs font-bold px-1.5 py-0.5 rounded-full",
                         activeTab === "history"
-                          ? "bg-white/20 text-white"
+                          ? "bg-white/20 text-text-light"
                           : "bg-white/10 text-gray-400",
                       ].join(" ")}
                     >
@@ -352,7 +352,7 @@ export default function ProfilePage() {
                       <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
                         <Heart className="text-rose-400 opacity-60" size={28} />
                       </div>
-                      <h3 className="text-white">Your wishlist is empty</h3>
+                      <h3 className="text-text-light">Your wishlist is empty</h3>
                       <p className="text-gray-500 text-sm max-w-xs">
                         Save books you're interested in — they'll show up here
                         so you can grab them later.
@@ -387,7 +387,7 @@ export default function ProfilePage() {
 
                         {/* Book details */}
                         <div className="flex-1 min-w-0 flex flex-col">
-                          <h3 className="text-white leading-snug line-clamp-2">
+                          <h3 className="text-text-light leading-snug line-clamp-2">
                             {book.title}
                           </h3>
                           <p className="text-gray-500 text-xs mt-0.5">
@@ -456,7 +456,7 @@ export default function ProfilePage() {
                       <div className="w-16 h-16 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center">
                         <Clock className="text-teal-400 opacity-60" size={28} />
                       </div>
-                      <h3 className="text-white">No downloads yet</h3>
+                      <h3 className="text-text-light">No downloads yet</h3>
                       <p className="text-gray-500 text-sm max-w-xs">
                         Your download history will appear here after you
                         download a book from your library.
@@ -518,7 +518,7 @@ export default function ProfilePage() {
 
                             {/* Book info */}
                             <div className="flex-1 min-w-0">
-                              <p className="text-white text-sm font-medium line-clamp-1">
+                              <p className="text-text-light text-sm font-medium line-clamp-1">
                                 {record.bookId?.title ?? "Unknown Book"}
                               </p>
                               <p className="text-gray-500 text-xs mt-0.5">

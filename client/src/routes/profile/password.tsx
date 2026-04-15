@@ -65,7 +65,7 @@ const PasswordField = ({
       <button
         type="button" // Prevent form submission on click
         onClick={onToggle} // Toggle the visibility state
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-[var(--color-text-secondary)] transition-colors"
         aria-label={show ? "Hide password" : "Show password"} // Accessibility
       >
         {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -111,9 +111,9 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="section">
-        <div className="container-page flex flex-col">
+    <div className="min-h-[90vh]">
+      <div className="py-12">
+        <div className="container-page max-w-2xl mx-auto flex flex-col">
           <button
             className="btn-ghost btn-sm flex items-center gap-1 self-start mb-4"
             onClick={() => navigate(-1)}
@@ -153,7 +153,7 @@ export default function ChangePasswordPage() {
             />
 
             {/* Password requirements hint */}
-            <p className="text-xs text-[var(--color-text-muted)]">
+            <p className="text-xs text-text-muted">
               Min. 8 characters, at least one uppercase letter and one number.
             </p>
 

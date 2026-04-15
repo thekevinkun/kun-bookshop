@@ -120,6 +120,8 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
 
         {/* The drawer panel itself — slides in from the right */}
         <Dialog.Content
+          onInteractOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
           className="cart-drawer fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-card shadow-2xl"
           style={{ borderLeft: "1px solid rgba(51,65,85,0.5)" }}
         >
@@ -139,6 +141,11 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                 </span>
               )}
             </Dialog.Title>
+
+            <Dialog.Description className="sr-only">
+              Your cart drawer where you can review items and proceed to
+              checkout.
+            </Dialog.Description>
 
             {/* Close button — top right corner */}
             <Dialog.Close asChild>

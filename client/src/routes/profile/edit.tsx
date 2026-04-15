@@ -80,9 +80,9 @@ export default function EditProfilePage() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="section">
-        <div className="container-page flex flex-col">
+    <div className="min-h-[90vh]">
+      <div className="py-12">
+        <div className="container-page max-w-2xl mx-auto flex flex-col">
           <button
             className="btn-ghost btn-sm flex items-center gap-1 self-start mb-4"
             onClick={() => navigate(-1)}
@@ -99,12 +99,13 @@ export default function EditProfilePage() {
             {/* Name fields */}
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-[var(--color-text-secondary)]">
+                <label className="text-xs font-medium text-text-muted">
                   First Name
                 </label>
                 <input
                   {...register("firstName")} // Register with RHF — handles value + onChange
-                  className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                  className="w-full px-3 py-2 rounded-lg border border-text-light bg-navy text-sm text-text-light 
+                    focus:outline-none focus:ring-2 focus:ring-teal-500/50"
                 />
                 {errors.firstName && (
                   <p className="text-xs text-rose-400">
@@ -113,12 +114,13 @@ export default function EditProfilePage() {
                 )}
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-[var(--color-text-secondary)]">
+                <label className="text-xs font-medium text-text-muted">
                   Last Name
                 </label>
                 <input
                   {...register("lastName")}
-                  className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                  className="w-full px-3 py-2 rounded-lg border border-text-light bg-navy text-sm 
+                    text-text-light focus:outline-none focus:ring-2 focus:ring-teal-500/50"
                 />
                 {errors.lastName && (
                   <p className="text-xs text-rose-400">
@@ -130,10 +132,10 @@ export default function EditProfilePage() {
 
             {/* Email preference toggles */}
             <div className="flex flex-col gap-3">
-              <p className="text-xs font-medium text-[var(--color-text-secondary)]">
+              <p className="text-xs font-medium text-text-muted">
                 Email Preferences
               </p>
-              <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] divide-y divide-[var(--color-border)]">
+              <div className="rounded-xl border border-text-light divide-y divide-text-light">
                 {/* Each preference is a labelled checkbox row */}
                 {(
                   [
@@ -161,13 +163,13 @@ export default function EditProfilePage() {
                 ).map(({ key, label, desc }) => (
                   <label
                     key={key}
-                    className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors"
+                    className="flex items-center justify-between px-4 py-3 cursor-pointer transition-colors"
                   >
                     <div>
-                      <p className="text-sm text-[var(--color-text-primary)]">
+                      <p className="text-sm text-text-light">
                         {label}
                       </p>
-                      <p className="text-xs text-[var(--color-text-muted)]">
+                      <p className="text-xs text-text-muted">
                         {desc}
                       </p>
                     </div>

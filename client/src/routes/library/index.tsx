@@ -92,10 +92,10 @@ export default function LibraryPage() {
       <div className="container-page min-h-screen flex flex-col items-center justify-center gap-4 text-center px-4">
         {/* Error icon */}
         <AlertCircle className="text-red-400" size={48} />
-        <h2 className="text-xl font-semibold text-white">
+        <h2 className="text-xl font-semibold text-text-light">
           Failed to load your library
         </h2>
-        <p className="text-gray-400">
+        <p className="text-text-muted">
           Something went wrong. Please refresh the page and try again.
         </p>
       </div>
@@ -110,10 +110,10 @@ export default function LibraryPage() {
         {/* Empty state icon */}
         <BookOpen className="text-teal-400 opacity-50" size={64} />
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">
+          <h2 className="text-2xl font-bold text-text-light mb-2">
             Your library is empty
           </h2>
-          <p className="text-gray-400">
+          <p className="text-text-muted">
             Books you purchase will appear here, ready to download anytime.
           </p>
         </div>
@@ -130,12 +130,12 @@ export default function LibraryPage() {
 
   // Library Grid
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+    <section className="min-h-screen">
+      <div className="container-page py-12">
         {/* Page header */}
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-white">My Library</h1>
-          <p className="text-gray-400 mt-1">
+          <h1 className="text-text-light">My Library</h1>
+          <p className="text-text-muted mt-1">
             {/* Show how many books they own */}
             {library.length} {library.length === 1 ? "book" : "books"} in your
             collection
@@ -143,7 +143,7 @@ export default function LibraryPage() {
         </div>
 
         {/* Books grid — responsive: 1 col on mobile, 2 on tablet, 3 on desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {library.map((book: IBook) => {
             // Check if THIS specific book is currently being downloaded
             const isThisDownloading = downloadingBookId === book._id;
@@ -155,7 +155,7 @@ export default function LibraryPage() {
                 className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden flex flex-col hover:border-teal-500/40 transition-colors duration-200"
               >
                 {/* Book cover image */}
-                <div className="aspect-[3/4] overflow-hidden bg-white/5">
+                <div className="aspect-[1/1] overflow-hidden bg-white/5">
                   <img
                     src={book.coverImage}
                     alt={`Cover of ${book.title}`}
@@ -172,12 +172,12 @@ export default function LibraryPage() {
                 {/* Card body */}
                 <div className="p-4 flex flex-col flex-1">
                   {/* Book title */}
-                  <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 mb-1">
+                  <h3 className="text-text-light font-semibold text-sm leading-snug line-clamp-2 mb-1">
                     {book.title}
                   </h3>
 
                   {/* Author name — using the denormalized authorName field, NOT book.author ObjectId */}
-                  <p className="text-gray-400 text-xs mb-3">
+                  <p className="text-text-muted text-xs mb-3">
                     {book.authorName}
                   </p>
 
@@ -218,6 +218,6 @@ export default function LibraryPage() {
           })}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

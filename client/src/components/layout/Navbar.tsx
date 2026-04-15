@@ -117,7 +117,7 @@ const Navbar = () => {
                 )}
               </button>
 
-              {/* ---- RADIX DROPDOWN MENU ---- */}
+              {/* RADIX DROPDOWN MENU */}
               <DropdownMenu.Root modal={false}>
                 {/* The button that opens the dropdown */}
                 <DropdownMenu.Trigger asChild>
@@ -243,17 +243,38 @@ const Navbar = () => {
             </>
           )}
         </div>
+        
+        <div className="md:hidden flex items-center gap-3">
+          {/* Cart button on mobile */}
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className="relative inline-flex h-9 items-center justify-center pr-1 
+              text-text-muted hover:text-text-light transition-colors cursor-pointer"
+            aria-label="Open cart"
+          >
+            <ShoppingCart size={20} strokeWidth={2.1} />
+            {/* Badge showing how many books are in the cart */}
+            {itemCount() > 0 && (
+              <span
+                className="absolute -top-1 -right-1.5 min-w-4.5 h-4.5 px-1 bg-teal text-white text-[10px] font-bold 
+                rounded-full flex items-center justify-center leading-none"
+              >
+                {itemCount()}
+              </span>
+            )}
+          </button>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden btn-ghost btn-sm"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+          {/* Mobile hamburger */}
+          <button
+            className="btn-ghost btn-sm"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
-
+      
       {/* Mobile menu — plain list, no Radix needed here */}
       {mobileOpen && (
         <div

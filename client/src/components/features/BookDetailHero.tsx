@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Add useNavigate for the "View in Library" button
 import { useCartStore } from "../../store/cart";
 import {
   useAddToWishlist,
   useRemoveFromWishlist,
   useWishlist,
+  useLibrary, // Import the library hook so we can check ownership
 } from "../../hooks/useLibrary";
 import { toast } from "sonner";
 import {
+  Users,
   Star,
   ShoppingCart,
   Heart,
@@ -15,35 +17,26 @@ import {
   FileText,
   BookOpen,
   Calendar,
+  CheckCircle, // Used for the "Owned" badge icon
 } from "lucide-react";
 
 import { BookPreview } from ".";
 
 import type { IBook } from "../../types/book";
 
+import { formatFileSize, formatDate } from "../../lib/helpers";
+
 interface BookDetailHeroProps {
   book: IBook;
   isAuthenticated: boolean;
 }
 
-// Formats bytes into a readable string like "2.4 MB"
-const formatFileSize = (bytes: number) => {
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
-
-// Formats a date string into "January 2024"
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return null;
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-  });
-};
-
 const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
   // Read cart actions and state from Zustand store
   const { addItem, isInCart } = useCartStore();
+
+  // useNavigate lets us programmatically send the user to /library on button click
+  const navigate = useNavigate();
 
   // Check if this book is already in the cart
   const alreadyInCart = isInCart(book._id);
@@ -53,6 +46,16 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
 
   // Controls whether the PDF preview modal is open or closed
   const [isPreviewOpen, setIsPreviewOpen] = useState(false); // Starts closed
+
+  // Fetch the user's purchased library — only fires when the user is logged in
+  // This gives us the list of books the user already owns
+  const { data: library = [] } = useLibrary(isAuthenticated);
+
+  // Check if this specific book is already owned by the user
+  // Compare string versions of IDs to avoid ObjectId vs string mismatches
+  const isOwned = library.some(
+    (b: IBook) => b._id?.toString() === book._id?.toString(),
+  );
 
   // Fetch the user's wishlist so we know if this book is already wishlisted
   const { data: wishlist } = useWishlist(isAuthenticated);
@@ -145,9 +148,21 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
               ))}
             </div>
 
-            <h1 className="text-text-light leading-tight">
-              {book.title}
-            </h1>
+            {/* "Owned" badge — only shows when the logged-in user has purchased this book */}
+            {isOwned ? (
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h1 className="text-text-light leading-tight">{book.title}</h1>
+
+                <span className="badge-primary text-[8px] uppercase tracking-widest"
+                >
+                  <CheckCircle size={11} className="shrink-0 mr-1" />
+                  Owned
+                  </span>
+              </div>
+            ) : (
+              <h1 className="text-text-light leading-tight">{book.title}</h1>
+            )}
+            
 
             <p className="text-text-muted text-base">
               By{" "}
@@ -185,7 +200,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 </span>
               </div>
             )}
-            
+
             {/* Meta chips */}
             <div className="flex flex-wrap gap-4 text-sm">
               <span className="flex items-center gap-1.5 text-text-muted">
@@ -225,32 +240,47 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 </>
               )}
             </div>
-            
+
             {book.purchaseCount > 0 && (
-              <p className="text-text-muted text-xs">
-                {book.purchaseCount.toLocaleString()} people have bought this
+              <p className="text-text-muted text-xs flex items-center gap-1.5">
+                <Users size={14} className="text-teal" />
+                Bought by {book.purchaseCount.toLocaleString()} readers
               </p>
             )}
 
             {/* Buttons */}
             <div id="book-purchase-section" className="flex gap-3 flex-wrap">
-              <button
-                className="btn-primary flex items-center gap-2"
-                onClick={handleAddToCart}
-                // Disable only while the "Added!" flash is showing — prevents double-add
-                disabled={justAdded}
-              >
-                <ShoppingCart size={16} />
-                {
-                  justAdded
-                    ? "✓ Added!" // Flash feedback after adding
-                    : alreadyInCart
-                      ? "View in Cart" // Already in cart — clicking opens the drawer
-                      : "Add to Cart" // Default state
-                }
-              </button>
+              {/* 
+                If the user already owns this book, show "View in Library" instead of the cart button.
+                This prevents confusion and avoids re-purchasing an already-owned book.
+              */}
+              {isOwned ? (
+                <button
+                  className="btn-primary flex items-center gap-2"
+                  onClick={() => navigate("/library")} // Send them straight to their library
+                >
+                  <BookOpen size={16} />
+                  View in Library
+                </button>
+              ) : (
+                <button
+                  className="btn-primary flex items-center gap-2"
+                  onClick={handleAddToCart}
+                  // Disable only while the "Added!" flash is showing — prevents double-add
+                  disabled={justAdded}
+                >
+                  <ShoppingCart size={16} />
+                  {
+                    justAdded
+                      ? "✓ Added!" // Flash feedback after adding
+                      : alreadyInCart
+                        ? "View in Cart" // Already in cart — clicking opens the drawer
+                        : "Add to Cart" // Default state
+                  }
+                </button>
+              )}
 
-              {/* Wishlist toggle button — sits below the Add to Cart button */}
+              {/* Wishlist toggle button — sits beside the primary action button */}
               <button
                 onClick={handleWishlistToggle}
                 disabled={isWishlistPending}

@@ -25,7 +25,7 @@ const SimilarBooks = ({ books }: SimilarBooksProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="mt-10 lg:mt-0 flex flex-col gap-4">
       <h2 className="text-text-light uppercase tracking-wider">
         Similar Books
       </h2>
