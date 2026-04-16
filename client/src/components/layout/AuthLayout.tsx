@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { FaInstagram, FaTwitter, FaGithub } from "react-icons/fa";
+import { FOOTER_SOCIAL_LINKS } from "../../lib/constants";
 
 const AuthLayout = () => {
   return (
@@ -11,27 +12,19 @@ const AuthLayout = () => {
 
       {/* BOTTOM BAR FOOTER */}
       <footer className="h-12.5 border-t border-bg-hover">
-        <div className="px-12 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="px-12 py-3 flex flex-wrap flex-col lg:flex-row items-center justify-center md:justify-between gap-3">
           <p className="text-text-muted text-xs text-center sm:text-left">
             © {new Date().getFullYear()} Kun Bookshop. All rights reserved.
           </p>
 
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-5">
             <p className="text-text-muted text-xs text-center">
               Digital books delivered instantly · PDF & ePub formats · Powered
               by <span className="text-emerald-500 font-medium">Stripe</span>
             </p>
 
             <div className="flex gap-3">
-              {[
-                { icon: <FaTwitter size={13} />, href: "#", label: "Twitter" },
-                {
-                  icon: <FaInstagram size={13} />,
-                  href: "#",
-                  label: "Instagram",
-                },
-                { icon: <FaGithub size={13} />, href: "#", label: "GitHub" },
-              ].map((social) => (
+              {FOOTER_SOCIAL_LINKS.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
@@ -40,7 +33,9 @@ const AuthLayout = () => {
                       flex items-center justify-center text-text-muted
                       hover:border-golden hover:text-golden transition-all duration-200"
                 >
-                  {social.icon}
+                  {social.label === "Twitter" && <FaTwitter size={15} />}
+                  {social.label === "Instagram" && <FaInstagram size={15} />}
+                  {social.label === "GitHub" && <FaGithub size={15} />}
                 </a>
               ))}
             </div>

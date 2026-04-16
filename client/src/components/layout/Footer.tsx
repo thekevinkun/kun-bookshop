@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Mail, ArrowRight } from "lucide-react";
+import { Mail, ArrowRight } from "lucide-react";
 import { FaInstagram, FaTwitter, FaGithub } from "react-icons/fa";
 import {
   FOOTER_CONTACT,
@@ -18,11 +18,15 @@ const Footer = () => {
             {/* Logo — reuses same markup as Navbar */}
             <Link
               to="/"
-              className="flex items-center gap-2 text-text-light hover:text-golden transition-colors w-fit"
+              className="flex items-center w-fit"
             >
-              <BookOpen size={22} className="text-golden" />
-              <span className="font-bold text-lg">
-                Kun <span className="text-golden">Bookshop</span>
+              <img 
+                src="/images/logo.webp"
+                alt="Logo"
+                className="w-6 h-6 object-cover"
+              />
+              <span className="text-gradient font-cinzel font-medium text-lg">
+                un <span className="text-golden">Bookshop</span>
               </span>
             </Link>
 
@@ -113,7 +117,7 @@ const Footer = () => {
       <div className="border-t border-bg-hover">
         <div className="container-page py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-text-muted text-xs text-center sm:text-left">
-            © {new Date().getFullYear()} Kun Bookshop. All rights reserved.
+            © 2026 Kun Bookshop. All rights reserved.
           </p>
           <p className="text-text-muted text-xs text-center">
             Digital books delivered instantly · PDF & ePub formats · Powered by{" "}

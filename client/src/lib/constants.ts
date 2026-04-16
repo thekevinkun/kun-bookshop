@@ -8,9 +8,9 @@ export const FOOTER_NAV_LINKS = [
 ] as const;
 
 export const FOOTER_SOCIAL_LINKS = [
-  { label: "Twitter", href: "#" },
-  { label: "Instagram", href: "#" },
-  { label: "GitHub", href: "#" },
+  { label: "Twitter", href: "https://x.com/thekevinkun" },
+  { label: "Instagram", href: "https://instagram.com/thekevinkun" },
+  { label: "GitHub", href: "https://github.com/thekevinkun" },
 ] as const;
 
 export const FOOTER_CONTACT = {

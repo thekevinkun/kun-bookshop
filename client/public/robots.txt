@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Block admin and private pages from being indexed
+Disallow: /admin
+Disallow: /admin/
+Disallow: /library
+Disallow: /orders
+Disallow: /profile
+Disallow: /profile/
+Disallow: /checkout
+Disallow: /checkout/
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email
+
+# Block API routes (shouldn't be crawled directly)
+Disallow: /api/
+
+# Tell crawlers where the sitemap lives
+Sitemap: https://kunbookshop.com/sitemap.xml

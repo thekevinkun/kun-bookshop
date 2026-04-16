@@ -2,9 +2,38 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    
+    <meta name="apple-mobile-web-app-title" content="Kun Bookshop" />
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Theme color (browser chrome on mobile) -->
+    <meta name="theme-color" content="#0a1628" />
+    <meta name="msapplication-TileColor" content="#0a1628" />
+
+    <!-- Default title/description (overridden per-page by react-helmet-async) -->
     <title>Kun Bookshop</title>
+    <meta name="description" content="Discover and buy digital books at Kun Bookshop." />
+
+    <!-- Performance: preconnect to external services -->
+    <!-- Tells the browser to open a connection early, before it's actually needed -->
+    <!-- Saves ~100-300ms per resource on first load -->
+
+    <!-- Cloudinary — where all book covers and files are hosted -->
+    <link rel="preconnect" href="https://res.cloudinary.com" />
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+
+    <!-- Google Fonts — only add this if you're using Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body>
     <div id="root"></div>

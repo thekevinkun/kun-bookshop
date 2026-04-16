@@ -1,11 +1,12 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { HelmetProvider } from "react-helmet-async";
 import { QueryClientProvider } from "@tanstack/react-query";
-import "./styles/globals.css";
+import { useAuthStore } from "./store/auth";
 import App from "./App.tsx";
 import { queryClient } from "./lib/react-query";
-import { useAuthStore } from "./store/auth";
 import api from "./lib/api";
+import "./styles/globals.css";
 
 // Check if the stored token is expired before the app renders.
 // If it is, attempt a silent refresh using the httpOnly refresh token cookie.
@@ -47,7 +48,9 @@ initAuth().then(() => {
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <HelmetProvider>
+          <App />
+        </HelmetProvider>
       </QueryClientProvider>
     </StrictMode>,
   );

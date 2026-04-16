@@ -7,6 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 // Import icons
 import { Globe } from "lucide-react";
 
+import SEO from "../../components/common/SEO";
+
 // Import our Axios instance
 import api from "../../lib/api";
 
@@ -71,119 +73,134 @@ export default function AuthorProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-dark">
-      {/* Hero banner */}
-      <section className="bg-navy py-16">
-        <div className="container-page">
-          {/* Author profile card */}
-          <div className="flex flex-col sm:flex-row gap-8 items-start">
-            {/* Avatar */}
-            <div className="flex-shrink-0">
-              <img
-                src={author.avatar}
-                alt={author.name}
-                className="w-34 h-42 object-cover border-4 border-golden/30"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "/images/placeholder-author.webp";
-                }}
-              />
-            </div>
+    <>
+      {/* Dynamic SEO — uses real author data once loaded */}
+      <SEO
+        title={author.name}
+        description={
+          author.bio
+            ? author.bio.slice(0, 155) // trim bio to what Google displays
+            : `Explore books by ${author.name} on Kun Bookshop.`
+        }
+        image={author.avatar} // Cloudinary URL — SEO component handles absolute URL check
+        url={`/authors/${id}`}
+        author={author.name} // populates <meta name="author"> tag
+      />
 
-            {/* Author info */}
-            <div className="flex flex-col gap-3 flex-1">
-              {/* Name */}
-              <h1 className="text-text-light">{author.name}</h1>
-
-              {/* Specialties as golden pills */}
-              {author.specialty?.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {author.specialty.map((s: string) => (
-                    <span key={s} className="badge-primary">
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {/* Nationality + website row */}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
-                {author.nationality && <span>🌍 {author.nationality}</span>}
-                {author.website && (
-                  <a
-                    href={author.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-golden hover:underline"
-                  >
-                    <Globe size={13} />
-                    Website
-                  </a>
-                )}
+      <div className="min-h-screen bg-bg-dark">
+        {/* Hero banner */}
+        <section className="bg-navy py-16">
+          <div className="container-page">
+            {/* Author profile card */}
+            <div className="flex flex-col sm:flex-row gap-8 items-start">
+              {/* Avatar */}
+              <div className="flex-shrink-0">
+                <img
+                  src={author.avatar}
+                  alt={author.name}
+                  className="w-34 h-42 object-cover border-4 border-golden/30"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src =
+                      "/images/placeholder-author.webp";
+                  }}
+                />
               </div>
 
-              {/* Bio */}
-              <p className="text-text-muted text-sm leading-relaxed max-w-2xl">
-                {author.bio}
-              </p>
+              {/* Author info */}
+              <div className="flex flex-col gap-3 flex-1">
+                {/* Name */}
+                <h1 className="text-text-light">{author.name}</h1>
 
-              {/* Social links */}
-              {author.socialLinks && (
-                <div className="flex flex-wrap gap-3 mt-1">
-                  {Object.entries(author.socialLinks)
-                    .filter(
-                      ([, url]) => typeof url === "string" && url.length > 0,
-                    )
-                    .map(([platform, url]) => (
-                      <a
-                        key={platform}
-                        href={url as string}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-ghost btn-sm capitalize"
-                      >
-                        {platform}
-                      </a>
+                {/* Specialties as golden pills */}
+                {author.specialty?.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {author.specialty.map((s: string) => (
+                      <span key={s} className="badge-primary">
+                        {s}
+                      </span>
                     ))}
+                  </div>
+                )}
+
+                {/* Nationality + website row */}
+                <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
+                  {author.nationality && <span>🌍 {author.nationality}</span>}
+                  {author.website && (
+                    <a
+                      href={author.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-golden hover:underline"
+                    >
+                      <Globe size={13} />
+                      Website
+                    </a>
+                  )}
                 </div>
-              )}
+
+                {/* Bio */}
+                <p className="text-text-muted text-sm leading-relaxed max-w-2xl">
+                  {author.bio}
+                </p>
+
+                {/* Social links */}
+                {author.socialLinks && (
+                  <div className="flex flex-wrap gap-3 mt-1">
+                    {Object.entries(author.socialLinks)
+                      .filter(
+                        ([, url]) => typeof url === "string" && url.length > 0,
+                      )
+                      .map(([platform, url]) => (
+                        <a
+                          key={platform}
+                          href={url as string}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-ghost btn-sm capitalize"
+                        >
+                          {platform}
+                        </a>
+                      ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Author's books */}
-      <section className="section">
-        <div className="container-page">
-          <div className="mb-8">
-            <h2 className="text-text-light uppercase tracking-wider">
-              Books by {author.name}
-            </h2>
-            <div className="w-10 h-1 bg-golden rounded-full mt-1" />
-            <p className="text-text-muted text-xs mt-2">
-              {books.length} {books.length === 1 ? "book" : "books"} available
-            </p>
-          </div>
-
-          {/* Empty state — author exists but has no books yet */}
-          {books.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <p className="text-5xl mb-4">📚</p>
-              <h3 className="text-text-light mb-2">No books yet</h3>
-              <p className="text-text-muted text-sm">
-                This author doesn't have any books in the catalog yet.
+        {/* Author's books */}
+        <section className="section">
+          <div className="container-page">
+            <div className="mb-8">
+              <h2 className="text-text-light uppercase tracking-wider">
+                Books by {author.name}
+              </h2>
+              <div className="w-10 h-1 bg-golden rounded-full mt-1" />
+              <p className="text-text-muted text-xs mt-2">
+                {books.length} {books.length === 1 ? "book" : "books"} available
               </p>
             </div>
-          ) : (
-            // Grid of BookCards — same component used everywhere else
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {books.map((book: IBook) => (
-                <BookCard key={book._id} book={book} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-    </div>
+
+            {/* Empty state — author exists but has no books yet */}
+            {books.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <p className="text-5xl mb-4">📚</p>
+                <h3 className="text-text-light mb-2">No books yet</h3>
+                <p className="text-text-muted text-sm">
+                  This author doesn't have any books in the catalog yet.
+                </p>
+              </div>
+            ) : (
+              // Grid of BookCards — same component used everywhere else
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {books.map((book: IBook) => (
+                  <BookCard key={book._id} book={book} />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

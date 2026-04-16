@@ -25,6 +25,9 @@ import connectDB from "./config/database";
 // Import the stale order expiry job — runs on startup and every hour
 import { expireStaleOrders } from "./jobs/expireOrders";
 
+// Sitemap route
+import sitemapRouter from "./routes/sitemap.routes";
+
 // Import the auth routes so we can mount them on the Express app
 import authRoutes from "./routes/auth.routes";
 
@@ -70,6 +73,10 @@ const app = express();
 
 // MIDDLEWARE SETUP
 // Middleware runs on every request before it reaches our route handlers
+
+// Register sitemap at /sitemap.xml
+// This must be registered early — no auth, no body parsing needed
+app.use("/sitemap.xml", sitemapRouter);
 
 // IMPORTANT: Webhook route must be registered BEFORE express.json() middleware
 // so the raw body is preserved for Stripe signature verification

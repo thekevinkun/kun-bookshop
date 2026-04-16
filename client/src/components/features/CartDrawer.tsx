@@ -258,7 +258,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                 )}
 
                 {/* Final total — uses discounted amount if coupon applied */}
-                <div className="flex justify-between items-center text-text-light border-t border-slate-700 pt-2 mt-1">
+                <div className="flex justify-between items-center text-golden border-t border-slate-700 pt-2 mt-1">
                   <span className="font-semibold">Total</span>
                   <span className="text-xl font-bold">
                     $

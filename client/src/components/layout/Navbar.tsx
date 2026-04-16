@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
-  BookOpen,
   ShoppingCart,
   User,
   LogOut,
@@ -69,11 +68,15 @@ const Navbar = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-text-light hover:text-golden transition-colors"
+          className="flex items-center"
         >
-          <BookOpen size={24} className="text-golden" />
-          <span className="font-bold text-lg">
-            Kun <span className="text-golden">Bookshop</span>
+          <img 
+            src="/images/logo.webp"
+            alt="Logo"
+            className="w-6 h-6 sm:w-8 sm:h-8 object-cover"
+          />
+          <span className="text-gradient-secondary font-cinzel font-medium text-base sm:text-xl">
+            un <span className="text-golden">Bookshop</span>
           </span>
         </Link>
 
@@ -249,25 +252,27 @@ const Navbar = () => {
         
         <div className="md:hidden flex items-center gap-3">
           {/* Cart button on mobile */}
-          <button
-            onClick={() => setIsCartOpen(true)}
-            className="relative inline-flex h-9 items-center justify-center pr-1 
-              text-text-muted hover:text-text-light transition-colors cursor-pointer"
-            aria-label="Open cart"
-          >
-            <ShoppingCart size={20} strokeWidth={2.1} />
-            {/* Badge showing how many books are in the cart */}
-            {itemCount() > 0 && (
-              <span
-                className="absolute -top-1 -right-1.5 min-w-4.5 h-4.5 px-1 bg-burgundy 
-                text-text-light text-[10px] font-bold 
-                rounded-full flex items-center justify-center leading-none"
-              >
-                {itemCount()}
-              </span>
-            )}
-          </button>
-
+          {isAuthenticated && (
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative inline-flex h-9 items-center justify-center pr-1 
+                text-text-muted hover:text-text-light transition-colors cursor-pointer"
+              aria-label="Open cart"
+            >
+              <ShoppingCart size={20} strokeWidth={2.1} />
+              {/* Badge showing how many books are in the cart */}
+              {itemCount() > 0 && (
+                <span
+                  className="absolute -top-1 -right-1.5 min-w-4.5 h-4.5 px-1 bg-burgundy 
+                  text-text-light text-[10px] font-bold 
+                  rounded-full flex items-center justify-center leading-none"
+                >
+                  {itemCount()}
+                </span>
+              )}
+            </button>
+          )}
+          
           {/* Mobile hamburger */}
           <button
             className="btn-ghost btn-sm"

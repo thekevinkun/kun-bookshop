@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useBook, useSimilarBooks } from "../../hooks/useBooks";
 import { useAuthStore } from "../../store/auth";
-
+import SEO from "../../components/common/SEO";
+import { BookJsonLd } from "../../components/common/JsonLd";
 import {
   BookDetailHero,
   BookDetailVideo,
@@ -59,31 +60,56 @@ export default function BookDetailPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero — cover image, title, price, buy button */}
-      <BookDetailHero book={book} isAuthenticated={isAuthenticated} />
+    <>
+      <SEO
+        title={book.title}
+        description={
+          book.description
+            ? book.description.slice(0, 155) // Google shows ~155 chars in search results
+            : `Buy "${book.title}" by ${book.authorName} on Kun Bookshop.`
+        }
+        image={book.coverImage} // Cloudinary URL — already absolute, SEO component handles it
+        url={`/books/${book._id}`}
+        type="book"
+        author={book.authorName}
+      />
+      <BookJsonLd
+        id={book._id}
+        title={book.title}
+        description={book.description ?? `A book by ${book.authorName}`}
+        image={book.coverImage}
+        authorName={book.authorName} // always authorName — never book.author
+        price={book.discountPrice ?? book.price}
+        rating={book.rating}
+        ratingCount={book.reviewCount}
+        publishedDate={book.publishedDate}
+      />
+      <div className="min-h-screen">
+        {/* Hero — cover image, title, price, buy button */}
+        <BookDetailHero book={book} isAuthenticated={isAuthenticated} />
 
-      {/* Main content area */}
-      <section className="section bg-bg-dark">
-        <div className="container-page">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Left: video + tabs — takes up 2/3 of the width on desktop */}
-            <div className="lg:col-span-2 flex flex-col gap-8">
-              {/* Only render the video section if this book has a video URL */}
-              {book.videoUrl && (
-                <BookDetailVideo
-                  posterUrl={book.coverImage}
-                  videoUrl={book.videoUrl}
-                />
-              )}
-              <BookDetailTabs book={book} />
+        {/* Main content area */}
+        <section className="section bg-bg-dark">
+          <div className="container-page">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+              {/* Left: video + tabs — takes up 2/3 of the width on desktop */}
+              <div className="lg:col-span-2 flex flex-col gap-8">
+                {/* Only render the video section if this book has a video URL */}
+                {book.videoUrl && (
+                  <BookDetailVideo
+                    posterUrl={book.coverImage}
+                    videoUrl={book.videoUrl}
+                  />
+                )}
+                <BookDetailTabs book={book} />
+              </div>
+
+              {/* Right: similar books — takes up 1/3 of the width on desktop */}
+              <SimilarBooks books={relatedBooks} />
             </div>
-
-            {/* Right: similar books — takes up 1/3 of the width on desktop */}
-            <SimilarBooks books={relatedBooks} />
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </>
   );
 }

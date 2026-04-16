@@ -1,11 +1,12 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import type { UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader2, KeyRound, Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
 import { useChangePassword } from "../../hooks/useAuth"; // Our new mutation hook
+import SEO from "../../components/common/SEO";
 import { toast } from "sonner";
 
 // Zod v4 validator (client-side duplicate — never import from server)
@@ -111,78 +112,87 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div className="min-h-[90vh]">
-      <div className="py-12">
-        <div className="container-page max-w-2xl mx-auto flex flex-col">
-          <button
-            className="btn-ghost btn-sm flex items-center gap-1 self-start mb-4"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowLeft size={15} /> Back
-          </button>
+    <>
+      <SEO
+        title="Change Password"
+        description="Update your account password to keep your Kun Bookshop account secure."
+        url="/profile/password"
+        noIndex={true}
+      />
 
-          <h2 className="text-base mb-6">Change Password</h2>
+      <div className="min-h-[90vh]">
+        <div className="py-12">
+          <div className="container-page max-w-2xl mx-auto flex flex-col">
+            <button
+              className="btn-ghost btn-sm flex items-center gap-1 self-start mb-4"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeft size={15} /> Back
+            </button>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-5"
-          >
-            <PasswordField
-              label="Current Password"
-              fieldKey="currentPassword"
-              show={showCurrent}
-              onToggle={() => setShowCurrent((v) => !v)}
-              error={errors.currentPassword?.message}
-              register={register}
-            />
-            <PasswordField
-              label="New Password"
-              fieldKey="newPassword"
-              show={showNew}
-              onToggle={() => setShowNew((v) => !v)}
-              error={errors.newPassword?.message}
-              register={register}
-            />
-            <PasswordField
-              label="Confirm New Password"
-              fieldKey="confirmNewPassword"
-              show={showConfirm}
-              onToggle={() => setShowConfirm((v) => !v)}
-              error={errors.confirmNewPassword?.message}
-              register={register}
-            />
+            <h2 className="text-base mb-6">Change Password</h2>
 
-            {/* Password requirements hint */}
-            <p className="text-xs text-text-muted">
-              Min. 8 characters, at least one uppercase letter and one number.
-            </p>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-5"
+            >
+              <PasswordField
+                label="Current Password"
+                fieldKey="currentPassword"
+                show={showCurrent}
+                onToggle={() => setShowCurrent((v) => !v)}
+                error={errors.currentPassword?.message}
+                register={register}
+              />
+              <PasswordField
+                label="New Password"
+                fieldKey="newPassword"
+                show={showNew}
+                onToggle={() => setShowNew((v) => !v)}
+                error={errors.newPassword?.message}
+                register={register}
+              />
+              <PasswordField
+                label="Confirm New Password"
+                fieldKey="confirmNewPassword"
+                show={showConfirm}
+                onToggle={() => setShowConfirm((v) => !v)}
+                error={errors.confirmNewPassword?.message}
+                register={register}
+              />
 
-            {/* Actions */}
-            <div className="flex items-center gap-3 pt-1">
-              <button
-                type="submit"
-                disabled={isPending}
-                className="flex items-center gap-2 btn-primary btn-sm"
-              >
-                {isPending ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <KeyRound className="w-4 h-4" />
-                )}
-                {isPending ? "Saving…" : "Change Password"}
-              </button>
+              {/* Password requirements hint */}
+              <p className="text-xs text-text-muted">
+                Min. 8 characters, at least one uppercase letter and one number.
+              </p>
 
-              <button
-                type="button"
-                onClick={() => navigate("/profile")}
-                className="btn-ghost btn-sm"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
+              {/* Actions */}
+              <div className="flex items-center gap-3 pt-1">
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="flex items-center gap-2 btn-primary btn-sm"
+                >
+                  {isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <KeyRound className="w-4 h-4" />
+                  )}
+                  {isPending ? "Saving…" : "Change Password"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => navigate("/profile")}
+                  className="btn-ghost btn-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
