@@ -6,65 +6,119 @@
     <style>
       /* Simple inline-friendly styles — email clients don't support external CSS */
       body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background-color: #0f172a;
         margin: 0;
         padding: 0;
-        background-color: #0f172a;
-        font-family: Arial, sans-serif;
       }
       .container {
-        max-width: 560px;
-        margin: 40px auto;
-        background-color: #1e293b;
+        max-width: 600px;
+        margin: 20px auto;
+        background: #1e293b;
         border-radius: 12px;
         overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
       .header {
-        background-color: #14b8a6;
-        padding: 32px;
+        background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+        color: white;
+        padding: 30px 20px;
         text-align: center;
       }
-      .header h1 {
-        margin: 0;
-        color: #ffffff;
-        font-size: 24px;
+      .logo-image_wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-      .body {
-        padding: 32px;
+      .logo-image_wrapper .logo-image {
+        width: 38px;
+        height: 38px;
+        object-fit: cover;
+      }
+      .logo-image_wrapper .logo-image_text {
+        font-family: "Cinzel", serif;
+        font-size: 28px;
+        font-weight: 500;
+        background: linear-gradient(
+          135deg,
+          #f8fafc 0%,
+          #e6be77 50%,
+          #f8fafc 100%
+        );
+        background-size: 200% 200%;
+        background-position: left;
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .content {
+        padding: 40px 30px;
         color: #f8fafc;
-      }
-      .body p {
         line-height: 1.6;
-        color: #cbd5e1;
+        font-size: 16px;
+      }
+      .content h1 {
+        margin: 0;
+        color: #e6be77;
+        font-size: 22px;
+        font-weight: 500;
+      }
+      .content .warning {
+        margin: 0;
+        color: #ef4444;
+        font-size: 14px;
       }
       .btn {
         display: inline-block;
-        margin: 24px 0;
+        background: #e6be77;
+        color: #000 !important;
         padding: 14px 32px;
-        background-color: #14b8a6;
-        color: #ffffff;
         text-decoration: none;
         border-radius: 8px;
-        font-weight: bold;
         font-size: 16px;
+        font-weight: 600;
+        margin: 24px 0 8px;
       }
       .footer {
-        padding: 16px 32px;
+        background: rgba(10, 22, 40, 0.5);
+        padding: 20px;
         text-align: center;
-        color: #475569;
-        font-size: 12px;
+        font-size: 13px;
+        color: #d1d1d1;
+      }
+      .footer a {
+        color: #e6be77;
+        text-decoration: none;
       }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1>📚 Kun Bookshop</h1>
+        <div
+          to="/"
+          class="logo-image_wrapper"
+        >
+          <img 
+            src="{{logoUrl}}"
+            alt="Logo"
+            class="logo-image"
+          />
+          <span class="logo-image_text">
+            un <span class="logo-image_span">Bookshop</span>
+          </span>
+        </div>
       </div>
-      <div class="body">
-        <h2 style="color: #f8fafc;">Verify your email address</h2>
+      <div class="content">
+        <h1>Verify your email address</h1>
         <p>Thanks for signing up! Click the button below to verify your email
           address and activate your account.</p>
-        <p>This link expires in <strong>24 hours</strong>.</p>
+        <p class="warning">This link expires in <strong>24 hours</strong>.</p>
 
         <!-- {{ verificationUrl }} is replaced by Handlebars with the real URL -->
         <a href="{{verificationUrl}}" class="btn">Verify My Email</a>
@@ -72,12 +126,15 @@
         <p>If the button doesn't work, copy and paste this link into your
           browser:</p>
         <p
-          style="word-break: break-all; color: #14b8a6;"
+          style="word-break: break-all; color: #e6be77;"
         >{{verificationUrl}}</p>
         <p>If you didn't create an account, you can safely ignore this email.</p>
       </div>
       <div class="footer">
         <p>© 2026 Kun Bookshop. All rights reserved.</p>
+        <p>
+          <a href="{{supportUrl}}">Contact Support</a>
+        </p>
       </div>
     </div>
   </body>

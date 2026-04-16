@@ -6,52 +6,82 @@
     <style>
       /* Reset styles so the email looks consistent across all email clients */
       body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background-color: #0f172a;
         margin: 0;
         padding: 0;
-        background-color: #f1f5f9;
-        font-family: Arial, sans-serif;
       }
-      .wrapper {
+      .container {
         max-width: 600px;
-        margin: 40px auto;
-        background: #ffffff;
+        margin: 20px auto;
+        background: #1e293b;
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
       .header {
-        background: linear-gradient(135deg, #0f766e, #0d9488);
-        padding: 40px 32px;
+        background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+        color: white;
+        padding: 30px 20px;
         text-align: center;
       }
-      .header h1 {
-        color: #ffffff;
-        margin: 0;
+      .logo-image_wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo-image_wrapper .logo-image {
+        width: 38px;
+        height: 38px;
+        object-fit: cover;
+      }
+      .logo-image_wrapper .logo-image_text {
+        font-family: "Cinzel", serif;
         font-size: 28px;
-        font-weight: 700;
+        font-weight: 500;
+        background: linear-gradient(
+          135deg,
+          #f8fafc 0%,
+          #e6be77 50%,
+          #f8fafc 100%
+        );
+        background-size: 200% 200%;
+        background-position: left;
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
-      .header p {
-        color: #ccfbf1;
-        margin: 8px 0 0;
-        font-size: 15px;
+      .content {
+        padding: 40px 30px;
+        color: #f8fafc;
+        line-height: 1.6;
+        font-size: 16px;
       }
-      .body {
-        padding: 36px 32px;
+      .content h1 {
+        margin: 0;
+        color: #e6be77;
+        font-size: 22px;
+        font-weight: 500;
       }
       .greeting {
-        font-size: 16px;
-        color: #334155;
+        font-size: 20px;
+        color: #f8fafc;
         margin-bottom: 16px;
       }
       .intro {
-        font-size: 15px;
-        color: #64748b;
+        font-size: 16px;
+        color: #f8fafc;
         line-height: 1.6;
         margin-bottom: 28px;
       }
       /* The coupon code box — visually prominent so it's easy to copy */
       .coupon-box {
-        background: #f0fdfa;
+        background: rgba(20, 184, 166, 0.20);
         border: 2px dashed #14b8a6;
         border-radius: 12px;
         padding: 28px;
@@ -59,27 +89,27 @@
         margin-bottom: 28px;
       }
       .coupon-label {
-        font-size: 13px;
-        color: #0f766e;
+        font-size: 14px;
+        color: #14b8a6;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 1px;
         margin-bottom: 10px;
       }
       .coupon-code {
-        font-size: 36px;
+        font-size: 32px;
         font-weight: 800;
-        color: #0f766e;
+        color: #14b8a6;
         letter-spacing: 6px;
         font-family: "Courier New", monospace;
       }
       .coupon-details {
         margin-top: 12px;
         font-size: 14px;
-        color: #64748b;
+        color: #d1d1d1;
       }
       .coupon-details strong {
-        color: #0f766e;
+        color: #14b8a6;
       }
       /* CTA button */
       .cta-wrapper {
@@ -88,45 +118,65 @@
       }
       .cta-btn {
         display: inline-block;
-        background: #0f766e;
-        color: #ffffff;
+        background: #e6be77;
+        color: #000 !important;
+        padding: 14px 32px;
         text-decoration: none;
-        padding: 14px 36px;
         border-radius: 8px;
         font-size: 16px;
-        font-weight: 700;
+        font-weight: 600;
+        margin: 24px 0 8px;
       }
       .expiry-note {
         text-align: center;
-        font-size: 13px;
-        color: #94a3b8;
+        font-size: 14px;
+        color: #ef4444;
         margin-bottom: 28px;
       }
-      .footer {
-        background: #f8fafc;
-        padding: 24px 32px;
+      .reminder {
         text-align: center;
-        font-size: 12px;
-        color: #94a3b8;
-        border-top: 1px solid #e2e8f0;
+        font-size: 14px;
+        color: #d1d1d1;
+      }
+      .footer {
+        background: rgba(10, 22, 40, 0.5);
+        padding: 20px;
+        text-align: center;
+        font-size: 13px;
+        color: #d1d1d1;
       }
       .footer a {
-        color: #0f766e;
+        color: #e6be77;
         text-decoration: none;
       }
     </style>
   </head>
   <body>
-    <div class="wrapper">
+    <div class="container">
       <!-- Header -->
       <div class="header">
-        <h1>📚 Kun Bookshop</h1>
-        <p>An exclusive offer, just for you</p>
+        <div
+          to="/"
+          class="logo-image_wrapper"
+        >
+          <img 
+            src="{{logoUrl}}"
+            alt="Logo"
+            class="logo-image"
+          />
+          <span class="logo-image_text">
+            un <span class="logo-image_span">Bookshop</span>
+          </span>
+        </div>
       </div>
 
       <!-- Body -->
-      <div class="body">
-        <p class="greeting">Hi {{firstName}},</p>
+      <div class="content">
+        <h1>An exclusive offer, just for you!</h1>
+
+        <p class="greeting">Hi 
+          <span style="color: #e6be77; font-weight: 700;">{{firstName}},</span>
+        </p>
         <p class="intro">
           We appreciate you being part of the Kun Bookshop community. Here's an
           exclusive discount code as a thank-you — use it on your next purchase!
@@ -165,12 +215,16 @@
           ⏰ This offer expires on
           <strong>{{validUntil}}</strong>. Don't miss out!
         </p>
+
+        <p class="reminder">You're receiving this because you have an account at Kun Bookshop.</p>
       </div>
 
       <!-- Footer -->
       <div class="footer">
-        <p>You're receiving this because you have an account at Kun Bookshop.</p>
-        <p>© {{year}} Kun Bookshop. All rights reserved.</p>
+        <p>© 2026 Kun Bookshop. All rights reserved.</p>
+        <p>
+          <a href="{{supportUrl}}">Contact Support</a>
+        </p>
       </div>
     </div>
   </body>

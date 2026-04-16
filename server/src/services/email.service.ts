@@ -8,6 +8,7 @@ import handlebars from "handlebars";
 import fs from "fs";
 import path from "path";
 
+import { Book } from "../models/Book";
 import type { ICoupon } from "../types/book";
 
 // Import our logger — no console.log in this project
@@ -129,6 +130,8 @@ export const sendVerificationEmail = async (
   // Compile the verification template with the values this email needs
   const html = compileTemplate("verification", {
     verificationUrl, // The clickable link
+    logoUrl: process.env.LOGO_URL,
+    supportUrl: `${process.env.CLIENT_URL}/contact`,
   });
 
   await sendEmail(email, "Verify your Kun Bookshop account", html);
@@ -144,6 +147,8 @@ export const sendWelcomeEmail = async (
   const html = compileTemplate("welcome", {
     firstName, // Used in the template as {{ firstName }}
     shopUrl: process.env.CLIENT_URL, // Link to the homepage
+    logoUrl: process.env.LOGO_URL,
+    supportUrl: `${process.env.CLIENT_URL}/contact`,
   });
 
   await sendEmail(email, "Welcome to Kun Bookshop! 📚", html);
@@ -162,6 +167,8 @@ export const sendPasswordResetEmail = async (
   const html = compileTemplate("passwordReset", {
     resetUrl,
     expiresIn: "1 hour", // Tell the user how long they have to use this link
+    logoUrl: process.env.LOGO_URL,
+    supportUrl: `${process.env.CLIENT_URL}/contact`,
   });
 
   await sendEmail(email, "Reset your Kun Bookshop password", html);
@@ -175,6 +182,7 @@ export const sendPasswordChangedEmail = async (
   email: string,
 ): Promise<void> => {
   const html = compileTemplate("passwordChanged", {
+    logoUrl: process.env.LOGO_URL,
     supportUrl: `${process.env.CLIENT_URL}/contact`, // Link to contact support if it wasn't them
   });
 
@@ -189,17 +197,40 @@ export const sendOrderConfirmation = async (
   email: string,
   order: any, // IOrder — using any to avoid circular import issues
 ): Promise<void> => {
+  // Fetch fileType for each book in the order from the Book collection
+  // The order snapshot doesn't store fileType — only the Book model has it
+  // We do a single query fetching all books at once to avoid N+1 DB calls
+  const bookIds = order.items.map((item: any) => item.bookId); // Collect all bookIds from the order
+  const books = await Book.find({ _id: { $in: bookIds } }) // Fetch all matching books in one query
+    .select("fileType") // We only need fileType — keep the query lean
+    .lean(); // Return plain objects, not Mongoose documents
+
+  // Build a lookup map: bookId string → fileType
+  // This lets us match each order item to its fileType in O(1) instead of looping
+  const fileTypeMap = new Map<string, string>(
+    books.map((b: any) => [b._id.toString(), b.fileType]), // Key is string so it matches item.bookId.toString()
+  );
+
+  // Determine if a coupon discount was applied to this order
+  // discount > 0 means the user saved money — we show the breakdown in the email
+  const hasDiscount = order.discount > 0;
+
   const html = compileTemplate("orderConfirmation", {
     orderNumber: order.orderNumber,
-    // Convert each Mongoose subdocument to a plain object
-    // Handlebars v4.6+ blocks access to prototype properties — .toObject() flattens it
+    // Build each item with fileType looked up from the map
     items: order.items.map((item: any) => ({
       title: item.title,
-      author: item.author,
-      price: item.price,
+      author: item.author, // denormalized snapshot string — never item.bookId
+      price: Number(item.price).toFixed(2), // Format to 2 decimal places e.g. "9.99"
       coverImage: item.coverImage,
+      fileType: fileTypeMap.get(item.bookId.toString()) ?? "pdf", // Fallback to pdf if somehow missing
     })),
-    total: order.total.toFixed(2),
+    subtotal: order.subtotal.toFixed(2), // Before discount
+    discount: order.discount.toFixed(2), // Amount saved
+    couponCode: order.couponCode, // e.g. "SAVE20" — shown next to the discount label
+    hasDiscount, // Boolean — Handlebars {{#if hasDiscount}} uses this
+    total: order.total.toFixed(2), // What was actually charged
+    logoUrl: process.env.LOGO_URL,
     libraryUrl: `${process.env.CLIENT_URL}/library`,
     supportUrl: `${process.env.CLIENT_URL}/contact`,
   });
@@ -230,7 +261,9 @@ export const sendCouponBlast = async (
       month: "long",
       day: "numeric", // e.g. "December 31, 2026"
     }),
+    logoUrl: process.env.LOGO_URL,
     shopUrl: process.env.CLIENT_URL ?? "http://localhost:3000/books", // CTA button link
+    supportUrl: `${process.env.CLIENT_URL}/contact`,
     year: new Date().getFullYear(), // Footer copyright year
   });
 

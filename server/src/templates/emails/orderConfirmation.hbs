@@ -1,7 +1,8 @@
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmed</title>
     <style>
       body {
         font-family:
@@ -10,14 +11,14 @@
           BlinkMacSystemFont,
           "Segoe UI",
           sans-serif;
-        background-color: #f3f4f6;
+        background-color: #0f172a;
         margin: 0;
         padding: 0;
       }
       .container {
         max-width: 600px;
         margin: 20px auto;
-        background: white;
+        background: #1e293b;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -28,46 +29,72 @@
         padding: 30px 20px;
         text-align: center;
       }
-      .header h1 {
-        margin: 0;
-        font-size: 28px;
-        font-weight: 700;
+      .logo-image_wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-      .header p {
-        margin: 8px 0 0;
-        color: #14b8a6;
-        font-size: 14px;
+      .logo-image_wrapper .logo-image {
+        width: 38px;
+        height: 38px;
+        object-fit: cover;
+      }
+      .logo-image_wrapper .logo-image_text {
+        font-family: "Cinzel", serif;
+        font-size: 28px;
+        font-weight: 500;
+        background: linear-gradient(
+          135deg,
+          #f8fafc 0%,
+          #e6be77 50%,
+          #f8fafc 100%
+        );
+        background-size: 200% 200%;
+        background-position: left;
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
       .content {
         padding: 40px 30px;
-        color: #374151;
+        color: #f8fafc;
         line-height: 1.6;
+        font-size: 16px;
+      }
+      .content h1 {
+        margin: 0;
+        color: #e6be77;
+        font-size: 22px;
+        font-weight: 500;
       }
       .order-number {
-        background: #f0fdfa;
-        border: 1px solid #99f6e4;
+        margin-top: 24px;
+        background: rgba(147, 164, 181, 0.25);
+        border: 1px solid #93a4b5;
         border-radius: 8px;
+        backdrop-filter: blur(10px);
         padding: 12px 20px;
         text-align: center;
         margin-bottom: 24px;
       }
       .order-number span {
-        font-size: 13px;
-        color: #6b7280;
+        font-size: 14px;
+        color: #d1d1d1;
       }
       .order-number strong {
         display: block;
         font-size: 20px;
-        color: #14b8a6;
+        color: #e6be77;
         margin-top: 2px;
       }
       .section-title {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 600;
-        color: #111827;
+        color: #f8fafc;
+        margin-top: 24px !important;
         margin: 0 0 16px;
         padding-bottom: 8px;
-        border-bottom: 2px solid #f3f4f6;
+        border-bottom: 2px solid #d1d1d1;
       }
       .book-item {
         display: flex;
@@ -75,7 +102,7 @@
         gap: 16px;
         margin-bottom: 16px;
         padding-bottom: 16px;
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid #d1d1d1;
       }
       .book-item:last-child {
         border-bottom: none;
@@ -94,18 +121,50 @@
       }
       .book-title {
         font-weight: 600;
-        color: #111827;
+        color: #e6be77;
         margin: 0 0 4px;
       }
       .book-author {
         font-size: 13px;
-        color: #6b7280;
+        color: #d1d1d1;
         margin: 0 0 6px;
       }
       .book-price {
         font-weight: 700;
-        color: #14b8a6;
+        color: #e6be77;
         margin: 0;
+      }
+      .book-format {
+        font-size: 11px;
+        font-weight: 600;
+        background: rgba(199, 58, 82, 0.2);
+        color: #c73a52;
+        border: 1px solid rgba(199, 58, 82, 0.3);
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0 0 6px;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #334155;
+      }
+      .summary-label {
+        font-size: 14px;
+        color: #d1d1d1;
+      }
+      .summary-value {
+        font-size: 14px;
+        color: #f8fafc;
+      }
+      .discount-amount {
+        color: #14b8a6; /* green — savings feel good */
       }
       .total-row {
         display: flex;
@@ -113,46 +172,48 @@
         align-items: center;
         margin-top: 20px;
         padding-top: 16px;
-        border-top: 2px solid #f3f4f6;
+        border-top: 2px solid #d1d1d1;
       }
       .total-label {
         font-size: 16px;
         font-weight: 600;
-        color: #111827;
+        color: #f8fafc;
       }
       .total-amount {
         font-size: 22px;
         font-weight: 700;
-        color: #14b8a6;
+        color: #e6be77;
       }
       .button {
         display: inline-block;
-        background: #14b8a6;
-        color: white !important;
+        background: #e6be77;
+        color: #000 !important;
         padding: 14px 32px;
         text-decoration: none;
         border-radius: 8px;
+        font-size: 16px;
         font-weight: 600;
         margin: 24px 0 8px;
       }
       .button-center {
+        margin-top: 14px;
         text-align: center;
       }
       .notice {
         font-size: 13px;
-        color: #6b7280;
+        color: #d1d1d1;
         text-align: center;
         margin-top: 8px;
       }
       .footer {
-        background: #f9fafb;
+        background: rgba(10, 22, 40, 0.5);
         padding: 20px;
         text-align: center;
         font-size: 13px;
-        color: #6b7280;
+        color: #d1d1d1;
       }
       .footer a {
-        color: #14b8a6;
+        color: #e6be77;
         text-decoration: none;
       }
     </style>
@@ -161,16 +222,23 @@
     <div class="container">
       <!-- Header -->
       <div class="header">
-        <h1>📘 Kun Bookshop</h1>
-        <p>Your order is confirmed!</p>
+        <div to="/" class="logo-image_wrapper">
+          <img src="{{logoUrl}}" alt="Logo" class="logo-image" />
+          <span class="logo-image_text">
+            un
+            <span class="logo-image_span">Bookshop</span>
+          </span>
+        </div>
       </div>
 
       <!-- Body -->
       <div class="content">
+        <h1>Your order is confirmed!</h1>
+
         <!-- Order number badge -->
         <div class="order-number">
           <span>Order Number</span>
-          <strong>#{{orderNumber}}</strong>
+          <strong>{{orderNumber}}</strong>
         </div>
 
         <p>
@@ -190,13 +258,24 @@
             />
             <div class="book-info">
               <p class="book-title">{{this.title}}</p>
-              <p class="book-author">by {{this.author}}</p>
+              <p class="book-author">{{this.author}}</p>
+              <p class="book-format">{{this.fileType}}</p>
               <p class="book-price">${{this.price}}</p>
             </div>
           </div>
         {{/each}}
-
-        <!-- Total -->
+        
+        <!-- Subtotal + optional discount + total -->
+        {{#if hasDiscount}}
+          <div class="summary-row">
+            <span class="summary-label">Subtotal</span>
+            <span class="summary-value">${{subtotal}}</span>
+          </div>
+          <div class="summary-row discount-row">
+            <span class="summary-label">Discount ({{couponCode}})</span>
+            <span class="summary-value discount-amount">−${{discount}}</span>
+          </div>
+        {{/if}}
         <div class="total-row">
           <span class="total-label">Total Paid</span>
           <span class="total-amount">${{total}}</span>
