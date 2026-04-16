@@ -1,19 +1,13 @@
-// Import React Query hooks for data fetching and mutations
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
-// Import our configured Axios instance
 import api from "../lib/api";
+import { bookKeys } from "./useBooks"; // Import bookKeys so we use the exact same key structure
 
-// Query Key factory
-// Centralized so invalidation always hits the right cache entries
 const reviewKeys = {
   all: (bookId: string) => ["reviews", bookId] as const,
   paged: (bookId: string, page: number, sortBy: string) =>
     ["reviews", bookId, page, sortBy] as const,
 };
 
-// useBookReviews
-// Fetches paginated reviews for a single book
 export const useBookReviews = (
   bookId: string,
   page = 1,
@@ -22,37 +16,34 @@ export const useBookReviews = (
   return useQuery({
     queryKey: reviewKeys.paged(bookId, page, sortBy),
     queryFn: async () => {
-      // GET /api/reviews/:bookId with pagination and sort params
       const { data } = await api.get(
         `/reviews/${bookId}?page=${page}&limit=5&sortBy=${sortBy}`,
       );
-      return data; // { reviews, total, totalPages, currentPage }
+      return data; // Now includes avgRating
     },
-    staleTime: 60 * 1000, // Cache for 1 minute
-    enabled: !!bookId, // Don't fetch if bookId is empty
+    staleTime: 60 * 1000,
+    enabled: !!bookId,
   });
 };
 
-// useCreateReview
-// Mutation to submit a new review
 export const useCreateReview = (bookId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (payload: { rating: number; comment: string }) => {
-      // POST /api/reviews/:bookId
       const { data } = await api.post(`/reviews/${bookId}`, payload);
       return data;
     },
     onSuccess: () => {
-      // Invalidate all review pages for this book so the new review appears
+      // Invalidate all review pages for this book — new review appears in the list
       queryClient.invalidateQueries({ queryKey: reviewKeys.all(bookId) });
+      // Also invalidate the book detail query so book.rating and reviewCount update
+      // Without this the tab label "Reviews (N)" and the hero rating stay stale
+      queryClient.invalidateQueries({ queryKey: bookKeys.detail(bookId) });
     },
   });
 };
 
-// useUpdateReview
-// Mutation to edit an existing review
 export const useUpdateReview = (bookId: string) => {
   const queryClient = useQueryClient();
 
@@ -66,7 +57,6 @@ export const useUpdateReview = (bookId: string) => {
       rating: number;
       comment: string;
     }) => {
-      // PUT /api/reviews/:reviewId
       const { data } = await api.put(`/reviews/${reviewId}`, {
         rating,
         comment,
@@ -74,40 +64,39 @@ export const useUpdateReview = (bookId: string) => {
       return data;
     },
     onSuccess: () => {
+      // Same dual invalidation — rating changed so both caches are stale
       queryClient.invalidateQueries({ queryKey: reviewKeys.all(bookId) });
+      queryClient.invalidateQueries({ queryKey: bookKeys.detail(bookId) });
     },
   });
 };
 
-// useDeleteReview
-// Mutation to delete a review
 export const useDeleteReview = (bookId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (reviewId: string) => {
-      // DELETE /api/reviews/:reviewId
       const { data } = await api.delete(`/reviews/${reviewId}`);
       return data;
     },
     onSuccess: () => {
+      // Deleted review changes the count and average — invalidate both
       queryClient.invalidateQueries({ queryKey: reviewKeys.all(bookId) });
+      queryClient.invalidateQueries({ queryKey: bookKeys.detail(bookId) });
     },
   });
 };
 
-// useMarkHelpful
-// Mutation to toggle a helpful vote on a review
 export const useMarkHelpful = (bookId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (reviewId: string) => {
-      // POST /api/reviews/:reviewId/helpful
       const { data } = await api.post(`/reviews/${reviewId}/helpful`);
-      return data; // { helpfulCount, voted }
+      return data;
     },
     onSuccess: () => {
+      // Helpful votes don't affect rating — no need to invalidate the book query
       queryClient.invalidateQueries({ queryKey: reviewKeys.all(bookId) });
     },
   });

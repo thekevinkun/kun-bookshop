@@ -67,29 +67,52 @@ export const getBookReviews = async (
   try {
     const { bookId } = req.params;
 
-    // Read pagination and sort params from the query string
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    const sortBy = (req.query.sortBy as string) || "createdAt"; // createdAt | helpful
+    const sortBy = (req.query.sortBy as string) || "createdAt";
     const order: Record<string, SortOrder> =
       sortBy === "helpful" ? { helpfulCount: -1 } : { createdAt: -1 };
 
-    // Fetch only active reviews for this book
     const reviews = await Review.find({ bookId, isActive: true })
       .sort(order)
       .skip((page - 1) * limit)
       .limit(limit)
-      // Populate the user's name and avatar so we can show who wrote the review
       .populate("userId", "firstName lastName avatar")
       .lean();
 
     const total = await Review.countDocuments({ bookId, isActive: true });
+
+    // Calculate the live average rating directly from the reviews collection
+    // This is the source of truth — not the denormalized book.rating field
+    // book.rating only updates after recalculateBookRating runs AND the book query refetches
+    // By computing it here we can return it immediately so the UI updates without a page refresh
+    const ratingResult = await Review.aggregate([
+      {
+        $match: {
+          bookId: new (require("mongoose").Types.ObjectId)(bookId), // Match only this book's reviews
+          isActive: true, // Exclude soft-deleted reviews
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          avgRating: { $avg: "$rating" }, // MongoDB averages all rating values for us
+        },
+      },
+    ]);
+
+    // If there are no reviews yet, avgRating should be 0 not null
+    const avgRating =
+      ratingResult[0]?.avgRating != null
+        ? Math.round(ratingResult[0].avgRating * 10) / 10 // Round to 1 decimal e.g. 4.3
+        : 0;
 
     res.json({
       reviews,
       total,
       totalPages: Math.ceil(total / limit),
       currentPage: page,
+      avgRating, // Now included — frontend can use this directly without waiting for book refetch
     });
   } catch (error) {
     logger.error("getBookReviews error", { error });
