@@ -53,20 +53,20 @@ const PasswordField = ({
   register: UseFormRegister<ChangePasswordForm>;
 }) => (
   <div className="flex flex-col gap-1.5">
-    <label className="text-xs font-medium text-[var(--color-text-secondary)]">
+    <label className="text-xs font-medium text-text-muted">
       {label}
     </label>
     <div className="relative">
       <input
         {...register(fieldKey)} // Register with RHF
         type={show ? "text" : "password"} // Toggle between plain text and masked input
-        className="w-full px-3 py-2 pr-10 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-golden-500/50"
+        className="w-full px-3 py-2 pr-10 rounded-lg border border-[#d1d1d1] text-sm text-text-light focus:outline-none focus:ring-2 focus:ring-golden-500/50"
       />
       {/* Show/hide toggle button */}
       <button
         type="button" // Prevent form submission on click
         onClick={onToggle} // Toggle the visibility state
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-[var(--color-text-secondary)] transition-colors"
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-light transition-colors"
         aria-label={show ? "Hide password" : "Show password"} // Accessibility
       >
         {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

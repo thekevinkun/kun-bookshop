@@ -10,7 +10,8 @@ interface RecommendedCarouselProps {
 }
 
 const carouselItemClassName =
-  "shrink-0 snap-start basis-[calc(39.999%-0.667rem)] min-[30rem]:basis-[calc(35%-0.667rem)] sm:basis-[calc(27.666%-0.5rem)] md:basis-[calc(22.333%-0.667rem)] lg:basis-[calc(20%-1rem)]";
+  `shrink-0 snap-start basis-[calc(39.999%-0.667rem)] min-[30rem]:basis-[calc(35%-0.667rem)] 
+    sm:basis-[calc(27.666%-0.5rem)] md:basis-[calc(22.333%-0.667rem)] lg:basis-[calc(20%-1rem)]`;
 
 const RecommendedCardSkeleton = () => (
   <div className={carouselItemClassName}>
@@ -67,7 +68,8 @@ const RecommendedCarousel = ({
 
       <div
         ref={trackRef}
-        className="flex gap-4 sm:gap-5 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-4 sm:gap-5 overflow-x-auto pb-2 snap-x snap-mandatory 
+        scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {isLoading
           ? Array.from({ length: skeletonCount }).map((_, index) => (

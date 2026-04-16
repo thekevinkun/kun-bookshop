@@ -116,7 +116,7 @@ export default function OrdersPage() {
             {orders.map((order: IOrder) => (
               <div
                 key={order._id} // React needs a unique key for each list item
-                className="rounded-xl border border-text-light bg-navy overflow-hidden"
+                className="rounded-xl border border-[#d1d1d1] bg-navy overflow-hidden"
               >
                 {/* Order header row — number, date, status, total */}
                 <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b">

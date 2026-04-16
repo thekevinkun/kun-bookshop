@@ -40,7 +40,7 @@ const BookCardCompact = ({ book, hideNew }: BookCardCompactProps) => (
     {!hideNew && (
       <div className="absolute top-2 left-2">
         <span
-          className="bg-burgundy text-text-light text-[10px] font-bold px-2 py-0.5
+          className="bg-emerald-500 text-text-light text-[10px] font-bold px-2 py-0.5
               rounded-full uppercase tracking-wide"
         >
           New

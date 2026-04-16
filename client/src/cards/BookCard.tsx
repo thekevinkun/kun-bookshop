@@ -4,10 +4,9 @@ import type { IBook } from "../types/book";
 
 interface BookCardProps {
   book: IBook;
-  compactInfo?: boolean;
 }
 
-const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
+const BookCard = ({ book }: BookCardProps) => {
   const displayPrice = book.discountPrice ?? book.price;
   const categories = Array.isArray(book.category) ? book.category : [];
 
@@ -18,7 +17,7 @@ const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
 
   return (
     <Link
-      className="group cursor-pointer flex flex-col"
+      className="h-full group cursor-pointer flex flex-col"
       to={`/books/${book._id}`}
     >
       {/* COVER */}
@@ -64,12 +63,9 @@ const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
           {book.title}
         </h3>
 
-        {/* This hides extra text when we want a smaller info block. */}
-        {!compactInfo && categories.length > 0 && (
-          <p className="text-text-muted text-xs italic line-clamp-2">
-            {categories.join(", ")}
-          </p>
-        )}
+        <p className="text-text-muted text-xs italic line-clamp-2">
+          {categories.join(", ")}
+        </p>
 
         {/* Rating — compact, only shows stars + number */}
         <div className="flex items-center gap-1 mt-0.5">
@@ -90,18 +86,17 @@ const BookCard = ({ book, compactInfo = false }: BookCardProps) => {
         </div>
 
         {/* This keeps the price hidden in the compact sidebar version. */}
-        {!compactInfo && (
-          <div className="flex items-baseline gap-2 mt-auto pt-2">
-            <span className="text-golden text-sm font-bold">
-              ${displayPrice.toFixed(2)}
+        <div className="flex items-baseline gap-2 mt-auto pt-2">
+          <span className="text-golden text-sm font-bold">
+            ${displayPrice.toFixed(2)}
+          </span>
+
+          {book.discountPrice && (
+            <span className="text-burgundy text-xs line-through">
+              ${book.price.toFixed(2)}
             </span>
-            {book.discountPrice && (
-              <span className="text-text-muted text-xs line-through">
-                ${book.price.toFixed(2)}
-              </span>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </Link>
   );

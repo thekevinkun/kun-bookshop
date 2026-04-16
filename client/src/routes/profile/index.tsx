@@ -252,7 +252,7 @@ export default function ProfilePage() {
                   <div className="flex flex-col gap-2 w-full mt-2">
                     <Link
                       to="/profile/edit"
-                      className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-text-light text-sm text-text-muted hover:bg-navy transition-colors"
+                      className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-[#d1d1d1] text-sm text-text-muted hover:bg-navy transition-colors"
                     >
                       <Pencil className="w-4 h-4" />{" "}
                       {/* Import Pencil from lucide-react */}
@@ -261,7 +261,7 @@ export default function ProfilePage() {
                     <Link
                       to="/profile/orders"
                       className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg 
-                      border border-text-light text-sm text-text-muted 
+                      border border-[#d1d1d1] text-sm text-text-muted 
                       hover:bg-navy transition-colors"
                     >
                       <ShoppingBag className="w-4 h-4" />{" "}
@@ -270,7 +270,7 @@ export default function ProfilePage() {
                     </Link>
                     <Link
                       to="/profile/password"
-                      className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-text-light text-sm text-text-muted hover:bg-navy transition-colors"
+                      className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-[#d1d1d1] text-sm text-text-muted hover:bg-navy transition-colors"
                     >
                       <KeyRound className="w-4 h-4" />{" "}
                       {/* Import KeyRound from lucide-react */}
@@ -552,7 +552,7 @@ export default function ProfilePage() {
                               >
                                 <Download
                                   size={15}
-                                  className="text-golden/80"
+                                  className="text-black"
                                 />
                               </div>
 

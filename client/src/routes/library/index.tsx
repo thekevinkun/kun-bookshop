@@ -206,7 +206,7 @@ export default function LibraryPage() {
                     </p>
 
                     {/* File type badge — shows PDF or EPUB */}
-                    <span className="text-xs text-golden/75 uppercase font-medium tracking-wide mb-4">
+                    <span className="text-xs text-burgundy uppercase font-medium tracking-wide mb-4">
                       {book.fileType}
                     </span>
 

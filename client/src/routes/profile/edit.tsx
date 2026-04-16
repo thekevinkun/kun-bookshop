@@ -27,6 +27,29 @@ const editProfileSchema = z.object({
 
 type EditProfileForm = z.infer<typeof editProfileSchema>; // Derive TypeScript type from schema
 
+const EMAIL_PREFERENCES = [
+  {
+    key: "marketing",
+    label: "Marketing & promotions",
+    desc: "Sales, deals, and featured picks",
+  },
+  {
+    key: "orderUpdates",
+    label: "Order updates",
+    desc: "Confirmations and receipts",
+  },
+  {
+    key: "newReleases",
+    label: "New releases",
+    desc: "When new books are added",
+  },
+  {
+    key: "priceDrops",
+    label: "Price drops",
+    desc: "When a wishlisted book goes on sale",
+  },
+] as const;
+
 export default function EditProfilePage() {
   const { user } = useAuthStore(); // Current user from Zustand — pre-fills the form
   const navigate = useNavigate(); // Redirect to profile after saving
@@ -114,7 +137,7 @@ export default function EditProfilePage() {
                   </label>
                   <input
                     {...register("firstName")} // Register with RHF — handles value + onChange
-                    className="w-full px-3 py-2 rounded-lg border border-text-light bg-navy text-sm text-text-light 
+                    className="w-full px-3 py-2 rounded-lg border border-[#d1d1d1] bg-navy text-sm text-text-light 
                       focus:outline-none focus:ring-2 focus:ring-golden/80"
                   />
                   {errors.firstName && (
@@ -129,7 +152,7 @@ export default function EditProfilePage() {
                   </label>
                   <input
                     {...register("lastName")}
-                    className="w-full px-3 py-2 rounded-lg border border-text-light bg-navy text-sm 
+                    className="w-full px-3 py-2 rounded-lg border border-[#d1d1d1] bg-navy text-sm 
                       text-text-light focus:outline-none focus:ring-2 focus:ring-golden/80"
                   />
                   {errors.lastName && (
@@ -145,32 +168,9 @@ export default function EditProfilePage() {
                 <p className="text-xs font-medium text-text-muted">
                   Email Preferences
                 </p>
-                <div className="rounded-xl border border-text-light divide-y divide-text-light">
+                <div className="rounded-xl border border-[#d1d1d1] divide-y divide-text-light">
                   {/* Each preference is a labelled checkbox row */}
-                  {(
-                    [
-                      {
-                        key: "marketing",
-                        label: "Marketing & promotions",
-                        desc: "Sales, deals, and featured picks",
-                      },
-                      {
-                        key: "orderUpdates",
-                        label: "Order updates",
-                        desc: "Confirmations and receipts",
-                      },
-                      {
-                        key: "newReleases",
-                        label: "New releases",
-                        desc: "When new books are added",
-                      },
-                      {
-                        key: "priceDrops",
-                        label: "Price drops",
-                        desc: "When a wishlisted book goes on sale",
-                      },
-                    ] as const
-                  ).map(({ key, label, desc }) => (
+                  {EMAIL_PREFERENCES.map(({ key, label, desc }) => (
                     <label
                       key={key}
                       className="flex items-center justify-between px-4 py-3 cursor-pointer transition-colors"

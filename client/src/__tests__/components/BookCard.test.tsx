@@ -110,8 +110,7 @@ describe("BookCard", () => {
   it("does NOT render category names when compactInfo is true", () => {
     render(
       <MemoryRouter>
-        {/* compactInfo=true hides categories and price — sidebar mode */}
-        <BookCard book={mockBook} compactInfo />
+        <BookCard book={mockBook} />
       </MemoryRouter>,
     );
     expect(
