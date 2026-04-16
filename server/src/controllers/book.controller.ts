@@ -452,8 +452,8 @@ export const getSimilarBooks = async (req: Request, res: Response) => {
       .filter(({ score }) => score > 0)
       // Best matches first
       .sort((a, b) => b.score - a.score)
-      // Sidebar stays focused — cap at 6
-      .slice(0, 6)
+      // Cap at 10
+      .slice(0, 10)
       .map(({ book }) => book);
 
     res.json({ books: rankedBooks });
