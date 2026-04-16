@@ -56,6 +56,8 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
   const [reviewPage, setReviewPage] = useState(1);
   const [reviewSortBy, setReviewSortBy] = useState("createdAt");
 
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
   // Fetch real reviews from the backend
   const { data: reviewsData, isLoading: reviewsLoading } = useBookReviews(
     book._id,
@@ -155,9 +157,28 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
       {/* SUMMARY TAB */}
       <RadixTabs.Content value="summary" className="focus:outline-none">
         <div className="flex flex-col gap-4">
-          <p className="text-slate-400 leading-relaxed text-sm">
+          <p className="hidden sm:block text-slate-400 leading-relaxed text-sm">
             {book.description}
           </p>
+
+          <div className="sm:hidden space-y-2">
+            <p 
+              className={`text-slate-400 leading-relaxed text-sm transition-all duration-200 ${
+                showFullDescription ? 'max-h-none' : 'line-clamp-3 max-h-[4.5rem]'
+              }`}
+            >
+              {book.description}
+            </p>
+            
+            {/* Show toggle button ONLY on mobile <640px */}
+            <button
+              onClick={() => setShowFullDescription(!showFullDescription)}
+              className="text-golden/80 hover:text-golden text-xs font-medium underline 
+                block sm:hidden transition-colors"
+            >
+              {showFullDescription ? 'Read Less' : 'Read More'}
+            </button>
+          </div>
 
           <div className="grid grid-cols-2 gap-3 mt-2">
             {bookMoreDetails.map((item) => (
