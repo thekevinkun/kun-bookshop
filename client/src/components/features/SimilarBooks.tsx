@@ -8,7 +8,7 @@ interface SimilarBooksProps {
 }
 
 const carouselItemClassName =
-  "shrink-0 snap-start basis-[calc(41.222%-0.275rem)] min-[30rem]:basis-[calc(30%-0.65rem)] md:basis-[calc(25%-0.625rem)]";
+  "shrink-0 snap-start basis-[calc(36.555%-0.35rem)] min-[30rem]:basis-[calc(30%-0.65rem)] sm:basis-[calc(23.333%-0.75rem)]";
 
 const SimilarBooks = ({ books }: SimilarBooksProps) => {
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -87,34 +87,36 @@ const SimilarBooks = ({ books }: SimilarBooksProps) => {
 
       {books.length > 0 ? (
         <>
-          <div className="flex items-center justify-end gap-2 lg:hidden">
-            <button
-              type="button"
-              className={`w-10 h-10 rounded-full border border-golden/60 bg-card/40 text-text-muted
-                flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-300 ${
+          {books.length > 2 && (
+            <div className="flex items-center justify-end gap-2 lg:hidden">
+              <button
+                type="button"
+                className={`w-10 h-10 rounded-full border border-golden/80 bg-card/40 text-text-muted
+                flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-200 ${
                   showLeftArrow
                     ? "opacity-100 shadow-md hover:shadow-golden/50"
                     : "!border-bg-hover opacity-30 pointer-events-none cursor-not-allowed"
                 }`}
-              onClick={() => scrollByPage("prev")}
-              aria-label="Scroll similar books left"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              type="button"
-              className={`w-10 h-10 rounded-full border border-golden/60 bg-card/40 text-text-muted
-                flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-300 ${
+                onClick={() => scrollByPage("prev")}
+                aria-label="Scroll similar books left"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                type="button"
+                className={`w-10 h-10 rounded-full border border-golden/80 bg-card/40 text-text-muted
+                flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-200 ${
                   showRightArrow
                     ? "opacity-100 shadow-md hover:shadow-golden/50"
                     : "!border-bg-hover opacity-30 pointer-events-none cursor-not-allowed"
                 }`}
-              onClick={() => scrollByPage("next")}
-              aria-label="Scroll similar books right"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
+                onClick={() => scrollByPage("next")}
+                aria-label="Scroll similar books right"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          )}
 
           <div
             ref={trackRef}
