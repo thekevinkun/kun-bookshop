@@ -31,7 +31,7 @@ const NewArrivalsSection = () => {
     // grid-rows-2 — splits that height into exactly 2 equal rows
     // No aspect ratio — height is dictated by the parent, not the image
     <div
-      className="lg:h-[460px] grid grid-cols-2 min-[30rem]:grid-cols-4 
+      className="h-[460px] min-[30rem]:h-auto lg:h-[460px] grid grid-cols-2 min-[30rem]:grid-cols-4 
         lg:grid-cols-2 lg:grid-rows-2 gap-3 order-1 lg:order-2"
     >
       {books.slice(0, 4).map((book) => (

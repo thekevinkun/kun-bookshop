@@ -13,7 +13,7 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
   return (
     <Link
       to={`/authors/${author._id}`}
-      className="group card-base flex flex-col items-center text-center
+      className="group card-base flex flex-col items-center text-center select-none
         h-full cursor-pointer hover:-translate-y-1 transition-all duration-300"
       // Navigate to the author's dedicated profile page — not a search URL
     >

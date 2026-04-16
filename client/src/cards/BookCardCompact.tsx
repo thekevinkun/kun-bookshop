@@ -15,7 +15,7 @@ const BookCardCompact = ({ book, hideNew }: BookCardCompactProps) => (
     <img
       src={book.coverImage}
       alt={book.title}
-      className="w-full h-full object-cover object-center
+      className="w-full h-full object-cover object-center select-none
         transition-transform duration-300 group-hover:scale-105"
       onError={(e) => {
         (e.target as HTMLImageElement).src = "/images/placeholder-cover.webp";

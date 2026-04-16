@@ -177,7 +177,7 @@ export default function LibraryPage() {
                       src={book.coverImage}
                       alt={`Cover of ${book.title}`}
                       // Cover fills the container, cropped to fit — same pattern as BookCard
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover select-none"
                       // Fallback if the image fails to load
                       onError={(e) => {
                         (e.target as HTMLImageElement).src =

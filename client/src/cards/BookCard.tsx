@@ -26,7 +26,7 @@ const BookCard = ({ book }: BookCardProps) => {
         <img
           src={book.coverImage}
           alt={`Cover of ${book.title}`}
-          className="w-full h-full object-cover transition-transform duration-500 not-first:group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 not-first:group-hover:scale-105 select-none"
           onError={(e) => {
             (e.target as HTMLImageElement).src =
               "/images/placeholder-cover.webp";
