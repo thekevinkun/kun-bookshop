@@ -22,7 +22,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
     setActiveIndex((prev) => (prev - 1 + books.length) % books.length);
   }, [books.length]);
 
-  // Auto-advance every 5 seconds unless hovered
+  // Auto-advance every 10 seconds unless hovered
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(next, 10000);
@@ -36,7 +36,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
   if (!isLoading && !activeBook) {
     // Show an empty state if there are no featured books
     return (
-      <section className="relative min-h-screen flex flex-col items-center justify-center bg-navy">
+      <section className="relative min-h-[92vh] flex flex-col items-center justify-center bg-navy">
         <div className="flex flex-col items-center justify-center text-center">
           <p className="text-5xl mb-4">📚</p>
           <h3 className="text-text-light mb-2">No featured yet</h3>
@@ -63,7 +63,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* LEFT: Book info */}
           {isLoading ? (
-            <div className="animate-pulse w-full">
+            <div className="hidden md:block animate-pulse w-full">
               <div className="w-32 h-4 bg-bg-hover rounded mb-4" />
               <div className="w-48 h-6 bg-bg-hover rounded mb-2" />
               <div className="w-24 h-3 bg-bg-hover rounded mb-6" />
@@ -77,7 +77,8 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
               </span>
 
               {/* Book title — large and bold */}
-              <h1 className="text-text-light leading-tight">
+              <h1 className="text-text-light leading-tight line-clamp-1 md:line-clamp-none"
+              >
                 {activeBook.title}
               </h1>
 
@@ -140,14 +141,26 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
               {/* Price + CTA */}
               <div className="flex items-center gap-6 mt-2">
                 <div className="flex flex-col">
-                  <span className="text-golden text-3xl font-bold">
+                  <span className="hidden md:inline text-golden text-3xl font-bold">
                     ${displayPrice.toFixed(2)}
                   </span>
+                  
                   {activeBook.discountPrice && (
-                    <span className="text-text-muted text-sm line-through">
+                    <span className="hidden md:inline text-text-muted text-sm line-through">
                       ${activeBook.price.toFixed(2)}
                     </span>
                   )}
+
+                  <span className={`md:hidden text-golden text-3xl font-bold
+                    ${!activeBook.discountPrice && "relative top-2.5"}`}>
+                    ${displayPrice.toFixed(2)}
+                  </span>
+
+                  <span className={`md:hidden text-text-muted text-sm line-through
+                    ${!activeBook.discountPrice && "invisible"}`}
+                  >
+                    {activeBook.discountPrice ? activeBook.price.toFixed(2) : "NaN"}             
+                  </span>
                 </div>
                 <Link
                   to={`/books/${activeBook._id}`}
@@ -178,7 +191,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                 <div className="flex gap-2 ml-4">
                   <button
                     onClick={prev}
-                    className="w-8 h-8 rounded-full border border-bg-hover flex items-center justify-center 
+                    className="w-8 h-8 rounded-full border border-golden/80 flex items-center justify-center 
                     text-text-muted hover:border-golden hover:text-golden transition-all duration-200"
                     aria-label="Previous book"
                   >
@@ -186,7 +199,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                   </button>
                   <button
                     onClick={next}
-                    className="w-8 h-8 rounded-full border border-bg-hover flex items-center justify-center 
+                    className="w-8 h-8 rounded-full border border-golden/80 flex items-center justify-center 
                     text-text-muted hover:border-golden hover:text-golden transition-all duration-200"
                     aria-label="Next book"
                   >
@@ -198,7 +211,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
           )}
 
           {/* RIGHT: Book cover with stacked shadow effect */}
-          <div className="flex justify-center items-center order-1 md:order-2">
+          <div className="select-none flex justify-center items-center order-1 md:order-2">
             <div className="relative w-64 sm:w-72">
               {isLoading ? (
                 <div className="aspect-[2/3] bg-bg-hover rounded-xl shadow-[0_24px_60px_rgba(0,0,0,0.5)]" />
