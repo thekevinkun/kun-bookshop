@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 // Import React Hook Form for form state management and validation
 import { useForm } from "react-hook-form";
 
@@ -7,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useCartStore } from "../../store/cart";
 
 // Import lucide icons for the email and password fields
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
 
 // Import zodResolver — bridges React Hook Form and Zod so they work together
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +30,9 @@ const LoginForm = () => {
 
   // useNavigate lets us redirect programmatically after login
   const navigate = useNavigate();
+
+  const [showEye, setShowEye] = useState(false);
+  const [showCurrent, setShowCurrent] = useState(false);
 
   // Set up React Hook Form with Zod validation
   // register: connects inputs to the form, handleSubmit: wraps our submit handler,
@@ -110,11 +115,30 @@ const LoginForm = () => {
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
           <input
             id="password"
-            type="password"
+            type={showCurrent ? "text" : "password"}
             placeholder="••••••••"
             {...register("password")}
+            onChange={(e) => {
+              if (e.target.value === "") setShowEye(false);
+              else setShowEye(true);
+            }}
             className="input-field pl-10"
           />
+          {showEye && (
+            <button
+              type="button" // Prevent form submission on click
+              onClick={() => setShowCurrent((v) => !v)} // Toggle the visibility state
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted 
+                hover:text-text-light transition-colors"
+              aria-label={showCurrent ? "Hide password" : "Show password"} // Accessibility
+            >
+              {showCurrent ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </button>
+          )}
         </div>
         {/* Shows either a Zod error OR a server error (like 'Invalid credentials') */}
         {errors.password && (
