@@ -1,17 +1,37 @@
-// Import Link and useNavigate for navigation
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
-// Import icons
-import { XCircle, ShoppingCart, ArrowLeft } from "lucide-react";
+// Import Link for navigation between pages
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 
-// Import cart store so we can reopen the cart drawer
+// Import icons — ArrowLeft for back to browsing, Home for homepage
+import { XCircle, ArrowLeft, Home } from "lucide-react";
+
+// Import cart store so we can tell the user their cart is still waiting
 import { useCartStore } from "../../store/cart";
 
 import SEO from "../../components/common/SEO";
 
 export default function CheckoutCancelPage() {
-  // Read itemCount to tell the user their cart is still intact
+  const [searchParams] = useSearchParams(); // Read URL query params
+  const sessionId = searchParams.get("session_id"); // Stripe appends this to the cancel URL
+  const navigate = useNavigate();
+
+  // Read itemCount to reassure the user their cart is still intact
   const { itemCount } = useCartStore();
+
+  // Count how many items are sitting in the cart right now
+  const count = itemCount();
+
+  useEffect(() => {
+    // If there's no session_id, this page was visited directly — kick them out
+    // Legitimate cancels always come from Stripe which always includes session_id
+    if (!sessionId) {
+      navigate("/");
+    }
+  }, [sessionId, navigate]);
+
+  // Don't render anything while the redirect is in progress
+  if (!sessionId) return null;
 
   return (
     <>
@@ -22,12 +42,14 @@ export default function CheckoutCancelPage() {
         noIndex={true}
       />
 
+      {/* Full-height centered layout — mirrors the success page structure */}
       <div className="container-page flex flex-col items-center justify-center min-h-[90vh] gap-6 text-center">
-        {/* Red X icon */}
+        {/* Red X icon — same size/shape as the success page's green circle */}
         <div className="w-20 h-20 rounded-full bg-error/20 flex items-center justify-center">
           <XCircle size={48} className="text-error" />
         </div>
 
+        {/* Heading + subtext block */}
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold text-text-light">
             Payment Cancelled
@@ -35,25 +57,33 @@ export default function CheckoutCancelPage() {
           <p className="text-text-muted text-lg">
             No worries — you haven't been charged.
           </p>
-          {/* Reassure them their cart is still there */}
-          {itemCount() > 0 && (
+
+          {/* Only show if they still have items in cart — reassures them nothing was lost */}
+          {count > 0 && (
             <p className="text-sm text-golden mt-1">
-              Your {itemCount()} {itemCount() === 1 ? "book" : "books"} are
-              still in your cart whenever you're ready.
+              Your {count} {count === 1 ? "book" : "books"} are still in your
+              cart whenever you're ready.
             </p>
           )}
         </div>
 
-        {/* Actions */}
+        {/* Small hint about what they can do next */}
+        <p className="text-sm text-text-muted max-w-sm">
+          You can go back and try again, or continue browsing. Your cart will be
+          waiting.
+        </p>
+
+        {/* Action buttons — primary is the most useful next action (back to books) */}
         <div className="flex gap-4 mt-2">
-          {/* Go back to browsing */}
+          {/* Primary — send them back to where they came from */}
           <Link to="/books" className="btn-primary flex items-center gap-2">
             <ArrowLeft size={18} />
             Back to Books
           </Link>
-          {/* Go back to home */}
+
+          {/* Secondary — homepage if they want a fresh start */}
           <Link to="/" className="btn-ghost flex items-center gap-2">
-            <ShoppingCart size={18} />
+            <Home size={18} />
             Back to Home
           </Link>
         </div>

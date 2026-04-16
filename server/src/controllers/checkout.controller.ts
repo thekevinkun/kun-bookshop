@@ -257,7 +257,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       success_url: `${process.env.CLIENT_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
 
       // Where Stripe redirects if the user cancels
-      cancel_url: `${process.env.CLIENT_URL}/checkout/cancel`,
+      cancel_url: `${process.env.CLIENT_URL}/checkout/cancel?session_id={CHECKOUT_SESSION_ID}`,
 
       // Pre-fill the user's email in Stripe's checkout form
       customer_email: req.user!.email,
