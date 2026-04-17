@@ -80,34 +80,36 @@ const AuthorsCarousel = ({ authors }: AuthorsCarouselProps) => {
 
   return (
     <div className="lg:hidden">
-      <div className="flex items-center justify-end gap-2 mb-5">
-        <button
-          type="button"
-          className={`w-10 h-10 rounded-full border border-golden/60 bg-card/40 text-text-muted
-                flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-300 ${
-                  showLeftArrow
-                    ? "opacity-100 shadow-md hover:shadow-golden/50"
-                    : "!border-bg-hover opacity-30 pointer-events-none cursor-not-allowed"
-                }`}
-          onClick={() => scrollByPage("prev")}
-          aria-label="Scroll similar books left"
-        >
-          <ChevronLeft size={18} />
-        </button>
-        <button
-          type="button"
-          className={`w-10 h-10 rounded-full border border-golden/60 bg-card/40 text-text-muted
-                flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-300 ${
-                  showRightArrow
-                    ? "opacity-100 shadow-md hover:shadow-golden/50"
-                    : "!border-bg-hover opacity-30 pointer-events-none cursor-not-allowed"
-                }`}
-          onClick={() => scrollByPage("next")}
-          aria-label="Scroll similar books right"
-        >
-          <ChevronRight size={18} />
-        </button>
-      </div>
+      {(showLeftArrow || showRightArrow) && (
+        <div className="flex items-center justify-end gap-2 mb-5">
+          <button
+            type="button"
+            className={`w-10 h-10 rounded-full border border-golden/60 bg-card/40 text-text-muted
+                  flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-300 ${
+                    showLeftArrow
+                      ? "opacity-100 shadow-md hover:shadow-golden/50"
+                      : "!border-bg-hover opacity-30 pointer-events-none cursor-not-allowed"
+                  }`}
+            onClick={() => scrollByPage("prev")}
+            aria-label="Scroll similar books left"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            type="button"
+            className={`w-10 h-10 rounded-full border border-golden/60 bg-card/40 text-text-muted
+                  flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-300 ${
+                    showRightArrow
+                      ? "opacity-100 shadow-md hover:shadow-golden/50"
+                      : "!border-bg-hover opacity-30 pointer-events-none cursor-not-allowed"
+                  }`}
+            onClick={() => scrollByPage("next")}
+            aria-label="Scroll similar books right"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      )}
 
       <div
         ref={trackRef}

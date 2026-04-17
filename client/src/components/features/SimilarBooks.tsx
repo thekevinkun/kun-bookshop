@@ -87,7 +87,7 @@ const SimilarBooks = ({ books }: SimilarBooksProps) => {
 
       {books.length > 0 ? (
         <>
-          {books.length > 2 && (
+          {(showLeftArrow || showRightArrow) && (
             <div className="flex items-center justify-end gap-2 lg:hidden">
               <button
                 type="button"
