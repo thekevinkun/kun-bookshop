@@ -13,6 +13,8 @@ import { logger } from "../utils/logger";
 // Import the audit logger so we can record sensitive admin actions
 import { logAuditEvent } from "../services/audit.service";
 
+import type { IUser } from "../types/auth";
+
 // 1. getStats — GET /api/admin/stats
 // Returns the four headline numbers shown on the dashboard,
 // plus a list of the 5 most recent orders.
@@ -196,7 +198,7 @@ export const deleteUser = async (
       resourceType: "User",
       resourceId: req.params.id as string,
       metadata: {
-        before: { email: (user as any).email, role: (user as any).role },
+        before: { email: (user as IUser).email, role: (user as IUser).role },
       },
       ipAddress: req.ip,
     });

@@ -1,13 +1,10 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 
 // Import the component AND the AppliedCoupon type so our mock data matches exactly
-import {
-  CouponInput,
-  type AppliedCoupon,
-} from "../../components/features/CouponInput";
+import { CouponInput } from "../../components/features";
+import type { IAppliedCoupon } from "../../types/order";
 
 // CouponInput calls useValidateCoupon internally — mock the whole hook module
 // so no real HTTP requests are made and we control isPending / mutate
@@ -23,18 +20,20 @@ vi.mock("@/hooks/useCoupons", () => ({
 import { useValidateCoupon } from "../../hooks/useCoupons";
 
 // A fully-shaped AppliedCoupon that matches the exported interface exactly
-const mockAppliedCoupon: AppliedCoupon = {
+const mockAppliedCoupon: IAppliedCoupon = {
   code: "SAVE20",
   discountAmount: 10.0, // how much is saved
   finalTotal: 40.0, // cart total after discount
+  discountType: "percentage",
+  discountValue: 20,
 };
 
 // Helper — builds props with sensible defaults so each test only overrides what it needs
 const renderCouponInput = (
   props: Partial<{
     cartTotal: number;
-    appliedCoupon: AppliedCoupon | null;
-    onApply: (coupon: AppliedCoupon) => void;
+    appliedCoupon: IAppliedCoupon | null;
+    onApply: (coupon: IAppliedCoupon) => void;
     onRemove: () => void;
   }> = {},
 ) =>
