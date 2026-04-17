@@ -20,6 +20,7 @@
   --color-burgundy: #c73a52; /* secondary accent — buttons, links, highlights */
   --color-dark: #0f172a; /* near-black — used for overlays */
   --color-card: #1e293b; /* card surface background */
+  --color-reader: #121212;
 
   /* Text Colors */
   --color-text-light: #f8fafc; /* primary text on dark backgrounds */
