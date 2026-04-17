@@ -3,7 +3,6 @@ import BookFiltersComponent from "./BookFilters";
 import BookDetailHero from "./BookDetailHero";
 import BookDetailVideo from "./BookDetailVideo";
 import BookDetailTabs from "./BookDetailTabs";
-import BookPreview from "./BookPreview";
 import SimilarBooks from "./SimilarBooks";
 import RecommendedCarousel from "./RecommendedCarousel";
 import AuthorsCarousel from "./AuthorsCarousel";
@@ -17,7 +16,6 @@ export {
   BookDetailHero,
   BookDetailVideo,
   BookDetailTabs,
-  BookPreview,
   SimilarBooks,
   RecommendedCarousel,
   AuthorsCarousel,

@@ -1,138 +1,175 @@
+import { lazy, Suspense } from "react"; // lazy loads a component only when it's needed
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import {
-  LoginPage,
-  RegisterPage,
-  ForgotPasswordPage,
-  ResetPasswordPage,
-  VerifyEmailPage,
-} from "./routes/auth";
+// A simple full-screen spinner shown while a lazy chunk is loading
+// Keeps the app feeling smooth instead of showing a blank screen
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-navy">
+    <div className="w-8 h-8 border-2 border-golden border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
-import HomePage from "./routes/index";
-import BooksPage from "./routes/books/index";
-import BookDetailPage from "./routes/books/[id]";
-import AuthorProfilePage from "./routes/authors/[id]";
+// AUTH ROUTES — only loaded when user visits /login, /register, etc.
+const LoginPage = lazy(() =>
+  import("./routes/auth").then((m) => ({ default: m.LoginPage })),
+);
+const RegisterPage = lazy(() =>
+  import("./routes/auth").then((m) => ({ default: m.RegisterPage })),
+);
+const ForgotPasswordPage = lazy(() =>
+  import("./routes/auth").then((m) => ({ default: m.ForgotPasswordPage })),
+);
+const ResetPasswordPage = lazy(() =>
+  import("./routes/auth").then((m) => ({ default: m.ResetPasswordPage })),
+);
+const VerifyEmailPage = lazy(() =>
+  import("./routes/auth").then((m) => ({ default: m.VerifyEmailPage })),
+);
 
-import { CheckoutSuccessPage, CheckoutCancelPage } from "./routes/checkout";
+// MAIN ROUTES — each splits into its own chunk
+const HomePage = lazy(() => import("./routes/index"));
+const BooksPage = lazy(() => import("./routes/books/index"));
+const BookDetailPage = lazy(() => import("./routes/books/[id]"));
+const AuthorProfilePage = lazy(() => import("./routes/authors/[id]"));
 
-import LibraryPage from "./routes/library/index";
+const CheckoutSuccessPage = lazy(() =>
+  import("./routes/checkout").then((m) => ({ default: m.CheckoutSuccessPage })),
+);
+const CheckoutCancelPage = lazy(() =>
+  import("./routes/checkout").then((m) => ({ default: m.CheckoutCancelPage })),
+);
 
-import ProfilePage from "./routes/profile/index";
-import OrdersPage from "./routes/profile/orders";
-import EditProfilePage from "./routes/profile/edit";
-import ChangePasswordPage from "./routes/profile/password";
+const LibraryPage = lazy(() => import("./routes/library/index"));
+const ProfilePage = lazy(() => import("./routes/profile/index"));
+const OrdersPage = lazy(() => import("./routes/profile/orders"));
+const EditProfilePage = lazy(() => import("./routes/profile/edit"));
+const ChangePasswordPage = lazy(() => import("./routes/profile/password"));
 
-import {
-  AdminLayout,
-  AdminDashboard,
-  AdminBooks,
-  AdminUsers,
-  AdminOrders,
-  AdminAuthors,
-  AdminReviews,
-  AdminCoupons,
-} from "./routes/admin";
+// ADMIN ROUTES — heaviest chunk, only admins ever load this
+const AdminDashboard = lazy(() =>
+  import("./routes/admin").then((m) => ({ default: m.AdminDashboard })),
+);
+const AdminBooks = lazy(() =>
+  import("./routes/admin").then((m) => ({ default: m.AdminBooks })),
+);
+const AdminUsers = lazy(() =>
+  import("./routes/admin").then((m) => ({ default: m.AdminUsers })),
+);
+const AdminOrders = lazy(() =>
+  import("./routes/admin").then((m) => ({ default: m.AdminOrders })),
+);
+const AdminAuthors = lazy(() =>
+  import("./routes/admin").then((m) => ({ default: m.AdminAuthors })),
+);
+const AdminReviews = lazy(() =>
+  import("./routes/admin").then((m) => ({ default: m.AdminReviews })),
+);
+const AdminCoupons = lazy(() =>
+  import("./routes/admin").then((m) => ({ default: m.AdminCoupons })),
+);
 
-import GraphQLDemoPage from "./routes/graphql-demo/index";
+const GraphQLDemoPage = lazy(() => import("./routes/graphql-demo/index"));
 
+// LAYOUTS — these stay eagerly loaded because every page needs them immediately
 import { MainLayout, AuthLayout } from "./components/layout";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
-
 import { ScrollToTop } from "./components/ui";
+
+// Imports only the layout shell, nothing else
+import AdminLayout from "./routes/admin/layout";
 
 const App = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Routes>
-        {/* AUTH ROUTES (NO NAVBAR / FOOTER) */}
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
-          <Route
-            path="/reset-password/:token"
-            element={<ResetPasswordPage />}
-          />
-        </Route>
+      {/* Suspense catches any lazy component that's still loading and shows PageLoader */}
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* AUTH ROUTES */}
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
+            <Route
+              path="/reset-password/:token"
+              element={<ResetPasswordPage />}
+            />
+          </Route>
 
-        {/* MAIN APP ROUTES (WITH NAVBAR + FOOTER) */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/books" element={<BooksPage />} />
-          <Route path="/books/:id" element={<BookDetailPage />} />
-          <Route path="/authors/:id" element={<AuthorProfilePage />} />
+          {/* MAIN APP ROUTES */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/books" element={<BooksPage />} />
+            <Route path="/books/:id" element={<BookDetailPage />} />
+            <Route path="/authors/:id" element={<AuthorProfilePage />} />
+            <Route
+              path="/library"
+              element={
+                <ProtectedRoute>
+                  <LibraryPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile/orders"
+              element={
+                <ProtectedRoute>
+                  <OrdersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile/edit"
+              element={
+                <ProtectedRoute>
+                  <EditProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile/password"
+              element={
+                <ProtectedRoute>
+                  <ChangePasswordPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+            <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
+          </Route>
+
+          {/* ADMIN ROUTES */}
           <Route
-            path="/library"
+            path="/admin"
             element={
-              <ProtectedRoute>
-                <LibraryPage />
+              <ProtectedRoute requireAdmin>
+                <AdminLayout />
               </ProtectedRoute>
             }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile/orders"
-            element={
-              <ProtectedRoute>
-                <OrdersPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile/edit"
-            element={
-              <ProtectedRoute>
-                <EditProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile/password"
-            element={
-              <ProtectedRoute>
-                <ChangePasswordPage />
-              </ProtectedRoute>
-            }
-          />
+          >
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="books" element={<AdminBooks />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="coupons" element={<AdminCoupons />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="authors" element={<AdminAuthors />} />
+            <Route path="reviews" element={<AdminReviews />} />
+          </Route>
 
-          <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
-          <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
-        </Route>
-
-        {/* ADMIN ROUTES (NO PUBLIC NAVBAR / FOOTER) */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute requireAdmin>
-              <AdminLayout />
-            </ProtectedRoute>
-          }
-        >
-          {/* /admin redirects to /admin/dashboard by default */}
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="books" element={<AdminBooks />} />
-          <Route path="users" element={<AdminUsers />} />
-          <Route path="coupons" element={<AdminCoupons />} />
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="authors" element={<AdminAuthors />} />
-          <Route path="reviews" element={<AdminReviews />} />
-        </Route>
-
-        <Route path="/graphql-demo" element={<GraphQLDemoPage />} />
-
-        {/* CATCH ALL */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          <Route path="/graphql-demo" element={<GraphQLDemoPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 };

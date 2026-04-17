@@ -1,5 +1,4 @@
-// Import the admin layout shell and all admin page components
-import AdminLayout from "./layout";
+// Import the all admin page components
 import AdminDashboard from "./dashboard";
 import AdminBooks from "./books";
 import AdminUsers from "./users";
@@ -9,7 +8,6 @@ import AdminAuthors from "./authors";
 import AdminCoupons from "./coupons";
 
 export {
-  AdminLayout,
   AdminDashboard,
   AdminBooks,
   AdminUsers,

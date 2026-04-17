@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Add useNavigate for the "View in Library" button
 import { useCartStore } from "../../store/cart";
 import {
@@ -20,11 +20,13 @@ import {
   CheckCircle, // Used for the "Owned" badge icon
 } from "lucide-react";
 
-import { BookPreview } from ".";
-
 import type { IBook } from "../../types/book";
 
 import { formatFileSize, formatDate } from "../../lib/helpers";
+
+// BookPreview pulls in react-pdf (678kb pdfjs) — we lazy-load it so that chunk
+// only downloads when the user actually opens a preview modal, not on page load
+const BookPreview = lazy(() => import("./BookPreview"));
 
 interface BookDetailHeroProps {
   book: IBook;
@@ -153,16 +155,14 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
               <div className="flex flex-wrap items-center gap-2.5">
                 <h1 className="text-text-light leading-tight">{book.title}</h1>
 
-                <span className="badge-primary text-[8px] uppercase tracking-widest"
-                >
+                <span className="badge-primary text-[8px] uppercase tracking-widest">
                   <CheckCircle size={11} className="shrink-0 mr-1" />
                   Owned
-                  </span>
+                </span>
               </div>
             ) : (
               <h1 className="text-text-light leading-tight">{book.title}</h1>
             )}
-            
 
             <p className="text-text-muted text-base">
               By{" "}
@@ -358,18 +358,20 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
       </div>
 
       {/* PDF Preview Modal — rendered outside the normal flow but controlled by isPreviewOpen */}
-      <BookPreview
-        bookId={book._id}
-        bookTitle={book.title}
-        fileType={book.fileType} // Add this — 'pdf' | 'epub'
-        isOpen={isPreviewOpen}
-        onClose={() => setIsPreviewOpen(false)}
-        onBuy={() => {
-          document
-            .getElementById("book-purchase-section")
-            ?.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
+      <Suspense fallback={null}>
+        <BookPreview
+          bookId={book._id}
+          bookTitle={book.title}
+          fileType={book.fileType} // Add this — 'pdf' | 'epub'
+          isOpen={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+          onBuy={() => {
+            document
+              .getElementById("book-purchase-section")
+              ?.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+      </Suspense>
     </section>
   );
 };
