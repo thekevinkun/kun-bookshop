@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useBook, useSimilarBooks } from "../../hooks/useBooks";
 import { useAuthStore } from "../../store/auth";
@@ -9,6 +10,7 @@ import {
   BookDetailTabs,
   SimilarBooks,
 } from "../../components/features";
+import { addRecentlyViewed } from "../../lib/recentlyViewed";
 
 export default function BookDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +22,13 @@ export default function BookDetailPage() {
 
   // Fetch related books using shared meaningful categories from the server.
   const { data: relatedBooks = [] } = useSimilarBooks(id!);
+
+  // Write this book to recently viewed as soon as it loads successfully
+  // We do this here — not in BookCard — because the user has actually opened the detail page
+  // which is a stronger signal of interest than just scrolling past a card
+  useEffect(() => {
+    if (book) addRecentlyViewed(book); // only fires when book data is ready
+  }, [book?._id]); // re-runs only if the book ID changes, not on every re-render
 
   // LOADING
   if (isLoading) {

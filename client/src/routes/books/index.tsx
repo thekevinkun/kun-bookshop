@@ -11,6 +11,8 @@ import { useBooks } from "../../hooks/useBooks";
 
 import SEO from "../../components/common/SEO";
 
+import { RecentlyViewedSection } from "../../components/layout";
+
 // Import the feature components
 import { BookGrid, BookFiltersComponent } from "../../components/features";
 
@@ -96,6 +98,9 @@ export default function BooksPage() {
             </div>
           </div>
         </section>
+
+        {/* Recently viewed — only renders when localStorage has items */}
+        <RecentlyViewedSection />
 
         {/* Catalog section */}
         <div ref={catalogTopRef} />

@@ -8,6 +8,7 @@ import DealsSection from "./DealsSection";
 import NewArrivalsSection from "./NewArrivalsSection";
 import CTASection from "./CTASection";
 import Footer from "./Footer";
+import RecentlyViewedSection from "./RecentlyViewedSection";
 
 export {
   MainLayout,
@@ -20,4 +21,5 @@ export {
   NewArrivalsSection,
   CTASection,
   Footer,
+  RecentlyViewedSection,
 };
