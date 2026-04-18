@@ -48,6 +48,8 @@ const LoginForm = () => {
     reValidateMode: "onSubmit",
   });
 
+  const { onChange: rhfOnChange, ...passwordRest } = register("password");
+
   // Called when the form passes validation and is submitted
   const onSubmit = async (data: LoginInput) => {
     try {
@@ -117,12 +119,14 @@ const LoginForm = () => {
             id="password"
             type={showCurrent ? "text" : "password"}
             placeholder="••••••••"
-            {...register("password")}
+            {...passwordRest}
             onChange={(e) => {
-              if (e.target.value === "") setShowEye(false);
-              else setShowEye(true);
+              // Let RHF track the value first — this keeps its internal state in sync
+              rhfOnChange(e);
+              // Then update our eye-icon visibility based on whether the field has content
+              setShowEye(e.target.value !== "");
             }}
-            className="input-field pl-10"
+            className="input-field pl-10 pr-10"
           />
           {showEye && (
             <button
