@@ -1,4 +1,5 @@
 import { useFeaturedBooks } from "../hooks/useBooks";
+import { useActiveCoupons } from "../hooks/useCoupons";
 import SEO from "../components/common/SEO";
 import { WebSiteJsonLd } from "../components/common/JsonLd";
 import {
@@ -13,6 +14,7 @@ import {
 export default function HomePage() {
   const { data: featuredBooks, isLoading: featuredLoading } =
     useFeaturedBooks();
+  const { data: coupons = [] } = useActiveCoupons();
 
   const heroBooks = featuredBooks ?? [];
 
@@ -25,7 +27,11 @@ export default function HomePage() {
       />
       <WebSiteJsonLd />
       <main className="min-h-screen">
-        <Hero books={heroBooks} isLoading={featuredLoading} />
+        <Hero
+          books={heroBooks}
+          coupons={coupons.length}
+          isLoading={featuredLoading}
+        />
 
         <RecommendedSection />
 

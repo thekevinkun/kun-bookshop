@@ -1,4 +1,5 @@
-import type { IBook, Coupon } from "../types/book";
+import type { IBook } from "../types/book";
+import type { Coupon } from "../types/order";
 import { toast } from "sonner";
 
 export const formatFileSize = (bytes: number) => {

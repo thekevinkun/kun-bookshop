@@ -4,7 +4,15 @@ import { Star, ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { IBook } from "../../types/book";
 
-const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
+const Hero = ({
+  books,
+  coupons,
+  isLoading,
+}: {
+  books: IBook[];
+  coupons: number;
+  isLoading: boolean;
+}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   // Track direction so we know which way to animate
@@ -75,7 +83,8 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
 
   return (
     <section
-      className="relative min-h-[92vh] flex items-center overflow-hidden bg-navy"
+      className={`relative flex items-center overflow-hidden bg-navy
+        ${coupons > 0 ? "min-h-[87vh]" : "min-h-[92vh]"}`}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >

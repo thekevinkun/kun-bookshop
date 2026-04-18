@@ -9,6 +9,7 @@ import {
   updateCoupon,
   deleteCoupon,
   emailBlastCoupon,
+  getActiveCoupons,
 } from "../controllers/coupon.controller";
 
 // Import auth middlewares — authenticate checks JWT, isAdmin checks the role field
@@ -23,6 +24,10 @@ const router = Router();
 // Requires authenticate so we know who is applying the coupon
 // (useful later if we want per-user usage limits)
 router.post("/validate", authenticate, validateCoupon);
+
+// GET /api/coupons/active — public, no auth required
+// Returns currently valid coupons for the homepage banner
+router.get("/active", getActiveCoupons);
 
 // Admin-only routes
 // Both authenticate AND isAdmin are required — must be logged in AND be an admin

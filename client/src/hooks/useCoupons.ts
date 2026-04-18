@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 // Import our pre-configured axios instance which has the base URL and auth header set up
 import api from "../lib/api";
 
-import type { Coupon, CreateCouponInput } from "../types/book";
+import type { Coupon, CreateCouponInput, ActiveCoupon } from "../types/order";
 
 // This type describes what we send to the backend when validating a coupon
 interface ValidateCouponInput {
@@ -105,5 +105,21 @@ export const useEmailBlastCoupon = () => {
       return res.data;
     },
     // No cache invalidation needed — email blast doesn't change coupon data
+  });
+};
+
+// Fetches all currently valid coupons for the homepage announcement banner.
+// Public — no auth required. Auto-refetches every 5 minutes so expired
+// coupons disappear without a page refresh.
+export const useActiveCoupons = () => {
+  return useQuery<ActiveCoupon[]>({
+    queryKey: ["coupons", "active"],
+    queryFn: async () => {
+      const res = await api.get<{ coupons: ActiveCoupon[] }>("/coupons/active");
+      return res.data.coupons;
+    },
+    // Refetch every 5 minutes so expired coupons vanish automatically
+    refetchInterval: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,
   });
 };

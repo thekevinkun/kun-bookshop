@@ -363,6 +363,15 @@ h6 {
   }
 }
 
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(200%);
+  }
+}
+
 @keyframes cart-overlay-in {
   from {
     opacity: 0;

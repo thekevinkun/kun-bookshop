@@ -18,6 +18,7 @@ import {
 import { useCartStore } from "../../store/cart";
 import { useAuthStore } from "../../store/auth";
 
+import { CouponBanner } from ".";
 import { CartDrawer } from "../features";
 
 import api from "../../lib/api";
@@ -71,6 +72,9 @@ const Navbar = () => {
           : "bg-navy"
       }`}
     >
+      {/* Coupon announcement banner — only visible on homepage, auto-hides when no active coupons */}
+      <CouponBanner />
+
       <div className="container-page py-0 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center">

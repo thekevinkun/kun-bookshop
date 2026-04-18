@@ -7,6 +7,32 @@ export interface ICartItem {
   coverImage: string; // Cover URL — shown as thumbnail in the cart
 }
 
+export interface Coupon {
+  _id: string;
+  code: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  minPurchase: number;
+  maxDiscount?: number;
+  validFrom: string;
+  validUntil: string;
+  usageLimit: number;
+  usedCount: number;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CreateCouponInput {
+  code: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  minPurchase?: number;
+  maxDiscount?: number;
+  validFrom: string;
+  validUntil: string;
+  usageLimit: number;
+}
+
 // The applied coupon stored in the cart — mirrors what the backend returns on validation
 export interface IAppliedCoupon {
   code: string;
@@ -15,6 +41,17 @@ export interface IAppliedCoupon {
   maxDiscount?: number;
   discountAmount: number; // The actual dollar amount saved
   finalTotal: number; // What the user pays after discount
+}
+
+// This type describes what the banner needs to display a coupon ad
+export interface ActiveCoupon {
+  _id: string;
+  code: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  maxDiscount?: number;
+  minPurchase?: number;
+  validUntil: string;
 }
 
 // Define the full shape of the cart store — state + actions

@@ -27,7 +27,7 @@ import {
 // CouponForm modal — same pattern as BookForm in AdminBooks
 import { CouponForm } from "../../components/forms";
 
-import type { Coupon } from "../../types/book";
+import type { Coupon } from "../../types/order";
 
 // Share helpers
 import { shareOnX, shareOnFacebook, shareOnInstagram } from "../../lib/helpers";

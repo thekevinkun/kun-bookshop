@@ -9,7 +9,7 @@ import fs from "fs";
 import path from "path";
 
 import { Book } from "../models/Book";
-import type { ICoupon } from "../types/book";
+import type { ICoupon } from "../types/order";
 
 // Import our logger — no console.log in this project
 import { logger } from "../utils/logger";

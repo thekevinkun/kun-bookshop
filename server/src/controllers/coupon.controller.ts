@@ -11,6 +11,29 @@ import { sendCouponBlast } from "../services/email.service";
 // Import logger
 import { logger } from "../utils/logger";
 
+// GET /api/coupons/active
+// Public. Returns all currently valid, active coupons with only display fields.
+// Frontend uses this to show the coupon announcement banner on the homepage.
+export const getActiveCoupons = async (
+  _req: Request,
+  res: Response,
+): Promise<void> => {
+  const now = new Date(); // Current timestamp for validity window check
+
+  const coupons = await Coupon.find({
+    isActive: true, // Admin hasn't deactivated it
+    validFrom: { $lte: now }, // Coupon window has started
+    validUntil: { $gte: now }, // Coupon hasn't expired yet
+    $expr: { $lt: ["$usedCount", "$usageLimit"] }, // Still has uses remaining
+  })
+    .select(
+      "code discountType discountValue maxDiscount validUntil minPurchase",
+    ) // Only display fields
+    .lean(); // Plain objects — faster, no Mongoose overhead needed here
+
+  res.status(200).json({ coupons });
+};
+
 // POST /api/coupons/validate
 // Public-ish: requires authenticate middleware so we know who the user is.
 // Body: { code: string, cartTotal: number }

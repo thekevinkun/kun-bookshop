@@ -2,6 +2,7 @@ import MainLayout from "./MainLayout";
 import AuthLayout from "./AuthLayout";
 import Navbar from "./Navbar";
 import Hero from "./Hero";
+import CouponBanner from "./CouponBanner";
 import RecommendedSection from "./RecommendedSection";
 import AuthorsSection from "./AuthorsSection";
 import DealsSection from "./DealsSection";
@@ -15,6 +16,7 @@ export {
   AuthLayout,
   Navbar,
   Hero,
+  CouponBanner,
   RecommendedSection,
   AuthorsSection,
   DealsSection,

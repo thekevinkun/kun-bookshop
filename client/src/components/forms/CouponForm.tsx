@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 // Our create coupon mutation hook
 import { useCreateCoupon } from "../../hooks/useCoupons";
-import type { Coupon, CreateCouponInput } from "../../types/book";
+import type { Coupon, CreateCouponInput } from "../../types/order";
 
 import { getDefaultValidUntil } from "../../lib/helpers";
 

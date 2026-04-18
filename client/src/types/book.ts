@@ -117,32 +117,6 @@ export interface IDownloadRecord {
   downloadedAt: string;
 }
 
-export interface Coupon {
-  _id: string;
-  code: string;
-  discountType: "percentage" | "fixed";
-  discountValue: number;
-  minPurchase: number;
-  maxDiscount?: number;
-  validFrom: string;
-  validUntil: string;
-  usageLimit: number;
-  usedCount: number;
-  isActive: boolean;
-  createdAt: string;
-}
-
-export interface CreateCouponInput {
-  code: string;
-  discountType: "percentage" | "fixed";
-  discountValue: number;
-  minPurchase?: number;
-  maxDiscount?: number;
-  validFrom: string;
-  validUntil: string;
-  usageLimit: number;
-}
-
 export interface EpubLocation {
   start?: {
     displayed?: {

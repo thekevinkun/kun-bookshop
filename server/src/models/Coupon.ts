@@ -1,7 +1,7 @@
 // Import mongoose and the tools we need to define a schema and model
 import mongoose, { Schema } from "mongoose";
 
-import type { ICoupon } from "../types/book";
+import type { ICoupon } from "../types/order";
 
 // Define the schema — this tells mongoose exactly what fields to store in MongoDB
 const CouponSchema = new Schema<ICoupon>(
