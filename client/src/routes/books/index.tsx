@@ -42,6 +42,17 @@ export default function BooksPage() {
   const currentPage = data?.currentPage ?? 1;
   const totalCount = data?.total ?? 0;
 
+  // True when the user has applied any actual filter — sort doesn't count
+  // Used to hide RecentlyViewed and relabel the catalog heading
+  const hasActiveFilters = Boolean(
+    filters.search ||
+    filters.category ||
+    filters.categoryBucket ||
+    filters.fileType ||
+    filters.minPrice ||
+    filters.maxPrice,
+  );
+
   // Blur the clicked pagination button so the browser does not snap it back into view.
   // Then scroll the catalog heading into view with space for the sticky navbar.
   const goToPage = (page: number) => {
@@ -84,10 +95,10 @@ export default function BooksPage() {
             <p className="text-golden text-xs font-semibold uppercase tracking-widest mb-3">
               Discover Your Next Great Read
             </p>
-            <h1 className="text-text-light leading-tight mb-2">
+            <h1 className="!text-[2rem] min-[30rem]:!text-[2.5rem] text-text-light leading-tight mb-2">
               Explore and Search for
             </h1>
-            <h1 className="leading-tight mb-10">
+            <h1 className="!text-[2.25rem] min-[30rem]:!text-[2.75rem] leading-tight mb-10">
               <span className="text-golden">Any Book</span>
               <span className="text-text-light"> In Our Library</span>
             </h1>
@@ -100,22 +111,25 @@ export default function BooksPage() {
         </section>
 
         {/* Recently viewed — only renders when localStorage has items */}
-        <RecentlyViewedSection />
+        {/* Hide recently viewed when filters are active — results should be front and center */}
+        {!hasActiveFilters && <RecentlyViewedSection />}
 
         {/* Catalog section */}
         <div ref={catalogTopRef} />
+
         <section className="section bg-bg-dark">
           <div className="container-page">
             {/* Section heading */}
             <div className="mb-8">
               <h2 className="text-text-light uppercase tracking-wider">
-                All Library Books
+                {/* Label changes based on whether the user is filtering or browsing */}
+                {hasActiveFilters ? "Search Results" : "All Library Books"}
               </h2>
 
               <div className="w-10 h-1 bg-golden rounded-full mt-1" />
 
               {!isLoading && (
-                <p className="text-text-muted text-xs mt-2">
+                <p className="text-golden text-xs mt-2">
                   {totalCount.toLocaleString()}{" "}
                   {totalCount === 1 ? "book" : "books"} found
                 </p>
