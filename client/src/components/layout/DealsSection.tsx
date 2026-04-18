@@ -14,17 +14,14 @@ const DISCOUNT_TARGETS = [25, 45] as const;
 const DISCOUNT_TOLERANCE = 5;
 
 // This type describes one homepage discount promo card.
+// Replace the sortBy/sortOrder on the interface with discount bounds
 interface DiscountPromoCard {
   target: (typeof DISCOUNT_TARGETS)[number];
   label: string;
   sublabel: string;
-  sortBy: "createdAt";
-  sortOrder: "desc";
-  covers: Array<{
-    _id: string;
-    title: string;
-    coverImage: string;
-  }>;
+  discountMin: number;
+  discountMax: number;
+  covers: Array<{ _id: string; title: string; coverImage: string }>;
 }
 
 // This calculates the real discount percent from the two prices.
@@ -95,8 +92,9 @@ const DealsSection = () => {
       target,
       label: target === 25 ? "Fresh" : "Big Savings",
       sublabel: target === 25 ? "Newly Added Deals" : "Hot Price Drops",
-      sortBy: "createdAt" as const,
-      sortOrder: "desc" as const,
+      // Range is target ± tolerance, clamped to 0–100
+      discountMin: Math.max(0, target - DISCOUNT_TOLERANCE),
+      discountMax: Math.min(100, target + DISCOUNT_TOLERANCE),
       covers,
     };
   }).filter((card) => card.covers.length > 0);
@@ -165,14 +163,15 @@ const DealsSection = () => {
               {card.sublabel}
             </p>
             <h3 className="text-text-light sm:!text-3xl font-black mb-4">
-              {card.label} <span className="text-burgundy">{card.target}% OFF</span>
+              {card.label}{" "}
+              <span className="text-burgundy">{card.target}% OFF</span>
             </h3>
             <button
               className="flex items-center gap-2 bg-text-light text-text-dark
                   btn btn-sm sm:btn-md rounded-full hover:bg-golden hover:text-text-dark"
               onClick={() =>
                 navigate(
-                  `/books?sortBy=${card.sortBy}&sortOrder=${card.sortOrder}`,
+                  `/books?discountMin=${card.discountMin}&discountMax=${card.discountMax}&discountLabel=${encodeURIComponent(card.target + "% OFF")}`,
                 )
               }
             >

@@ -50,6 +50,8 @@ export interface BookFilters {
   categoryBucket?: string;
   minPrice?: number;
   maxPrice?: number;
+  discountMin?: number;
+  discountMax?: number;
   fileType?: "pdf" | "epub";
   search?: string;
   sortBy?: "createdAt" | "price" | "rating" | "purchaseCount";

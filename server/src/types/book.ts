@@ -56,6 +56,8 @@ export interface BookFilters {
   category?: string;
   minPrice?: number;
   maxPrice?: number;
+  discountMin?: number;
+  discountMax?: number;
   fileType?: "pdf" | "epub";
   search?: string; // Full-text search term
   sortBy?: "createdAt" | "price" | "rating" | "purchaseCount";

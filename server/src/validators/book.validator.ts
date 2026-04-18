@@ -64,6 +64,8 @@ export const bookQuerySchema = z.object({
   categoryBucket: z.string().optional(),
   minPrice: z.coerce.number().min(0).optional(),
   maxPrice: z.coerce.number().min(0).optional(),
+  discountMin: z.coerce.number().min(0).max(100).optional(),
+  discountMax: z.coerce.number().min(0).max(100).optional(),
   fileType: z.enum(["pdf", "epub"]).optional(),
 
   // Author ID filter — lets us show all books by one author

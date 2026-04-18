@@ -190,6 +190,37 @@ export const getBooks = async (req: Request, res: Response) => {
       if (query.maxPrice !== undefined) filter.price.$lte = query.maxPrice;
     }
 
+    // Filter by discount percentage range — used by the DealsSection "Shop Now" buttons
+    if (query.discountMin !== undefined || query.discountMax !== undefined) {
+      // discountPrice must exist and be less than price (actually discounted)
+      filter.discountPrice = { $exists: true, $gt: 0 };
+      filter.$expr = filter.$expr ?? {};
+
+      // We compute the discount percent as: ((price - discountPrice) / price) * 100
+      // MongoDB $expr lets us compare computed fields
+      const discountExpr = {
+        $multiply: [
+          { $divide: [{ $subtract: ["$price", "$discountPrice"] }, "$price"] },
+          100,
+        ],
+      };
+
+      const exprConditions = [];
+      if (query.discountMin !== undefined) {
+        // Computed discount percent must be >= discountMin
+        exprConditions.push({ $gte: [discountExpr, query.discountMin] });
+      }
+      if (query.discountMax !== undefined) {
+        // Computed discount percent must be <= discountMax
+        exprConditions.push({ $lte: [discountExpr, query.discountMax] });
+      }
+
+      filter.$expr =
+        exprConditions.length === 1
+          ? exprConditions[0]
+          : { $and: exprConditions };
+    }
+
     if (query.fileType) filter.fileType = query.fileType;
 
     const sort: any = {

@@ -1,6 +1,8 @@
 // Import React hooks for state management
 import { useRef, useState } from "react";
 
+import { useSearchParams } from "react-router-dom";
+
 import { useMediaQuery } from "react-responsive";
 
 // Import navigation icons for pagination
@@ -20,18 +22,34 @@ import { BookGrid, BookFiltersComponent } from "../../components/features";
 import type { BookFilters } from "../../types/book";
 
 export default function BooksPage() {
+  const [searchParams] = useSearchParams();
+  const discountLabel = searchParams.get("discountLabel"); // e.g. "25% OFF"
+
   const catalogTopRef = useRef<HTMLDivElement | null>(null);
 
   const isTablet = useMediaQuery({ maxWidth: 639 });
 
   const totalBookToShow = isTablet ? 16 : 15;
 
-  // All active filters live here as controlled state
-  const [filters, setFilters] = useState<BookFilters>({
-    page: 1,
-    limit: totalBookToShow,
-    sortBy: "createdAt",
-    sortOrder: "desc",
+  // Initialize filters directly from URL so the first useBooks call is already correct
+  const [filters, setFilters] = useState<BookFilters>(() => {
+    const urlDiscountMin = searchParams.get("discountMin");
+    const urlDiscountMax = searchParams.get("discountMax");
+    const urlSortBy = searchParams.get("sortBy") as BookFilters["sortBy"];
+    const urlSortOrder = searchParams.get(
+      "sortOrder",
+    ) as BookFilters["sortOrder"];
+    const urlSearch = searchParams.get("search");
+
+    return {
+      page: 1,
+      limit: totalBookToShow,
+      sortBy: urlSortBy || "createdAt",
+      sortOrder: urlSortOrder || "desc",
+      ...(urlSearch && { search: urlSearch }),
+      ...(urlDiscountMin && { discountMin: Number(urlDiscountMin) }),
+      ...(urlDiscountMax && { discountMax: Number(urlDiscountMax) }),
+    };
   });
 
   // Fetch books from the real API with the current filters
@@ -50,7 +68,9 @@ export default function BooksPage() {
     filters.categoryBucket ||
     filters.fileType ||
     filters.minPrice ||
-    filters.maxPrice,
+    filters.maxPrice ||
+    filters.discountMin !== undefined ||
+    filters.discountMax !== undefined,
   );
 
   // Blur the clicked pagination button so the browser does not snap it back into view.
@@ -123,7 +143,11 @@ export default function BooksPage() {
             <div className="mb-8">
               <h2 className="text-text-light uppercase tracking-wider">
                 {/* Label changes based on whether the user is filtering or browsing */}
-                {hasActiveFilters ? "Search Results" : "All Library Books"}
+                {hasActiveFilters
+                  ? discountLabel
+                    ? `${discountLabel} Results`
+                    : "Search Results"
+                  : "All Library Books"}
               </h2>
 
               <div className="w-10 h-1 bg-golden rounded-full mt-1" />
@@ -208,7 +232,8 @@ export default function BooksPage() {
             {!isLoading && totalPages > 1 && (
               <div className="flex items-center justify-center gap-2 mt-12">
                 <button
-                  className="btn-ghost btn-sm flex items-center gap-1"
+                  className="btn-ghost btn-sm !border-golden/60 hover:!border-golden hover:!bg-dark
+                    !text-text-muted flex items-center gap-1 disabled:!border-bg-hover"
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage <= 1}
                 >
@@ -248,7 +273,7 @@ export default function BooksPage() {
                         className={`w-9 h-9 rounded-lg text-sm font-medium transition-all
                         ${
                           currentPage === page
-                            ? "bg-golden text-white"
+                            ? "bg-golden text-black"
                             : "btn-ghost text-text-muted"
                         }`}
                         onClick={() => goToPage(page as number)}
@@ -259,7 +284,8 @@ export default function BooksPage() {
                   )}
 
                 <button
-                  className="btn-ghost btn-sm flex items-center gap-1"
+                  className="btn-ghost btn-sm !border-golden/60 hover:!border-golden hover:!bg-dark
+                    !text-text-muted flex items-center gap-1 disabled:!border-bg-hover"
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage >= totalPages}
                 >

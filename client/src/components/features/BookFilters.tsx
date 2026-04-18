@@ -72,6 +72,8 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
     const urlCategory = searchParams.get("category");
     const urlCategoryBucket = searchParams.get("categoryBucket");
     const urlAuthor = searchParams.get("author");
+    const urlDiscountMin = searchParams.get("discountMin");
+    const urlDiscountMax = searchParams.get("discountMax");
 
     // Only apply if any URL params are present — don't override existing filter state
     if (
@@ -89,6 +91,8 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
         ...(urlSearch && { search: urlSearch }),
         ...(urlCategory && { category: urlCategory }),
         ...(urlCategoryBucket && { categoryBucket: urlCategoryBucket }),
+        ...(urlDiscountMin && { discountMin: Number(urlDiscountMin) }),
+        ...(urlDiscountMax && { discountMax: Number(urlDiscountMax) }),
         page: 1,
       });
       if (urlSearch) setSearchInput(urlSearch);
