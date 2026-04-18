@@ -1,5 +1,6 @@
 import { useState, lazy, Suspense } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Add useNavigate for the "View in Library" button
+import { Link, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { useCartStore } from "../../store/cart";
 import {
   useAddToWishlist,
@@ -263,47 +264,120 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                   View in Library
                 </button>
               ) : (
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.95 }} // physical press-down feel
                   className="btn-primary flex items-center gap-2"
                   onClick={handleAddToCart}
-                  // Disable only while the "Added!" flash is showing — prevents double-add
                   disabled={justAdded}
                 >
-                  <ShoppingCart size={16} />
-                  {
-                    justAdded
-                      ? "✓ Added!" // Flash feedback after adding
-                      : alreadyInCart
-                        ? "View in Cart" // Already in cart — clicking opens the drawer
-                        : "Add to Cart" // Default state
-                  }
-                </button>
+                  <AnimatePresence mode="wait" initial={false}>
+                    {justAdded ? (
+                      // "Added!" state — scales in from small to confirm the action
+                      <motion.span
+                        key="added"
+                        className="flex items-center gap-2"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        ✓ Added!
+                      </motion.span>
+                    ) : alreadyInCart ? (
+                      <motion.span
+                        key="in-cart"
+                        className="flex items-center gap-2"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <ShoppingCart size={16} />
+                        View in Cart
+                      </motion.span>
+                    ) : (
+                      <motion.span
+                        key="add"
+                        className="flex items-center gap-2"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <ShoppingCart size={16} />
+                        Add to Cart
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </motion.button>
               )}
 
               {/* Wishlist toggle button — sits beside the primary action button */}
-              <button
+              <motion.button
                 onClick={handleWishlistToggle}
                 disabled={isWishlistPending}
-                className={[
-                  // Base styles — ghost button with icon
-                  "flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
-                  // Filled heart style if wishlisted, outline if not
-                  isWishlisted
-                    ? "bg-burgundy/30 border-burgundy/85 text-text-light hover:bg-burgundy/80" // Already wishlisted
-                    : "bg-text-light/5 border-text-light/10 text-gray-400 hover:text-text-light hover:border-text-light/20", // Not wishlisted
-                ].join(" ")}
+                whileTap={{ scale: 0.93 }} // press feedback
+                // Animate background/border color change when wishlist state toggles
+                animate={{
+                  backgroundColor: isWishlisted
+                    ? "rgba(136, 19, 55, 0.3)" // burgundy tint when wishlisted
+                    : "rgba(248, 250, 252, 0.05)", // ghost when not
+                  borderColor: isWishlisted
+                    ? "rgba(136, 19, 55, 0.85)" // burgundy border when wishlisted
+                    : "rgba(248, 250, 252, 0.10)", // subtle border when not
+                }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-text-light"
               >
-                <Heart
-                  size={16}
-                  // Fill the heart icon solid when wishlisted, outline when not
-                  className={isWishlisted ? "fill-burgundy text-burgundy" : ""}
-                />
-                {isWishlistPending
-                  ? "Updating..."
-                  : isWishlisted
-                    ? "Wishlisted"
-                    : "Add to Wishlist"}
-              </button>
+                <motion.div
+                  // Heart icon pops on toggle — scale up briefly then settles
+                  animate={{ scale: isWishlisted ? [1, 1.4, 1] : 1 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <Heart
+                    size={16}
+                    className={
+                      isWishlisted
+                        ? "fill-burgundy text-burgundy"
+                        : "text-gray-400"
+                    }
+                  />
+                </motion.div>
+
+                <AnimatePresence mode="wait" initial={false}>
+                  {isWishlistPending ? (
+                    <motion.span
+                      key="pending"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.1 }}
+                    >
+                      Updating...
+                    </motion.span>
+                  ) : isWishlisted ? (
+                    <motion.span
+                      key="wishlisted"
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      Wishlisted
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="add-wishlist"
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      Add to Wishlist
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
             </div>
 
             {/* Preview button — only show if the book has a preview available (previewPages is set) */}

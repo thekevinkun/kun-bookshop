@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 // Import React Router hook to read URL query params
 import { useSearchParams } from "react-router-dom";
 
+import { AnimatePresence, motion } from "framer-motion";
+
 // Import icons for the search bar and filter panel
 import { Search, SlidersHorizontal, X } from "lucide-react";
 
@@ -179,38 +181,49 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
             }}
           />
 
-          {/* Autocomplete dropdown — shows real book suggestions from the API */}
-          {showSuggestions && suggestions.length > 0 && (
-            <div
-              className="absolute top-full left-0 right-0 mt-1 bg-card border border-bg-hover
-                            rounded-lg shadow-xl z-50 overflow-hidden"
-            >
-              {suggestions.map((book: IBook) => (
-                <button
-                  key={book._id}
-                  className="w-full flex items-center gap-3 px-4 py-2 hover:bg-bg-hover
-                    text-left transition-colors duration-150"
-                  onClick={() => {
-                    setSearchInput(book.title);
-                    // This commits the clicked suggestion to the catalog.
-                    applySearch(book.title);
-                  }}
-                >
-                  <img
-                    src={book.coverImage}
-                    alt={book.title}
-                    className="w-8 h-10 object-cover rounded"
-                  />
-                  <div>
-                    <p className="text-text-light text-sm font-medium">
-                      {book.title}
-                    </p>
-                    <p className="text-text-muted text-xs">{book.authorName}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+          {/* Autocomplete dropdown — animates in/out smoothly */}
+          <AnimatePresence>
+            {showSuggestions && suggestions.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }} // starts slightly above and invisible
+                animate={{ opacity: 1, y: 0 }} // drops into place and fades in
+                exit={{ opacity: 0, y: -8 }} // reverses out when hidden
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className="absolute top-full left-0 right-0 mt-1 bg-card border border-bg-hover
+        rounded-lg shadow-xl z-50 overflow-hidden"
+              >
+                {suggestions.map((book: IBook, index: number) => (
+                  <motion.button
+                    key={book._id}
+                    // Each suggestion staggers in slightly after the container
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.12, delay: index * 0.04 }}
+                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-bg-hover
+            text-left transition-colors duration-150"
+                    onClick={() => {
+                      setSearchInput(book.title);
+                      applySearch(book.title);
+                    }}
+                  >
+                    <img
+                      src={book.coverImage}
+                      alt={book.title}
+                      className="w-8 h-10 object-cover rounded"
+                    />
+                    <div>
+                      <p className="text-text-light text-sm font-medium">
+                        {book.title}
+                      </p>
+                      <p className="text-text-muted text-xs">
+                        {book.authorName}
+                      </p>
+                    </div>
+                  </motion.button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Filter */}
@@ -263,123 +276,129 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
       </div>
 
       {/* Expanded filter panel */}
-      {showFilters && (
-        <div
-          // This makes the filter panel float instead of pushing the catalog down.
-          className="absolute left-0 right-0 top-full mt-2 card-base flex flex-col sm:flex-row gap-6 z-40 shadow-2xl"
-        >
-          {/* Category filter — curated browse buckets */}
-          <div className="flex-1">
-            <p className="text-text-muted text-xs font-semibold uppercase tracking-wider mb-2">
-              Category
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {BOOK_CATEGORY_BUCKETS.map((bucket) => (
-                <button
-                  key={bucket.key}
-                  className={`text-xs px-3 py-1 rounded-full border transition-all duration-150
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }} // drops in from slightly above
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            // This makes the filter panel float instead of pushing the catalog down.
+            className="absolute left-0 right-0 top-full mt-2 card-base flex flex-col sm:flex-row gap-6 z-40 shadow-2xl"
+          >
+            {/* Category filter — curated browse buckets */}
+            <div className="flex-1">
+              <p className="text-text-muted text-xs font-semibold uppercase tracking-wider mb-2">
+                Category
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {BOOK_CATEGORY_BUCKETS.map((bucket) => (
+                  <button
+                    key={bucket.key}
+                    className={`text-xs px-3 py-1 rounded-full border transition-all duration-150
                     ${
                       filters.categoryBucket === bucket.key
                         ? "bg-golden text-white border-golden"
                         : "border-bg-hover text-text-muted hover:border-golden hover:text-golden"
                     }`}
-                  onClick={() =>
-                    onChange({
-                      ...filters,
-                      category: undefined,
-                      categoryBucket:
-                        filters.categoryBucket === bucket.key
-                          ? undefined
-                          : bucket.key,
-                      page: 1,
-                    })
-                  }
-                >
-                  {bucket.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Right column: format + price range + clear */}
-          <div className="flex flex-col gap-4 sm:w-56">
-            {/* File type filter */}
-            <div>
-              <p className="text-text-muted text-xs font-semibold uppercase tracking-wider mb-2">
-                Format
-              </p>
-              <div className="flex gap-2">
-                {(["pdf", "epub"] as const).map((type) => (
-                  <button
-                    key={type}
-                    className={`flex-1 text-xs py-1.5 rounded-lg border uppercase transition-all duration-150
-                      ${
-                        filters.fileType === type
-                          ? "bg-golden text-white border-golden"
-                          : "border-bg-hover text-text-muted hover:border-golden hover:text-golden"
-                      }`}
                     onClick={() =>
-                      updateFilter(
-                        "fileType",
-                        filters.fileType === type ? undefined : type,
-                      )
+                      onChange({
+                        ...filters,
+                        category: undefined,
+                        categoryBucket:
+                          filters.categoryBucket === bucket.key
+                            ? undefined
+                            : bucket.key,
+                        page: 1,
+                      })
                     }
                   >
-                    {type}
+                    {bucket.label}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Price range */}
-            <div>
-              <p className="text-text-muted text-xs font-semibold uppercase tracking-wider mb-2">
-                Price Range
-              </p>
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  className="input-field text-sm py-1.5"
-                  min={0}
-                  value={filters.minPrice ?? ""}
-                  onChange={(e) =>
-                    updateFilter(
-                      "minPrice",
-                      e.target.value ? Number(e.target.value) : undefined,
-                    )
-                  }
-                />
-                <span className="text-text-muted text-xs">to</span>
-                <input
-                  type="number"
-                  placeholder="Max"
-                  className="input-field text-sm py-1.5"
-                  min={0}
-                  value={filters.maxPrice ?? ""}
-                  onChange={(e) =>
-                    updateFilter(
-                      "maxPrice",
-                      e.target.value ? Number(e.target.value) : undefined,
-                    )
-                  }
-                />
+            {/* Right column: format + price range + clear */}
+            <div className="flex flex-col gap-4 sm:w-56">
+              {/* File type filter */}
+              <div>
+                <p className="text-text-muted text-xs font-semibold uppercase tracking-wider mb-2">
+                  Format
+                </p>
+                <div className="flex gap-2">
+                  {(["pdf", "epub"] as const).map((type) => (
+                    <button
+                      key={type}
+                      className={`flex-1 text-xs py-1.5 rounded-lg border uppercase transition-all duration-150
+                      ${
+                        filters.fileType === type
+                          ? "bg-golden text-white border-golden"
+                          : "border-bg-hover text-text-muted hover:border-golden hover:text-golden"
+                      }`}
+                      onClick={() =>
+                        updateFilter(
+                          "fileType",
+                          filters.fileType === type ? undefined : type,
+                        )
+                      }
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Clear all */}
-            {activeFilterCount > 0 && (
-              <button
-                className="btn-ghost btn-sm flex items-center gap-2 self-start"
-                onClick={clearFilters}
-              >
-                <X size={14} />
-                Clear all filters
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+              {/* Price range */}
+              <div>
+                <p className="text-text-muted text-xs font-semibold uppercase tracking-wider mb-2">
+                  Price Range
+                </p>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    className="input-field text-sm py-1.5"
+                    min={0}
+                    value={filters.minPrice ?? ""}
+                    onChange={(e) =>
+                      updateFilter(
+                        "minPrice",
+                        e.target.value ? Number(e.target.value) : undefined,
+                      )
+                    }
+                  />
+                  <span className="text-text-muted text-xs">to</span>
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    className="input-field text-sm py-1.5"
+                    min={0}
+                    value={filters.maxPrice ?? ""}
+                    onChange={(e) =>
+                      updateFilter(
+                        "maxPrice",
+                        e.target.value ? Number(e.target.value) : undefined,
+                      )
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Clear all */}
+              {activeFilterCount > 0 && (
+                <button
+                  className="btn-ghost btn-sm flex items-center gap-2 self-start"
+                  onClick={clearFilters}
+                >
+                  <X size={14} />
+                  Clear all filters
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

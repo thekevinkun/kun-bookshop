@@ -4,6 +4,9 @@ import { useState } from "react";
 // Import React Router's navigation hook
 import { useNavigate, Link } from "react-router-dom";
 
+// Animate item removal and entry
+import { AnimatePresence, motion } from "framer-motion";
+
 // Import Radix Dialog — we use this as our slide-in drawer (same as Phase 3 pattern)
 import * as Dialog from "@radix-ui/react-dialog";
 
@@ -57,7 +60,10 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   };
 
   const handleRemoveItem = (bookId: string) => {
+    // Clear any checkout error state before modifying the cart
     clearCheckoutState();
+    // Remove coupon if cart becomes empty after this removal
+    if (items.length === 1 && appliedCoupon) removeCoupon();
     removeItem(bookId);
   };
 
@@ -182,46 +188,58 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             ) : (
               // List of cart items
               <ul className="flex flex-col gap-4">
-                {items.map((item) => (
-                  <li
-                    key={item.bookId}
-                    className="flex gap-4 items-start"
-                    style={{
-                      paddingBottom: "1rem",
-                      borderBottom: "1px solid rgba(51,65,85,0.4)",
-                    }}
-                  >
-                    {/* Book cover thumbnail */}
-                    <img
-                      src={item.coverImage}
-                      alt={item.title}
-                      className="w-14 h-20 object-cover rounded-md flex-shrink-0"
-                    />
-
-                    {/* Book info */}
-                    <div className="flex-1 min-w-0">
-                      {/* min-w-0 prevents text from overflowing the flex container */}
-                      <p className="font-semibold text-text-light truncate">
-                        {item.title}
-                      </p>
-                      <p className="text-sm text-text-muted truncate">
-                        {item.author}
-                      </p>
-                      <p className="text-golden font-bold mt-1">
-                        ${item.price.toFixed(2)}
-                      </p>
-                    </div>
-
-                    {/* Remove button */}
-                    <button
-                      onClick={() => handleRemoveItem(item.bookId)}
-                      className="text-text-muted hover:text-error transition-colors flex-shrink-0 mt-1"
-                      aria-label={`Remove ${item.title} from cart`}
+                <AnimatePresence initial={false}>
+                  {items.map((item) => (
+                    <motion.li
+                      key={item.bookId}
+                      // Entry — slides in from right and fades in when added
+                      initial={{ opacity: 0, x: 24 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      // Exit — slides out to right and fades out when removed
+                      exit={{
+                        opacity: 0,
+                        x: 24,
+                        transition: { duration: 0.2 },
+                      }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                      className="flex gap-4 items-start"
+                      style={{
+                        paddingBottom: "1rem",
+                        borderBottom: "1px solid rgba(51,65,85,0.4)",
+                      }}
                     >
-                      <Trash2 size={18} />
-                    </button>
-                  </li>
-                ))}
+                      {/* Book cover thumbnail */}
+                      <img
+                        src={item.coverImage}
+                        alt={item.title}
+                        className="w-14 h-20 object-cover rounded-md flex-shrink-0"
+                      />
+
+                      {/* Book info */}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-text-light truncate">
+                          {item.title}
+                        </p>
+                        <p className="text-sm text-text-muted truncate">
+                          {item.author}
+                        </p>
+                        <p className="text-golden font-bold mt-1">
+                          ${item.price.toFixed(2)}
+                        </p>
+                      </div>
+
+                      {/* Remove button — turns red on hover as a deletion warning signal */}
+                      <motion.button
+                        whileTap={{ scale: 0.85 }} // physical press feedback
+                        onClick={() => handleRemoveItem(item.bookId)}
+                        className="text-text-muted hover:text-error transition-colors flex-shrink-0 mt-1"
+                        aria-label={`Remove ${item.title} from cart`}
+                      >
+                        <Trash2 size={18} />
+                      </motion.button>
+                    </motion.li>
+                  ))}
+                </AnimatePresence>
               </ul>
             )}
           </div>
@@ -249,13 +267,21 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                   <span className="text-sm">${total().toFixed(2)}</span>
                 </div>
 
-                {/* Discount row — only shown when a coupon is applied */}
-                {appliedCoupon && (
-                  <div className="flex justify-between items-center text-emerald-400 text-sm">
-                    <span>Discount ({appliedCoupon.code})</span>
-                    <span>− ${appliedCoupon.discountAmount.toFixed(2)}</span>
-                  </div>
-                )}
+                {/* Discount row — animates in when coupon is applied, out when removed */}
+                <AnimatePresence>
+                  {appliedCoupon && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }} // starts collapsed
+                      animate={{ opacity: 1, height: "auto" }} // expands into place
+                      exit={{ opacity: 0, height: 0 }} // collapses when removed
+                      transition={{ duration: 0.2 }}
+                      className="flex justify-between items-center text-emerald-400 text-sm overflow-hidden"
+                    >
+                      <span>Discount ({appliedCoupon.code})</span>
+                      <span>− ${appliedCoupon.discountAmount.toFixed(2)}</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 {/* Final total — uses discounted amount if coupon applied */}
                 <div className="flex justify-between items-center text-golden border-t border-slate-700 pt-2 mt-1">
@@ -278,13 +304,13 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
               )}
 
               {/* Checkout button */}
-              <button
+              <motion.button
+                whileTap={{ scale: 0.97 }} // subtle press-down feel
                 onClick={handleCheckout}
                 disabled={isCheckingOut}
                 className="btn-primary w-full"
               >
                 {isCheckingOut ? (
-                  // Show spinner while waiting for Stripe session to be created
                   <span className="flex items-center justify-center gap-2">
                     <svg
                       className="animate-spin h-4 w-4"
@@ -310,11 +336,12 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                 ) : (
                   "Checkout"
                 )}
-              </button>
+              </motion.button>
 
               {/* Reassure the user their payment is handled by Stripe */}
               <p className="text-xs text-text-muted text-center">
-                Secure checkout powered by <span className="text-emerald-400">Stripe</span>
+                Secure checkout powered by{" "}
+                <span className="text-emerald-400">Stripe</span>
               </p>
             </div>
           )}

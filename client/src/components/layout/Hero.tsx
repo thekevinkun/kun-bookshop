@@ -1,40 +1,65 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Star, ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import type { IBook } from "../../types/book";
 
 const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
-  // Which slide is currently active
   const [activeIndex, setActiveIndex] = useState(0);
-
-  // Whether auto-play is paused (user is hovering)
   const [isPaused, setIsPaused] = useState(false);
+  // Track direction so we know which way to animate
+  const [direction, setDirection] = useState<"next" | "prev">("next");
 
   const activeBook = books[activeIndex];
 
-  // Move to the next slide — wraps around to 0 after the last
+  // Store books.length in a ref so next/prev don't recreate on length change
+  // This fixes the autoplay reset bug — the interval never restarts unexpectedly
+  const lengthRef = useRef(books.length);
+  useEffect(() => {
+    lengthRef.current = books.length;
+  }, [books.length]);
+
   const next = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1) % books.length);
-  }, [books.length]);
+    setDirection("next");
+    setActiveIndex((prev) => (prev + 1) % lengthRef.current);
+  }, []); // stable — no deps that change
 
-  // Move to the previous slide
   const prev = useCallback(() => {
-    setActiveIndex((prev) => (prev - 1 + books.length) % books.length);
-  }, [books.length]);
+    setDirection("prev");
+    setActiveIndex(
+      (prev) => (prev - 1 + lengthRef.current) % lengthRef.current,
+    );
+  }, []); // stable — no deps that change
 
-  // Auto-advance every 10 seconds unless hovered
+  // Clean autoplay — next and isPaused are both stable now so this never resets
   useEffect(() => {
     if (isPaused) return;
-    const timer = setInterval(next, 10000);
-    return () => clearInterval(timer); // Clean up on unmount or pause
+    const timer = setInterval(next, 15000);
+    return () => clearInterval(timer);
   }, [isPaused, next]);
 
   const displayPrice = activeBook
     ? (activeBook.discountPrice ?? activeBook.price)
     : 0;
 
+  // Crossfade variants — content fades out/in with subtle vertical drift
+  // Direction-aware: next slides up, prev slides down
+  const contentVariants = {
+    enter: (dir: "next" | "prev") => ({
+      opacity: 0,
+      y: dir === "next" ? 16 : -16, // drift in from below (next) or above (prev)
+    }),
+    center: {
+      opacity: 1,
+      y: 0,
+    },
+    exit: (dir: "next" | "prev") => ({
+      opacity: 0,
+      y: dir === "next" ? -16 : 16, // drift out upward (next) or downward (prev)
+    }),
+  };
+
   if (!isLoading && !activeBook) {
-    // Show an empty state if there are no featured books
     return (
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center bg-navy">
         <div className="flex flex-col items-center justify-center text-center">
@@ -51,10 +76,9 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
   return (
     <section
       className="relative min-h-[92vh] flex items-center overflow-hidden bg-navy"
-      onMouseEnter={() => setIsPaused(true)} // Pause on hover
-      onMouseLeave={() => setIsPaused(false)} // Resume on leave
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Subtle background texture — dark radial gradient for depth */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_#1e3a5f33_0%,_transparent_70%)]" />
       </div>
@@ -71,136 +95,149 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
             </div>
           ) : (
             <div className="mt-4 sm:mt-0 flex flex-col gap-5 order-2 md:order-1">
-              {/* Category chip */}
-              <span className="badge-primary self-start uppercase tracking-widest">
-                {activeBook.category[0]}
-              </span>
-
-              {/* Book title — large and bold */}
-              <h1 className="text-text-light leading-tight line-clamp-1 md:line-clamp-none"
-              >
-                {activeBook.title}
-              </h1>
-
-              {/* Author and Publisher */}
-              <div className="flex flex-wrap items-center gap-3 sm:gap-5">
-                <p className="text-text-muted">
-                  By{" "}
-                  <Link
-                    to={`/authors/${
-                      typeof activeBook.author === "string"
-                        ? activeBook.author
-                        : activeBook.author?._id
-                    }`}
-                    className="text-golden font-semibold"
-                  >
-                    {activeBook.authorName}
-                  </Link>
-                </p>
-
-                <p className="text-text-muted italic">{activeBook.publisher}</p>
-
-                <div className="flex items-center gap-1">
-                  <p className="text-text-muted italic text-xs">
-                    #{activeBook.tags[0]}
-                  </p>
-                  {activeBook.tags.length > 1 && (
-                    <p className="text-text-muted italic text-xs">
-                      #{activeBook.tags[1]}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Rating row */}
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      size={16}
-                      className={
-                        i < Math.round(activeBook.rating)
-                          ? "text-warning fill-warning"
-                          : "text-bg-hover fill-bg-hover"
-                      }
-                    />
-                  ))}
-                </div>
-                <span className="text-text-muted text-sm">
-                  {activeBook.rating.toFixed(1)} · {activeBook.reviewCount}{" "}
-                  reviews
-                </span>
-              </div>
-
-              {/* Description — clamped to 4 lines */}
-              <p className="text-text-muted leading-relaxed line-clamp-4 max-w-lg">
-                {activeBook.description}
-              </p>
-
-              {/* Price + CTA */}
-              <div className="flex items-center gap-6 mt-2">
-                <div className="flex flex-col">
-                  <span className="hidden md:inline text-golden text-3xl font-bold">
-                    ${displayPrice.toFixed(2)}
-                  </span>
-                  
-                  {activeBook.discountPrice && (
-                    <span className="hidden md:inline text-text-muted text-sm line-through">
-                      ${activeBook.price.toFixed(2)}
-                    </span>
-                  )}
-
-                  <span className={`md:hidden text-golden text-3xl font-bold
-                    ${!activeBook.discountPrice && "relative top-2.5"}`}>
-                    ${displayPrice.toFixed(2)}
-                  </span>
-
-                  <span className={`md:hidden text-text-muted text-sm line-through
-                    ${!activeBook.discountPrice && "invisible"}`}
-                  >
-                    {activeBook.discountPrice ? activeBook.price.toFixed(2) : "NaN"}             
-                  </span>
-                </div>
-                <Link
-                  to={`/books/${activeBook._id}`}
-                  className="btn-primary btn-md flex items-center gap-2"
+              {/* AnimatePresence animates content out before new content animates in */}
+              {/* mode="wait" ensures exit completes before enter starts — no overlap */}
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={activeBook._id} // key change triggers the animation
+                  custom={direction}
+                  variants={contentVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="flex flex-col gap-5"
                 >
-                  <BookOpen size={18} />
-                  View Book
-                </Link>
-              </div>
+                  {/* Category chip */}
+                  <span className="badge-primary self-start uppercase tracking-widest">
+                    {activeBook.category[0]}
+                  </span>
 
-              {/* Slide indicators — dots at the bottom of the text block */}
+                  <h1 className="text-text-light leading-tight line-clamp-1 md:line-clamp-none">
+                    {activeBook.title}
+                  </h1>
+
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-5">
+                    <p className="text-text-muted">
+                      By{" "}
+                      <Link
+                        to={`/authors/${
+                          typeof activeBook.author === "string"
+                            ? activeBook.author
+                            : activeBook.author?._id
+                        }`}
+                        className="text-golden font-semibold"
+                      >
+                        {activeBook.authorName}
+                      </Link>
+                    </p>
+                    <p className="text-text-muted italic">
+                      {activeBook.publisher}
+                    </p>
+                    <div className="flex items-center gap-1">
+                      <p className="text-text-muted italic text-xs">
+                        #{activeBook.tags[0]}
+                      </p>
+                      {activeBook.tags.length > 1 && (
+                        <p className="text-text-muted italic text-xs">
+                          #{activeBook.tags[1]}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          size={16}
+                          className={
+                            i < Math.round(activeBook.rating)
+                              ? "text-warning fill-warning"
+                              : "text-bg-hover fill-bg-hover"
+                          }
+                        />
+                      ))}
+                    </div>
+                    <span className="text-text-muted text-sm">
+                      {activeBook.rating.toFixed(1)} · {activeBook.reviewCount}{" "}
+                      reviews
+                    </span>
+                  </div>
+
+                  <p className="text-text-muted leading-relaxed line-clamp-4 max-w-lg">
+                    {activeBook.description}
+                  </p>
+
+                  <div className="flex items-center gap-6 mt-2">
+                    <div className="flex flex-col">
+                      <span className="hidden md:inline text-golden text-3xl font-bold">
+                        ${displayPrice.toFixed(2)}
+                      </span>
+                      {activeBook.discountPrice && (
+                        <span className="hidden md:inline text-text-muted text-sm line-through">
+                          ${activeBook.price.toFixed(2)}
+                        </span>
+                      )}
+                      <span
+                        className={`md:hidden text-golden text-3xl font-bold
+                        ${!activeBook.discountPrice && "relative top-2.5"}`}
+                      >
+                        ${displayPrice.toFixed(2)}
+                      </span>
+                      <span
+                        className={`md:hidden text-text-muted text-sm line-through
+                        ${!activeBook.discountPrice && "invisible"}`}
+                      >
+                        {activeBook.discountPrice
+                          ? activeBook.price.toFixed(2)
+                          : "NaN"}
+                      </span>
+                    </div>
+                    <Link
+                      to={`/books/${activeBook._id}`}
+                      className="btn-primary btn-md flex items-center gap-2"
+                    >
+                      <BookOpen size={18} />
+                      View Book
+                    </Link>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Dots and arrows stay OUTSIDE AnimatePresence — they never animate */}
               <div className="flex items-center gap-3 mt-4">
                 {books.map((_, i) => (
                   <button
                     key={i}
-                    onClick={() => setActiveIndex(i)}
+                    onClick={() => {
+                      // Set direction based on whether we're going forward or back
+                      setDirection(i > activeIndex ? "next" : "prev");
+                      setActiveIndex(i);
+                    }}
                     className={`transition-all duration-300 rounded-full
-                    ${
-                      i === activeIndex
-                        ? "w-8 h-2 bg-golden" // Active dot is wider
-                        : "w-2 h-2 bg-bg-hover hover:bg-golden/50"
-                    }`}
+                      ${
+                        i === activeIndex
+                          ? "w-8 h-2 bg-golden"
+                          : "w-2 h-2 bg-bg-hover hover:bg-golden/50"
+                      }`}
                     aria-label={`Go to slide ${i + 1}`}
                   />
                 ))}
-
-                {/* Prev / Next arrows beside the dots */}
                 <div className="flex gap-2 ml-4">
                   <button
                     onClick={prev}
-                    className="w-8 h-8 rounded-full border border-golden/80 flex items-center justify-center 
-                    text-text-muted hover:border-golden hover:text-golden transition-all duration-200"
+                    className="w-8 h-8 rounded-full border border-golden/80 flex items-center justify-center
+                      text-text-muted hover:border-golden hover:text-golden transition-all duration-200"
                     aria-label="Previous book"
                   >
                     <ChevronLeft size={16} />
                   </button>
                   <button
                     onClick={next}
-                    className="w-8 h-8 rounded-full border border-golden/80 flex items-center justify-center 
-                    text-text-muted hover:border-golden hover:text-golden transition-all duration-200"
+                    className="w-8 h-8 rounded-full border border-golden/80 flex items-center justify-center
+                      text-text-muted hover:border-golden hover:text-golden transition-all duration-200"
                     aria-label="Next book"
                   >
                     <ChevronRight size={16} />
@@ -210,57 +247,60 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
             </div>
           )}
 
-          {/* RIGHT: Book cover with stacked shadow effect */}
+          {/* RIGHT: Book cover */}
           <div className="select-none flex justify-center items-center order-1 md:order-2">
             <div className="relative w-64 sm:w-72">
               {isLoading ? (
                 <div className="aspect-[2/3] bg-bg-hover rounded-xl shadow-[0_24px_60px_rgba(0,0,0,0.5)]" />
               ) : (
-                <>
-                  {/* Back copies of the same cover create a more convincing stacked-book effect */}
-                  <img
-                    key={`${activeBook._id}-stack-back`}
-                    src={activeBook.coverImage}
-                    alt=""
-                    aria-hidden="true"
-                    className="absolute top-6 left-9 sm:left-12 w-full rounded-xl object-cover aspect-[2/3]
-                      rotate-[12deg] scale-[0.94] opacity-55 blur-[1.5px] brightness-[0.55]
-                      saturate-[0.8] shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "/images/placeholder-cover.webp";
-                    }}
-                  />
-                  <img
-                    key={`${activeBook._id}-stack-mid`}
-                    src={activeBook.coverImage}
-                    alt=""
-                    aria-hidden="true"
-                    className="absolute top-3 left-5 sm:left-8 w-full rounded-xl object-cover aspect-[2/3]
-                      rotate-[10deg] scale-[0.97] opacity-75 blur-[0.5px] brightness-[0.72]
-                      saturate-[0.9] shadow-[0_18px_40px_rgba(0,0,0,0.38)]"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "/images/placeholder-cover.webp";
-                    }}
-                  />
-
-                  {/* Main cover image */}
-                  <img
-                    key={activeBook._id} // Key change triggers re-render on slide change
-                    src={activeBook.coverImage}
-                    alt={`Cover of ${activeBook.title}`}
-                    className="relative z-10 w-full rounded-xl shadow-[0_24px_60px_rgba(0,0,0,0.5)] 
-                      object-cover aspect-[2/3] transition-opacity duration-500"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "/images/placeholder-cover.webp";
-                    }}
-                  />
-                </>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeBook._id} // triggers on book change
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                    className="relative"
+                  >
+                    {/* Stacked back covers */}
+                    <img
+                      src={activeBook.coverImage}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute top-6 left-9 sm:left-12 w-full rounded-xl object-cover aspect-[2/3]
+                        rotate-[12deg] scale-[0.94] opacity-55 blur-[1.5px] brightness-[0.55]
+                        saturate-[0.8] shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "/images/placeholder-cover.webp";
+                      }}
+                    />
+                    <img
+                      src={activeBook.coverImage}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute top-3 left-5 sm:left-8 w-full rounded-xl object-cover aspect-[2/3]
+                        rotate-[10deg] scale-[0.97] opacity-75 blur-[0.5px] brightness-[0.72]
+                        saturate-[0.9] shadow-[0_18px_40px_rgba(0,0,0,0.38)]"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "/images/placeholder-cover.webp";
+                      }}
+                    />
+                    {/* Main cover */}
+                    <img
+                      src={activeBook.coverImage}
+                      alt={`Cover of ${activeBook.title}`}
+                      className="relative z-10 w-full rounded-xl shadow-[0_24px_60px_rgba(0,0,0,0.5)]
+                        object-cover aspect-[2/3]"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "/images/placeholder-cover.webp";
+                      }}
+                    />
+                  </motion.div>
+                </AnimatePresence>
               )}
-
-              {/* golden glow beneath the cover — our design touch */}
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 h-12 bg-golden/20 blur-2xl rounded-full z-0" />
             </div>
           </div>

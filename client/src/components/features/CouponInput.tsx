@@ -92,7 +92,7 @@ const CouponInput = ({
         {/* Right side: remove button */}
         <button
           onClick={onRemove}
-          className="text-emerald-500 hover:text-emerald-700 transition-colors"
+          className="text-error/85 hover:text-error transition-colors"
           aria-label="Remove coupon"
         >
           <X className="h-4 w-4" />
@@ -121,8 +121,8 @@ const CouponInput = ({
       <button
         onClick={handleApply}
         disabled={isPending || !inputValue.trim()}
-        className="rounded-lg bg-burgundy/75 px-4 py-2 text-sm font-medium 
-          text-text-light hover:bg-burgundy disabled:opacity-50 
+        className="rounded-lg bg-teal/75 px-4 py-2 text-sm font-medium 
+          text-text-light hover:bg-teal disabled:opacity-50 
           disabled:cursor-not-allowed transition-colors flex items-center gap-1.5"
       >
         {/* Show a spinner while validating */}
