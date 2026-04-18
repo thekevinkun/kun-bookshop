@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+
+// Import useQueryClient so we can wipe the cache on logout
+import { useQueryClient } from "@tanstack/react-query";
+
 import {
   ShoppingCart,
   User,
@@ -20,6 +24,7 @@ import api from "../../lib/api";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { user, isAuthenticated, logout } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -33,6 +38,8 @@ const Navbar = () => {
     } catch {
       // Even if server call fails, clear local state
     } finally {
+      // Wipe ALL cached query data — prevents previous user's data bleeding into next session
+      queryClient.clear();
       logout();
       navigate("/login");
     }
@@ -66,11 +73,8 @@ const Navbar = () => {
     >
       <div className="container-page py-0 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link
-          to="/"
-          className="flex items-center"
-        >
-          <img 
+        <Link to="/" className="flex items-center">
+          <img
             src="/images/logo.webp"
             alt="Logo"
             className="w-6 h-6 sm:w-8 sm:h-8 object-cover"
@@ -249,7 +253,7 @@ const Navbar = () => {
             </>
           )}
         </div>
-        
+
         <div className="md:hidden flex items-center gap-3">
           {/* Cart button on mobile */}
           {isAuthenticated && (
@@ -272,7 +276,7 @@ const Navbar = () => {
               )}
             </button>
           )}
-          
+
           {/* Mobile hamburger */}
           <button
             className="btn-ghost btn-sm"
@@ -283,7 +287,7 @@ const Navbar = () => {
           </button>
         </div>
       </div>
-      
+
       {/* Mobile menu — plain list, no Radix needed here */}
       {mobileOpen && (
         <div

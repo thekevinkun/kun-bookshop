@@ -8,6 +8,9 @@ import { useNavigate } from "react-router-dom";
 
 import { useCartStore } from "../../store/cart";
 
+// Add this import at the top of LoginForm
+import { useQueryClient } from "@tanstack/react-query";
+
 // Import lucide icons for the email and password fields
 import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
 
@@ -30,6 +33,8 @@ const LoginForm = () => {
 
   // useNavigate lets us redirect programmatically after login
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
 
   const [showEye, setShowEye] = useState(false);
   const [showCurrent, setShowCurrent] = useState(false);
@@ -58,6 +63,9 @@ const LoginForm = () => {
 
       // Save the user and token to the Zustand store (also persisted to localStorage)
       login(response.data.user, response.data.token);
+
+      // Clear any cached data from a previous session before loading new user's data
+      queryClient.clear();
 
       // Now that the user ID is set in the auth store, load their personal cart
       // from localStorage — switches from "cart-guest" to "cart-user-{id}"

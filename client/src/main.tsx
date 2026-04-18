@@ -28,6 +28,8 @@ const initAuth = async () => {
           const res = await api.post("/auth/refresh");
           setToken(res.data.token); // Store the new token so all queries use it
         } catch {
+          // Refresh failed — clear stale cache before mounting so no previous user's data leaks
+          queryClient.clear();
           // Refresh token is also expired or invalid — log the user out cleanly
           logout();
         }
