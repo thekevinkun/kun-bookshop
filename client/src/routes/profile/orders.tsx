@@ -1,12 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import {
-  ShoppingBag,
-  BookOpen,
-  Calendar,
-  Hash,
-  Loader2,
-  AlertCircle,
-} from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { BookOpen, Calendar, Hash, Loader2, AlertCircle } from "lucide-react";
 import { useOrders } from "../../hooks/useOrders";
 import { format } from "date-fns";
 
@@ -68,23 +61,60 @@ export default function OrdersPage() {
           url="/profile/orders"
           noIndex={true}
         />
+        <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+          <div className="max-w-sm w-full text-center flex flex-col items-center gap-6">
+            {/* Receipt illustration — pure CSS */}
+            <div className="relative w-24 mx-auto">
+              {/* Receipt shadow behind */}
+              <div
+                className="absolute top-2 left-1/2 -translate-x-1/2 w-20
+              h-28 rounded-lg bg-ocean/40 border border-white/5 rotate-[4deg]"
+              />
+              {/* Receipt front */}
+              <div
+                className="relative w-20 h-28 rounded-lg bg-card border
+              border-white/10 flex flex-col gap-2 p-3 shadow-xl mx-auto"
+              >
+                {/* Mimics a receipt line pattern */}
+                <div className="h-1.5 w-full rounded bg-golden/30" />
+                <div className="h-1.5 w-3/4 rounded bg-white/10" />
+                <div className="h-1.5 w-1/2 rounded bg-white/10" />
+                <div className="my-1 border-t border-dashed border-white/10" />
+                <div className="h-1.5 w-full rounded bg-white/10" />
+                <div className="h-1.5 w-2/3 rounded bg-white/10" />
+                <div className="mt-auto h-1.5 w-1/2 rounded bg-golden/20 self-end" />
+              </div>
+            </div>
 
-        <div className="container-page min-h-screen flex flex-col items-center justify-center gap-6 text-center px-4">
-          <ShoppingBag className="text-golden/75 opacity-50" size={64} />
+            {/* Heading + subtext */}
+            <div className="flex flex-col gap-2">
+              <h2 className="text-text-light text-2xl font-bold">
+                No orders yet
+              </h2>
+              <p className="text-text-muted text-sm leading-relaxed">
+                Your purchase history will show up here after you buy your first
+                book — with order numbers, dates, and totals.
+              </p>
+            </div>
 
-          <div>
-            <h2 className="text-white mb-2">No orders yet</h2>
-            <p className="text-xs text-gray-400">
-              When you purchase a book, your orders will appear here.
-            </p>
+            {/* Primary CTA */}
+            <Link
+              to="/books"
+              className="btn-primary w-full flex items-center gap-2"
+            >
+              <BookOpen size={18} />
+              Find Your First Book
+            </Link>
+
+            {/* Secondary — in case they already have library books somehow */}
+            <Link
+              to="/library"
+              className="text-xs text-text-muted hover:text-golden
+              underline-offset-2 hover:underline transition-colors"
+            >
+              Check your library instead
+            </Link>
           </div>
-
-          <button
-            onClick={() => navigate("/books")}
-            className="btn-primary" // Reusing our global btn-primary class from globals.css
-          >
-            Browse Books
-          </button>
         </div>
       </>
     );

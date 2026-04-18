@@ -11,7 +11,7 @@ export default function CheckoutSuccessPage() {
   const navigate = useNavigate();
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(
-    "success",
+    "loading",
   );
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
 
@@ -77,12 +77,14 @@ export default function CheckoutSuccessPage() {
   // LOADING STATE
   if (status === "loading") {
     return (
-      <div className="container-page flex flex-col items-center justify-center min-h-[90vh] gap-4">
-        <Loader2 size={48} className="text-emerald-500 animate-spin" />
-        <p className="text-text-muted text-lg">Confirming your payment...</p>
-        <p className="text-text-muted text-sm">
-          This usually takes just a few seconds.
-        </p>
+      <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+        <div className="max-w-lg w-full text-center flex flex-col items-center gap-6">
+          <Loader2 size={48} className="text-golden animate-spin" />
+          <p className="text-text-muted text-lg">Confirming your payment...</p>
+          <p className="text-text-muted text-sm">
+            This usually takes just a few seconds.
+          </p>
+        </div>
       </div>
     );
   }
@@ -98,19 +100,25 @@ export default function CheckoutSuccessPage() {
           noIndex={true}
         />
 
-        <div className="container-page flex flex-col items-center justify-center min-h-[90vh] gap-4 text-center">
-          <p className="text-5xl mb-2">❌</p>
-          <p className="text-2xl font-bold text-text-light">
-            Something went wrong
-          </p>
-          <p className="text-text-muted max-w-md">
-            We couldn't confirm your payment. If you were charged, your books
-            will appear in your library shortly. Contact support if the issue
-            persists.
-          </p>
-          <Link to="/library" className="btn-primary mt-2">
-            Go to My Library
-          </Link>
+        <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+          <div className="max-w-md w-full text-center flex flex-col items-center gap-6">
+            <p className="text-5xl mb-2">❌</p>
+            <p className="text-2xl font-bold text-text-light">
+              Something went wrong
+            </p>
+            <p className="text-text-muted">
+              We couldn't confirm your payment. If you were charged, your books
+              will appear in your library shortly. Contact support if the issue
+              persists.
+            </p>
+            <Link
+              to="/library"
+              className="btn-primary max-w-sm w-full flex items-center gap-2"
+            >
+              <BookOpen size={18} />
+              Go to My Library
+            </Link>
+          </div>
         </div>
       </>
     );
@@ -126,35 +134,40 @@ export default function CheckoutSuccessPage() {
         noIndex={true}
       />
 
-      <div className="container-page flex flex-col items-center justify-center min-h-[90vh] gap-6 text-center">
-        <div className="w-20 h-20 rounded-full bg-success/20 flex items-center justify-center">
-          <CheckCircle size={48} className="text-success" />
-        </div>
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold text-text-light">
-            Payment Successful!
-          </h1>
-          <p className="text-text-muted text-lg">
-            Thank you for your purchase. Your books are ready to read.
-          </p>
-          {orderNumber && (
-            <p className="text-sm text-text-muted mt-1">
-              Order number:{" "}
-              <span className="text-golden font-semibold">{orderNumber}</span>
+      <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+        <div className="max-w-lg w-full text-center flex flex-col items-center gap-6">
+          <div className="w-20 h-20 rounded-full bg-success/20 flex items-center justify-center">
+            <CheckCircle size={48} className="text-success" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl font-bold text-text-light">
+              Payment Successful!
+            </h1>
+            <p className="text-text-muted text-lg">
+              Thank you for your purchase. Your books are ready to read.
             </p>
-          )}
-        </div>
-        <p className="text-sm text-text-muted max-w-sm">
-          A confirmation email has been sent to you with your download links.
-        </p>
-        <div className="flex gap-4 mt-2">
-          <Link to="/library" className="btn-primary flex items-center gap-2">
-            <BookOpen size={18} />
-            Go to My Library
-          </Link>
-          <Link to="/books" className="btn-ghost">
-            Browse More Books
-          </Link>
+            {orderNumber && (
+              <p className="text-sm text-text-muted mt-1">
+                Order number:{" "}
+                <span className="text-golden font-semibold">{orderNumber}</span>
+              </p>
+            )}
+          </div>
+          <p className="text-sm text-text-muted max-w-sm">
+            A confirmation email has been sent to you with your download links.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 mt-2">
+            <Link
+              to="/library"
+              className="btn-primary w-full sm:w-fit flex items-center gap-2"
+            >
+              <BookOpen size={18} />
+              Go to My Library
+            </Link>
+            <Link to="/books" className="btn-ghost w-full sm:w-fit">
+              Browse More Books
+            </Link>
+          </div>
         </div>
       </div>
     </>

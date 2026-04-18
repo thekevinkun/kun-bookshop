@@ -105,6 +105,7 @@ export default function LibraryPage() {
 
   // Empty State
   // The user is logged in and the request succeeded but they haven't bought anything yet
+  // Empty State
   if (!library || library.length === 0) {
     return (
       <>
@@ -114,24 +115,86 @@ export default function LibraryPage() {
           url="/library"
           noIndex={true}
         />
-        <div className="container-page min-h-screen flex flex-col items-center justify-center gap-6 text-center px-4">
-          {/* Empty state icon */}
-          <BookOpen className="text-golden/75 opacity-50" size={64} />
-          <div>
-            <h2 className="text-2xl font-bold text-text-light mb-2">
-              Your library is empty
-            </h2>
-            <p className="text-text-muted">
-              Books you purchase will appear here, ready to download anytime.
+        <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+          <div className="max-w-md w-full text-center flex flex-col items-center gap-6">
+            {/* Illustrated stack of books — pure CSS, no images needed */}
+            <div className="relative w-32 h-40 mx-auto">
+              {/* Back book — rotated right */}
+              <div
+                className="absolute bottom-0 left-1/2 -translate-x-1/2
+              w-24 h-32 rounded-lg bg-ocean/60 border border-white/10
+              rotate-[10deg] translate-x-3"
+              />
+              {/* Middle book — rotated left */}
+              <div
+                className="absolute bottom-0 left-1/2 -translate-x-1/2
+              w-24 h-32 rounded-lg bg-ocean/80 border border-white/10
+              -rotate-[6deg] -translate-x-2"
+              />
+              {/* Front book — straight, golden spine accent */}
+              <div
+                className="absolute bottom-0 left-1/2 -translate-x-1/2
+              w-24 h-32 rounded-lg bg-card border border-white/10
+              flex flex-col overflow-hidden shadow-xl"
+              >
+                {/* Spine color bar at top — mimics a book cover design */}
+                <div className="h-2 bg-golden/70 w-full" />
+                {/* Book open icon centered on front cover */}
+                <div className="flex-1 flex items-center justify-center">
+                  <BookOpen size={28} className="text-golden/40" />
+                </div>
+              </div>
+            </div>
+
+            {/* Heading + subtext */}
+            <div className="flex flex-col gap-2">
+              <h2 className="text-text-light text-2xl font-bold">
+                Your library is empty
+              </h2>
+              <p className="text-text-muted text-sm leading-relaxed">
+                Books you purchase appear here instantly — no waiting, no
+                shipping. Download and read them anytime.
+              </p>
+            </div>
+
+            {/* Value props — three quick reasons to buy */}
+            <div className="w-full flex flex-col gap-2 text-left">
+              {[
+                { icon: "⚡", text: "Instant access after purchase" },
+                { icon: "📥", text: "Download PDF or EPUB anytime" },
+                { icon: "♾️", text: "Yours forever — no subscription" },
+              ].map(({ icon, text }) => (
+                <div
+                  key={text}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl
+                  bg-white/5 border border-white/10 text-sm text-text-muted"
+                >
+                  <span className="text-base">{icon}</span>
+                  <span>{text}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA */}
+             <Link
+              to="/books"
+              className="btn-primary w-full flex items-center gap-2"
+            >
+              <BookOpen size={18} />
+              Browse the Catalog
+            </Link>
+
+            {/* Secondary nudge — if they came from a book page they might remember something */}
+            <p className="text-text-muted text-xs">
+              Already browsing something?{" "}
+              <Link
+                to="/books"
+                className="text-golden hover:underline underline-offset-2"
+              >
+                Pick up where you left off
+              </Link>
             </p>
           </div>
-          {/* CTA to go browse books */}
-          <button
-            onClick={() => navigate("/books")}
-            className="btn-primary" // Reusing our global btn-primary class from globals.css
-          >
-            Browse Books
-          </button>
         </div>
       </>
     );
@@ -194,11 +257,8 @@ export default function LibraryPage() {
                         text-sm leading-snug line-clamp-2 mb-1 cursor-pointer transition-colors duration-300"
                       to={`/books/${book._id}`}
                     >
-                      <h3>
-                        {book.title}
-                      </h3>
+                      <h3>{book.title}</h3>
                     </Link>
-                    
 
                     {/* Author name — using the denormalized authorName field, NOT book.author ObjectId */}
                     <p className="text-text-muted text-xs mb-3">
