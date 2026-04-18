@@ -41,7 +41,7 @@ const BookCard = ({ book }: BookCardProps) => {
 
         {/* Discount badge — top left */}
         {discountPercent && (
-          <span className="absolute top-2 left-2 bg-burgundy text-text-light text-xs font-bold px-2 py-0.5 rounded-md">
+          <span className="absolute top-2 left-2 bg-[#c72445] text-[#FFFDD0] text-xs font-bold px-2 py-0.5 rounded-md">
             -{discountPercent}%
           </span>
         )}
@@ -92,7 +92,7 @@ const BookCard = ({ book }: BookCardProps) => {
           </span>
 
           {book.discountPrice && (
-            <span className="text-burgundy text-xs line-through">
+            <span className="text-text-muted text-xs line-through">
               ${book.price.toFixed(2)}
             </span>
           )}

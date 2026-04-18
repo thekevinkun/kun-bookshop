@@ -77,7 +77,7 @@ export default function CheckoutSuccessPage() {
   // LOADING STATE
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+      <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
         <div className="max-w-lg w-full text-center flex flex-col items-center gap-6">
           <Loader2 size={48} className="text-golden animate-spin" />
           <p className="text-text-muted text-lg">Confirming your payment...</p>
@@ -85,7 +85,7 @@ export default function CheckoutSuccessPage() {
             This usually takes just a few seconds.
           </p>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -100,7 +100,7 @@ export default function CheckoutSuccessPage() {
           noIndex={true}
         />
 
-        <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+        <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
           <div className="max-w-md w-full text-center flex flex-col items-center gap-6">
             <p className="text-5xl mb-2">❌</p>
             <p className="text-2xl font-bold text-text-light">
@@ -119,7 +119,7 @@ export default function CheckoutSuccessPage() {
               Go to My Library
             </Link>
           </div>
-        </div>
+        </main>
       </>
     );
   }
@@ -134,7 +134,7 @@ export default function CheckoutSuccessPage() {
         noIndex={true}
       />
 
-      <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+      <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
         <div className="max-w-lg w-full text-center flex flex-col items-center gap-6">
           <div className="w-20 h-20 rounded-full bg-success/20 flex items-center justify-center">
             <CheckCircle size={48} className="text-success" />
@@ -169,7 +169,7 @@ export default function CheckoutSuccessPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

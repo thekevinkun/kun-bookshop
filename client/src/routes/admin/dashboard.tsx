@@ -95,7 +95,7 @@ export default function AdminDashboard() {
           title="Total Revenue"
           value={`$${stats?.totalRevenue?.toFixed(2) ?? "0.00"}`}
           icon={<DollarSign size={22} className="text-emerald-400" />}
-          color="bg-emerald-500/20"
+          color="bg-emerald-700/20"
         />
         <StatCard
           title="Total Books"
@@ -134,7 +134,7 @@ export default function AdminDashboard() {
                 className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors
                   ${
                     days === d
-                      ? "bg-emerald-500 text-white"
+                      ? "bg-emerald-700 text-white"
                       : "bg-slate-700 text-slate-400 hover:text-white"
                   }`}
               >

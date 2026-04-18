@@ -15,11 +15,12 @@ export default function LoginPage() {
         noIndex={true}
       />
 
-      <div className="min-h-screen lg:min-h-[calc(100vh-50px)] flex bg-bg-dark">
+      <main className="min-h-screen lg:min-h-[calc(100vh-50px)] flex bg-bg-dark">
         {/* LEFT SIDE — IMAGE */}
         <div className="hidden lg:block lg:w-1/2 relative">
           <img
             src="/images/bg-login.webp"
+            fetchPriority="high"
             alt="Login background"
             className="absolute inset-0 w-full h-full object-cover"
           />
@@ -74,7 +75,7 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

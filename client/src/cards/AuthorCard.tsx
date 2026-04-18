@@ -60,7 +60,7 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
 
       {/* Book count badge — now real data from the backend */}
       {typeof author.bookCount === "number" && (
-        <span className="badge-primary text-xs mt-auto">
+        <span className="badge-primary !text-golden/90 text-xs mt-auto">
           {author.bookCount} {author.bookCount === 1 ? "book" : "books"}
         </span>
       )}

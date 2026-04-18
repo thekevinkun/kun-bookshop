@@ -53,7 +53,7 @@ export default function ResetPasswordPage() {
           noIndex={true}
         />
 
-        <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+        <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
           <div className="w-full max-w-md">
             <div className="card-base text-center space-y-4">
               <CheckCircle className="w-16 h-16 text-success mx-auto" />
@@ -72,7 +72,7 @@ export default function ResetPasswordPage() {
               </button>
             </div>
           </div>
-        </div>
+        </main>
       </>
     );
   }

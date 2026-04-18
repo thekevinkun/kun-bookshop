@@ -102,7 +102,7 @@ const RecommendedCarousel = ({
         <div className="flex items-center justify-end gap-2 mb-5">
           <button
             type="button"
-            className={`w-10 h-10 rounded-full border border-golden/60 bg-card/40 text-text-muted
+            className={`w-11 h-11 p-0.5 rounded-full border border-golden/60 bg-card/40 text-text-muted
                   flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-300 ${
                     showLeftArrow
                       ? "opacity-100 shadow-md hover:shadow-golden/50"
@@ -115,7 +115,7 @@ const RecommendedCarousel = ({
           </button>
           <button
             type="button"
-            className={`w-10 h-10 rounded-full border border-golden/60 bg-card/40 text-text-muted
+            className={`w-11 h-11 p-0.5 rounded-full border border-golden/60 bg-card/40 text-text-muted
                   flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-300 ${
                     showRightArrow
                       ? "opacity-100 shadow-md hover:shadow-golden/50"

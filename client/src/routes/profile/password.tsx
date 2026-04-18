@@ -53,9 +53,7 @@ const PasswordField = ({
   register: UseFormRegister<ChangePasswordForm>;
 }) => (
   <div className="flex flex-col gap-1.5">
-    <label className="text-xs font-medium text-text-muted">
-      {label}
-    </label>
+    <label className="text-xs font-medium text-text-muted">{label}</label>
     <div className="relative">
       <input
         {...register(fieldKey)} // Register with RHF
@@ -120,7 +118,7 @@ export default function ChangePasswordPage() {
         noIndex={true}
       />
 
-      <div className="min-h-[90vh]">
+      <main className="min-h-[90vh]">
         <div className="py-12">
           <div className="container-page max-w-2xl mx-auto flex flex-col">
             <button
@@ -192,7 +190,7 @@ export default function ChangePasswordPage() {
             </form>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

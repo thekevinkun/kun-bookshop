@@ -43,7 +43,7 @@ export default function CheckoutCancelPage() {
       />
 
       {/* Full-height centered layout — mirrors the success page structure */}
-      <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+      <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
         <div className="max-w-lg w-full text-center flex flex-col items-center gap-6">
           {/* Red X icon — same size/shape as the success page's green circle */}
           <div className="w-20 h-20 rounded-full bg-error/20 flex items-center justify-center">
@@ -75,19 +75,25 @@ export default function CheckoutCancelPage() {
           {/* Action buttons — primary is the most useful next action (back to books) */}
           <div className="flex flex-wrap justify-center gap-4 mt-2">
             {/* Primary — send them back to where they came from */}
-            <Link to="/books" className="btn-primary w-full sm:w-fit flex items-center gap-2">
+            <Link
+              to="/books"
+              className="btn-primary w-full sm:w-fit flex items-center gap-2"
+            >
               <ArrowLeft size={18} />
               Back to Books
             </Link>
 
             {/* Secondary — homepage if they want a fresh start */}
-            <Link to="/" className="btn-ghost w-full sm:w-fit flex items-center gap-2">
+            <Link
+              to="/"
+              className="btn-ghost w-full sm:w-fit flex items-center gap-2"
+            >
               <Home size={18} />
               Back to Home
             </Link>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

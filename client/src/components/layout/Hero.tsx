@@ -216,7 +216,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                       setDirection(i > activeIndex ? "next" : "prev");
                       setActiveIndex(i);
                     }}
-                    className={`transition-all duration-300 rounded-full
+                    className={`p-1.5 transition-all duration-300 rounded-full
                       ${
                         i === activeIndex
                           ? "w-8 h-2 bg-golden"
@@ -228,7 +228,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                 <div className="flex gap-2 ml-4">
                   <button
                     onClick={prev}
-                    className="w-8 h-8 rounded-full border border-golden/80 flex items-center justify-center
+                    className="w-10 h-10 rounded-full border border-golden/80 flex items-center justify-center
                       text-text-muted hover:border-golden hover:text-golden transition-all duration-200"
                     aria-label="Previous book"
                   >
@@ -236,7 +236,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                   </button>
                   <button
                     onClick={next}
-                    className="w-8 h-8 rounded-full border border-golden/80 flex items-center justify-center
+                    className="w-10 h-10 rounded-full border border-golden/80 flex items-center justify-center
                       text-text-muted hover:border-golden hover:text-golden transition-all duration-200"
                     aria-label="Next book"
                   >
@@ -266,6 +266,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                     <img
                       src={activeBook.coverImage}
                       alt=""
+                      fetchPriority="high"
                       aria-hidden="true"
                       className="absolute top-6 left-9 sm:left-12 w-full rounded-xl object-cover aspect-[2/3]
                         rotate-[12deg] scale-[0.94] opacity-55 blur-[1.5px] brightness-[0.55]
@@ -278,6 +279,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                     <img
                       src={activeBook.coverImage}
                       alt=""
+                      fetchPriority="high"
                       aria-hidden="true"
                       className="absolute top-3 left-5 sm:left-8 w-full rounded-xl object-cover aspect-[2/3]
                         rotate-[10deg] scale-[0.97] opacity-75 blur-[0.5px] brightness-[0.72]
@@ -291,6 +293,7 @@ const Hero = ({ books, isLoading }: { books: IBook[]; isLoading: boolean }) => {
                     <img
                       src={activeBook.coverImage}
                       alt={`Cover of ${activeBook.title}`}
+                      fetchPriority="high"
                       className="relative z-10 w-full rounded-xl shadow-[0_24px_60px_rgba(0,0,0,0.5)]
                         object-cover aspect-[2/3]"
                       onError={(e) => {

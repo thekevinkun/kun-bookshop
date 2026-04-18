@@ -38,7 +38,7 @@ export default function AuthorProfilePage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-navy animate-pulse">
+      <main className="min-h-screen bg-navy animate-pulse">
         <div className="container-page py-16">
           <div className="flex flex-col sm:flex-row gap-8 items-start">
             <div className="skeleton w-36 h-36 rounded-full flex-shrink-0" />
@@ -50,14 +50,14 @@ export default function AuthorProfilePage() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   // Not found state
   if (isError || !author) {
     return (
-      <div className="container-page text-center py-24">
+      <main className="container-page text-center py-24">
         <p className="text-6xl mb-4">✍️</p>
         <h2 className="text-text-light text-2xl font-bold mb-2">
           Author not found
@@ -68,7 +68,7 @@ export default function AuthorProfilePage() {
         <button className="btn-primary" onClick={() => navigate("/")}>
           Back to Home
         </button>
-      </div>
+      </main>
     );
   }
 
@@ -87,7 +87,7 @@ export default function AuthorProfilePage() {
         author={author.name} // populates <meta name="author"> tag
       />
 
-      <div className="min-h-screen bg-bg-dark">
+      <main className="min-h-screen bg-bg-dark">
         {/* Hero banner */}
         <section className="bg-navy py-16">
           <div className="container-page">
@@ -200,7 +200,7 @@ export default function AuthorProfilePage() {
             )}
           </div>
         </section>
-      </div>
+      </main>
     </>
   );
 }

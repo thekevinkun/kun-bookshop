@@ -80,7 +80,7 @@ export default function BooksPage() {
         url="/books"
       />
 
-      <div className="min-h-screen">
+      <main className="min-h-screen">
         {/* Hero search section */}
         <section className="relative bg-navy pt-12 overflow-visible">
           {/* Background golden glow — decorative */}
@@ -270,7 +270,7 @@ export default function BooksPage() {
             )}
           </div>
         </section>
-      </div>
+      </main>
     </>
   );
 }

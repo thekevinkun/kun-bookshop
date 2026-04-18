@@ -113,7 +113,7 @@ export default function EditProfilePage() {
         noIndex={true}
       />
 
-      <div className="min-h-[90vh]">
+      <main className="min-h-[90vh]">
         <div className="py-12">
           <div className="container-page max-w-2xl mx-auto flex flex-col">
             <button
@@ -216,7 +216,7 @@ export default function EditProfilePage() {
             </form>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

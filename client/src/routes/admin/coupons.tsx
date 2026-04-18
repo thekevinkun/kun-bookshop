@@ -237,7 +237,7 @@ export default function AdminCoupons() {
                           <button
                             onClick={() => handleToggle(coupon)}
                             title={coupon.isActive ? "Deactivate" : "Activate"}
-                            className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors"
+                            className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-emerald-700/10 rounded-lg transition-colors"
                           >
                             {coupon.isActive ? (
                               <ToggleRight size={15} />

@@ -11,7 +11,7 @@ export default function ForgotPasswordPage() {
         noIndex={true}
       />
 
-      <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+      <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
         <div className="w-full max-w-md">
           {/* LOGO / BRAND */}
           <div className="mb-8">
@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
             <ForgotPasswordForm />
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

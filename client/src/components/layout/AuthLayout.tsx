@@ -4,7 +4,7 @@ import { FOOTER_SOCIAL_LINKS } from "../../lib/constants";
 
 const AuthLayout = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-bg-dark">
+    <main className="min-h-screen flex flex-col bg-bg-dark">
       {/* MAIN CONTENT */}
       <div className="flex-1">
         <Outlet />
@@ -42,7 +42,7 @@ const AuthLayout = () => {
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 };
 

@@ -401,6 +401,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 key={`${book._id}-stack-mid`}
                 src={book.coverImage}
                 alt=""
+                fetchPriority="high"
                 aria-hidden="true"
                 className="absolute top-3 left-7 sm:left-8 md:left-5 lg:left-8 w-full rounded-xl object-cover aspect-[2/3]
                   rotate-[10deg] md:rotate-[7deg] lg:rotate-[10deg] scale-[0.97] opacity-75 blur-[0.5px] brightness-[0.72]
@@ -416,6 +417,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 key={book._id} // Key change triggers re-render on slide change
                 src={book.coverImage}
                 alt={`Cover of ${book.title}`}
+                fetchPriority="high"
                 className="relative z-10 w-full rounded-xl shadow-[0_24px_60px_rgba(0,0,0,0.5)] 
                   object-cover aspect-[2/3] transition-opacity duration-500"
                 onError={(e) => {

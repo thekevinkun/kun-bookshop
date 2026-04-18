@@ -11,7 +11,7 @@ export default function RegisterPage() {
         noIndex={true}
       />
 
-      <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+      <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
         <div className="section w-full max-w-md">
           {/* LOGO / BRAND */}
           <div className="mb-8">
@@ -48,7 +48,7 @@ export default function RegisterPage() {
             </p>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

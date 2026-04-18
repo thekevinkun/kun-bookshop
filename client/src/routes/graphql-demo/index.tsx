@@ -465,7 +465,7 @@ export default function GraphQLDemoPage() {
 
         {/* Mutation result */}
         {mutResult && (
-          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 flex flex-col gap-2">
+          <div className="rounded-xl border border-emerald-700/20 bg-emerald-700/5 p-4 flex flex-col gap-2">
             <div className="flex items-center gap-2 text-emerald-400 text-sm font-medium">
               <CheckCircle className="w-4 h-4" />
               Review created via GraphQL mutation

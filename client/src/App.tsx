@@ -1,15 +1,19 @@
 import { lazy, Suspense } from "react"; // lazy loads a component only when it's needed
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-// A simple full-screen spinner shown while a lazy chunk is loading
+// A simple full-screen small icon shown while a lazy chunk is loading
 // Keeps the app feeling smooth instead of showing a blank screen
 const PageLoader = () => (
-  <div
+  <main
     style={{ backgroundColor: "#0a1628" }}
     className="min-h-screen flex items-center justify-center"
   >
-    <div className="w-8 h-8 border-2 border-golden border-t-transparent rounded-full animate-spin" />
-  </div>
+    <img 
+      src="/images/logo.webp"
+      alt="logo loading"
+      className="w-10 h-10 object-cover animate-pulse"
+    />
+  </main>
 );
 
 // AUTH ROUTES — only loaded when user visits /login, /register, etc.

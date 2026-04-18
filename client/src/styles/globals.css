@@ -11,7 +11,7 @@
   --color-ocean: #1e3a5f; /* slightly lighter — card/section backgrounds */
   --color-golden: #e6be77; /* primary accent — buttons, links, highlights */
   --color-teal: #14b8a6;
-  --color-burgundy: #c73a52; /* secondary accent — buttons, links, highlights */
+  --color-burgundy: #cf405d; /* secondary accent — buttons, links, highlights */
   --color-dark: #0f172a; /* near-black — used for overlays */
   --color-card: #1e293b; /* card surface background */
   --color-reader: #121212;
@@ -19,7 +19,7 @@
   /* Text Colors */
   --color-text-light: #f8fafc; /* primary text on dark backgrounds */
   --color-text-dark: #1f2937; /* text on light backgrounds */
-  --color-text-muted: #9ca3af; /* secondary/helper text */
+  --color-text-muted: #b0b9c6; /* secondary/helper text */
 
   /* Status Colors */
   --color-success: #10b981; /* success states — completed orders, verified */
@@ -169,7 +169,6 @@ h6 {
   font-weight: 600;
 }
 
-
 @media screen and (max-width: 640px) {
   h1 {
     font-size: 2.45rem;
@@ -307,17 +306,17 @@ h6 {
     @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
   }
 
-  /* golden badge — "New", "Featured" */
+  /* teal badge — "New", "Featured" */
   .badge-primary {
     background: rgba(20, 184, 166, 0.2);
-    color: #14b8a6;
+    color: rgba(20, 184, 166, 1);
     border: 1px solid rgba(20, 184, 166, 0.3);
   }
 
   .badge-secondary {
-    background: rgba(199, 58, 82, 0.2);
-    color: #c73a52;
-    border: 1px solid rgba(199, 58, 82, 0.3);
+    background: rgba(224, 84, 112, 0.2);
+    color: rgba(224, 84, 112, 1);
+    border: 1px solid rgba(224, 84, 112, 0.3);
   }
 
   /* GRADIENT TEXT */
@@ -335,12 +334,7 @@ h6 {
   }
 
   .text-gradient-secondary {
-    background: linear-gradient(
-      135deg,
-      #f8fafc 0%,
-      #e6be77 50%,
-      #f8fafc 100%
-    );
+    background: linear-gradient(135deg, #f8fafc 0%, #e6be77 50%, #f8fafc 100%);
     background-size: 200% 200%;
     background-position: left;
 
@@ -353,7 +347,6 @@ h6 {
   .text-gradient-secondary:hover {
     background-position: right;
   }
-
 
   /* SKELETON LOADING */
 

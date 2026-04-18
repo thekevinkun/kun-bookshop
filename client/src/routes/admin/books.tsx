@@ -176,7 +176,7 @@ export default function AdminBooks() {
                     <td className="px-6 py-4 text-white">
                       ${book.discountPrice ?? book.price}
                       {book.discountPrice && (
-                        <span className="text-slate-500 line-through ml-2 text-xs">
+                        <span className="text-text-muted line-through ml-2 text-xs">
                           ${book.price}
                         </span>
                       )}

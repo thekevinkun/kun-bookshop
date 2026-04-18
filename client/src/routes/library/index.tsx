@@ -81,16 +81,16 @@ export default function LibraryPage() {
   if (isLoading) {
     return (
       // Full-page centered spinner while we wait for the library to load
-      <div className="container-page min-h-screen flex items-center justify-center">
+      <main className="container-page min-h-screen flex items-center justify-center">
         <Loader2 className="animate-spin text-golden/75" size={40} />
-      </div>
+      </main>
     );
   }
 
   // Error State
   if (isError) {
     return (
-      <div className="container-page min-h-screen flex flex-col items-center justify-center gap-4 text-center px-4">
+      <main className="container-page min-h-screen flex flex-col items-center justify-center gap-4 text-center px-4">
         {/* Error icon */}
         <AlertCircle className="text-red-400" size={48} />
         <h2 className="text-xl font-semibold text-text-light">
@@ -99,7 +99,7 @@ export default function LibraryPage() {
         <p className="text-text-muted">
           Something went wrong. Please refresh the page and try again.
         </p>
-      </div>
+      </main>
     );
   }
 
@@ -115,7 +115,7 @@ export default function LibraryPage() {
           url="/library"
           noIndex={true}
         />
-        <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+        <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
           <div className="max-w-md w-full text-center flex flex-col items-center gap-6">
             {/* Illustrated stack of books — pure CSS, no images needed */}
             <div className="relative w-32 h-40 mx-auto">
@@ -176,7 +176,7 @@ export default function LibraryPage() {
             </div>
 
             {/* CTA */}
-             <Link
+            <Link
               to="/books"
               className="btn-primary w-full flex items-center gap-2"
             >
@@ -195,7 +195,7 @@ export default function LibraryPage() {
               </Link>
             </p>
           </div>
-        </div>
+        </main>
       </>
     );
   }

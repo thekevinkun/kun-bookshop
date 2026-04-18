@@ -1,4 +1,4 @@
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BookOpen, Calendar, Hash, Loader2, AlertCircle } from "lucide-react";
 import { useOrders } from "../../hooks/useOrders";
 import { format } from "date-fns";
@@ -24,30 +24,27 @@ export default function OrdersPage() {
   // Fetch the user's order history from the backend
   const { data, isLoading, isError } = useOrders();
 
-  // Hook for navigation — used to redirect to login if not authenticated
-  const navigate = useNavigate();
-
   const orders = data?.orders ?? []; // Default to empty array while loading
 
   // Loading state
   if (isLoading) {
     return (
       // Full-page centered spinner while we wait for the library to load
-      <div className="container-page min-h-screen flex items-center justify-center">
+      <main className="container-page min-h-screen flex items-center justify-center">
         <Loader2 className="animate-spin text-golden/75" size={40} />
-      </div>
+      </main>
     );
   }
 
   // Error state
   if (isError) {
     return (
-      <div className="container-page min-h-screen flex flex-col items-center justify-center">
+      <main className="container-page min-h-screen flex flex-col items-center justify-center">
         <AlertCircle className="text-rose-400" size={40} />
         <p className="text-sm">
           Failed to load orders. Please try again later.
         </p>
-      </div>
+      </main>
     );
   }
 

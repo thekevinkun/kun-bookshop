@@ -57,7 +57,7 @@ export default function VerifyEmailPage() {
         noIndex={true}
       />
 
-      <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+      <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
         <div className="w-full max-w-md">
           <div className="mb-8">
             <div className="flex items-center justify-center">
@@ -107,7 +107,7 @@ export default function VerifyEmailPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

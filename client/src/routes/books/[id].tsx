@@ -33,7 +33,7 @@ export default function BookDetailPage() {
   // LOADING
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-navy">
+      <main className="min-h-screen bg-navy">
         <div className="container-page py-16 animate-pulse">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center min-h-[85vh]">
             <div className="flex flex-col gap-4">
@@ -45,7 +45,7 @@ export default function BookDetailPage() {
             <div className="skeleton aspect-[2/3] w-64 mx-auto rounded-xl" />
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -53,7 +53,7 @@ export default function BookDetailPage() {
   // Show this when the API returns an error or the book simply doesn't exist
   if (isError || !book) {
     return (
-      <div className="container-page text-center py-24">
+      <main className="container-page text-center py-24">
         <p className="text-6xl mb-4">📖</p>
         <h2 className="text-text-light text-2xl font-bold mb-2">
           Book not found
@@ -64,7 +64,7 @@ export default function BookDetailPage() {
         <button className="btn-primary" onClick={() => navigate("/books")}>
           Back to Catalog
         </button>
-      </div>
+      </main>
     );
   }
 
@@ -93,7 +93,7 @@ export default function BookDetailPage() {
         ratingCount={book.reviewCount}
         publishedDate={book.publishedDate}
       />
-      <div className="min-h-screen">
+      <main className="min-h-screen">
         {/* Hero — cover image, title, price, buy button */}
         <BookDetailHero book={book} isAuthenticated={isAuthenticated} />
 
@@ -118,7 +118,7 @@ export default function BookDetailPage() {
             </div>
           </div>
         </section>
-      </div>
+      </main>
     </>
   );
 }

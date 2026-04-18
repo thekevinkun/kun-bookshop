@@ -77,7 +77,8 @@ const CouponInput = ({
   // If a coupon is already applied, show the applied pill instead of the input
   if (appliedCoupon) {
     return (
-      <div className="flex items-center justify-between rounded-lg 
+      <div
+        className="flex items-center justify-between rounded-lg 
         bg-emerald-50 border border-emerald-200 px-3 py-2"
       >
         {/* Left side: tag icon + coupon summary */}

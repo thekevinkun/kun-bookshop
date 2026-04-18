@@ -108,7 +108,7 @@ export default function ProfilePage() {
         noIndex={true}
       />
 
-      <div className="min-h-screen">
+      <main className="min-h-screen">
         <div className="container-page py-12">
           {/*
             OUTER LAYOUT — left profile card + right content panel
@@ -550,10 +550,7 @@ export default function ProfilePage() {
                                 className="w-9 h-9 rounded-xl bg-golden border border-golden 
                               flex items-center justify-center flex-shrink-0"
                               >
-                                <Download
-                                  size={15}
-                                  className="text-black"
-                                />
+                                <Download size={15} className="text-black" />
                               </div>
 
                               {/* Book info */}
@@ -584,7 +581,7 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

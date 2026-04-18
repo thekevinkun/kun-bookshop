@@ -24,7 +24,7 @@ export default function HomePage() {
         url="/"
       />
       <WebSiteJsonLd />
-      <div className="min-h-screen">
+      <main className="min-h-screen">
         <Hero books={heroBooks} isLoading={featuredLoading} />
 
         <RecommendedSection />
@@ -54,7 +54,7 @@ export default function HomePage() {
         <AuthorsSection />
 
         <CTASection />
-      </div>
+      </main>
     </>
   );
 }
