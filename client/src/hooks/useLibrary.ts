@@ -1,6 +1,8 @@
 // Import the React Query hooks we need for fetching and mutating data
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useAuthStore } from "../store/auth";
+
 // Import our pre-configured Axios instance so all requests include auth cookies
 import api from "../lib/api";
 
@@ -15,43 +17,54 @@ const DOWNLOADS_KEY = ["downloadHistory"] as const; // Key for the user's downlo
 // Fetches the logged-in user's purchased books from GET /api/users/library
 // Use this on the library page to display all owned books
 export const useLibrary = (enabled = true) => {
+  // Wait for initAuth to finish before firing — prevents 401 during hydration window
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
   return useQuery({
-    queryKey: LIBRARY_KEY, // Cache this data under the 'library' key
+    queryKey: LIBRARY_KEY,
     queryFn: async () => {
-      // Call our backend library endpoint
       const { data } = await api.get("/users/library");
-      // Return the library array — this becomes the 'data' property in the component
       return data.library;
     },
-    enabled,
-    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes — library doesn't change often
+    // All three conditions must be true before firing
+    enabled: isHydrated && isAuthenticated && enabled,
+    staleTime: 1000 * 60 * 5,
   });
 };
 
 // useWishlist
 // Fetches the logged-in user's wishlisted books from GET /api/users/wishlist
 export const useWishlist = (enabled = true) => {
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
   return useQuery({
     queryKey: WISHLIST_KEY,
     queryFn: async () => {
       const { data } = await api.get("/users/wishlist");
       return data.wishlist;
     },
-    enabled,
-    staleTime: 1000 * 60 * 5, // Fresh for 5 minutes
+    enabled: isHydrated && isAuthenticated && enabled,
+    staleTime: 1000 * 60 * 5,
   });
 };
 
 // useDownloadHistory
 // Fetches the logged-in user's download history from GET /api/downloads/history
 export const useDownloadHistory = () => {
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
   return useQuery({
     queryKey: DOWNLOADS_KEY,
     queryFn: async () => {
       const { data } = await api.get("/downloads/history");
       return data.downloads;
     },
-    staleTime: 1000 * 60 * 2, // Fresh for 2 minutes — more likely to change than library
+    // Was missing enabled entirely — fired for guests and during hydration
+    enabled: isHydrated && isAuthenticated,
+    staleTime: 1000 * 60 * 2,
   });
 };
 
