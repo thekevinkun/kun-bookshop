@@ -1,16 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { AuthorCard } from "../../cards";
-import type { IAuthor } from "../../types/book";
+import { BookCard } from "../../cards";
+import type { IBook } from "../../types/book";
 
-interface AuthorsCarouselProps {
-  authors: (IAuthor & { bookCount?: number })[];
-}
+const carouselItemClassName = `shrink-0 snap-start basis-[calc(27.333%-0.35rem)] min-[30rem]:basis-[calc(21.666%-0.475rem)] 
+    sm:basis-[calc(17.666%-0.725rem)] md:basis-[calc(15%-1rem)] lg:basis-[calc(13.333%-1.5rem)]`;
 
-const carouselItemClassName =
-  "shrink-0 snap-start basis-[calc(50%-0.5rem)] min-[30rem]:basis-[calc(33.333%-0.75rem)]";
-
-const AuthorsCarousel = ({ authors }: AuthorsCarouselProps) => {
+const RecentlyViewedCarousel = ({ books }: { books: IBook[] }) => {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
@@ -65,7 +61,7 @@ const AuthorsCarousel = ({ authors }: AuthorsCarouselProps) => {
         cancelAnimationFrame(rafRef.current);
       }
     };
-  }, [checkArrowVisibility, authors.length]);
+  }, [checkArrowVisibility, books.length]);
 
   // Scroll listener
   useEffect(() => {
@@ -79,7 +75,7 @@ const AuthorsCarousel = ({ authors }: AuthorsCarouselProps) => {
   }, [handleScroll]);
 
   return (
-    <div className="lg:hidden">
+    <div className="relative">
       {(showLeftArrow || showRightArrow) && (
         <div className="flex items-center justify-end gap-2 mb-5">
           <button
@@ -113,11 +109,12 @@ const AuthorsCarousel = ({ authors }: AuthorsCarouselProps) => {
 
       <div
         ref={trackRef}
-        className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-3 sm:gap-4 md:gap-5 overflow-x-auto pb-2 snap-x snap-mandatory 
+        scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {authors.map((author) => (
-          <div key={author._id} className={carouselItemClassName}>
-            <AuthorCard author={author} />
+        {books.map((book) => (
+          <div key={book._id} className={carouselItemClassName}>
+            <BookCard book={book} />
           </div>
         ))}
       </div>
@@ -125,4 +122,4 @@ const AuthorsCarousel = ({ authors }: AuthorsCarouselProps) => {
   );
 };
 
-export default AuthorsCarousel;
+export default RecentlyViewedCarousel;

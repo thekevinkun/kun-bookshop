@@ -1,5 +1,5 @@
 import { useRecentlyViewed } from "../../hooks/useRecentlyViewed";
-import RecommendedCarousel from "../features/RecommendedCarousel"; // reuse the exact same carousel
+import { RecentlyViewedCarousel } from "../features";
 
 const RecentlyViewedSection = () => {
   // Read from localStorage — synchronous, no loading state
@@ -23,7 +23,7 @@ const RecentlyViewedSection = () => {
 
         {/* Reuse the exact same carousel component from RecommendedSection */}
         {/* No isLoading state needed — localStorage is synchronous */}
-        <RecommendedCarousel books={books} isLoading={false} />
+        <RecentlyViewedCarousel books={books} />
       </div>
     </div>
   );

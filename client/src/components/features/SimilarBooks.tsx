@@ -91,7 +91,7 @@ const SimilarBooks = ({ books }: SimilarBooksProps) => {
             <div className="flex items-center justify-end gap-2 lg:hidden">
               <button
                 type="button"
-                className={`w-11 h-11 p-0.5 rounded-full border border-golden/80 bg-card/40 text-text-muted
+                className={`w-10 h-10 md:w-11 md:h-11 p-0.5 rounded-full border border-golden/80 bg-card/40 text-text-muted
                 flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-200 ${
                   showLeftArrow
                     ? "opacity-100 shadow-md hover:shadow-golden/50"
@@ -104,7 +104,7 @@ const SimilarBooks = ({ books }: SimilarBooksProps) => {
               </button>
               <button
                 type="button"
-                className={`w-11 h-11 p-0.5 rounded-full border border-golden/80 bg-card/40 text-text-muted
+                className={`w-10 h-10 md:w-11 md:h-11 p-0.5 rounded-full border border-golden/80 bg-card/40 text-text-muted
                 flex items-center justify-center hover:border-golden hover:text-golden transition-all duration-200 ${
                   showRightArrow
                     ? "opacity-100 shadow-md hover:shadow-golden/50"
