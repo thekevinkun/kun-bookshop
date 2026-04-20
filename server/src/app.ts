@@ -158,7 +158,7 @@ app.use("/api/admin/coupons", couponRoutes);
 
 // HEALTH CHECK ROUTE
 // A simple route to confirm the server is running — used by Docker and monitoring tools
-app.get("/api/health", (req, res) => {
+app.get("/api/health", (_req, res) => {
   // Respond with a 200 status and a simple message
   res
     .status(200)
