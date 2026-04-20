@@ -19,8 +19,7 @@ const DEFAULT_DESCRIPTION =
   "Discover and buy digital books at Kun Bookshop. Instant access to your library after purchase.";
 
 // The fallback image used when a page doesn't provide a social share image
-// Replace this with your actual OG image URL once you have one
-const DEFAULT_IMAGE = "/android-chrome-512x512.png";
+const DEFAULT_IMAGE = "/og-image.png";
 
 // The production URL of your site — used for canonical URLs and OG URLs
 // Vite exposes env vars via import.meta.env — set VITE_SITE_URL in your .env
