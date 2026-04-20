@@ -1,14 +1,18 @@
 import { Request, Response } from "express";
 import cloudinary from "../config/cloudinary";
 
+import { promises as fs } from "fs";
+import path from "path";
+
+import DOMPurify from "dompurify";
+import { JSDOM } from "jsdom";
+
 import { User } from "../models/User";
 import { Book } from "../models/Book";
 import { Author } from "../models/Author";
 
 import { logger } from "../utils/logger";
 
-import { promises as fs } from "fs";
-import path from "path";
 import {
   bookQuerySchema,
   createBookSchema,
@@ -18,8 +22,7 @@ import {
   BOOK_CATEGORY_BUCKETS,
   type BookCategoryBucketKey,
 } from "../constants/bookCategoryBuckets";
-import DOMPurify from "dompurify";
-import { JSDOM } from "jsdom";
+
 import {
   extractEpubPreview,
   removeEpubPreview,
@@ -1061,5 +1064,65 @@ export const deleteBook = async (req: Request, res: Response) => {
   } catch (error) {
     logger.error("deleteBook error", { error });
     res.status(500).json({ error: "Failed to delete book" });
+  }
+};
+
+// GET /api/books/:id/read
+// Auth + ownership required — returns a full-access signed URL for the book file.
+// For EPUB: reuses the same extracted preview dir (full archive is already there).
+// For PDF: signed Cloudinary URL with 1-hour expiry.
+export const getBookRead = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user!.userId;
+    const bookId = req.params.id as string;
+
+    // Verify ownership — user must have this book in their library
+    const user = await User.findById(userId).select("library").lean();
+    const ownsBook = user?.library?.some((id) => id.toString() === bookId);
+
+    if (!ownsBook) {
+      res.status(403).json({ error: "You do not own this book" });
+      return;
+    }
+
+    const book = await Book.findById(bookId)
+      .select("title filePublicId fileType isActive")
+      .lean();
+
+    if (!book || !book.isActive) {
+      res.status(404).json({ error: "Book not found" });
+      return;
+    }
+
+    if (!book.filePublicId) {
+      res.status(400).json({ error: "Book file is not available" });
+      return;
+    }
+
+    // This endpoint is only called for PDF — EPUB owners download instead
+    if (book.fileType !== "pdf") {
+      res
+        .status(400)
+        .json({ error: "Use the download endpoint for EPUB files" });
+      return;
+    }
+
+    // Signed Cloudinary URL valid for 1 hour — longer than preview (15 min)
+    // because reading a full book takes time
+    const expiresAt = Math.floor(Date.now() / 1000) + 3600;
+
+    const readUrl = cloudinary.url(book.filePublicId, {
+      sign_url: true,
+      expires_at: expiresAt,
+      resource_type: "raw",
+      type: "upload",
+    });
+
+    logger.info("Book read URL generated", { bookId, userId });
+
+    res.json({ readUrl, fileType: book.fileType });
+  } catch (error) {
+    logger.error("getBookRead error", { error });
+    res.status(500).json({ error: "Failed to generate read URL" });
   }
 };

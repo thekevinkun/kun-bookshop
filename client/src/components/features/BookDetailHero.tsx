@@ -6,7 +6,8 @@ import {
   useAddToWishlist,
   useRemoveFromWishlist,
   useWishlist,
-  useLibrary, // Import the library hook so we can check ownership
+  useLibrary,
+  useDownloadBook,
 } from "../../hooks/useLibrary";
 import { toast } from "sonner";
 import {
@@ -52,7 +53,8 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
 
   // Fetch the user's purchased library — only fires when the user is logged in
   // This gives us the list of books the user already owns
-  const { data: library = [] } = useLibrary(isAuthenticated);
+  const { data: library = [], isLoading: isLibraryLoading } =
+    useLibrary(isAuthenticated);
 
   // Check if this specific book is already owned by the user
   // Compare string versions of IDs to avoid ObjectId vs string mismatches
@@ -77,6 +79,18 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
 
   // Combined pending state — true while either mutation is in flight
   const isWishlistPending = isAddingWishlist || isRemovingWishlist;
+
+  const { mutate: downloadBook, isPending: isDownloadingEpub } =
+    useDownloadBook();
+
+  const handleDownloadEpub = () => {
+    downloadBook(
+      { bookId: book._id, title: book.title, fileType: book.fileType },
+      {
+        onError: () => toast.error("Download failed. Please try again."),
+      },
+    );
+  };
 
   // Called when the user clicks "Add to Cart"
   const handleAddToCart = () => {
@@ -258,10 +272,21 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
               {isOwned ? (
                 <button
                   className="btn-primary flex items-center gap-2"
-                  onClick={() => navigate("/library")} // Send them straight to their library
+                  disabled={isDownloadingEpub}
+                  onClick={() => {
+                    if (book.fileType === "epub") {
+                      handleDownloadEpub();
+                    } else {
+                      setIsPreviewOpen(true);
+                    }
+                  }}
                 >
                   <BookOpen size={16} />
-                  View in Library
+                  {book.fileType === "epub"
+                    ? isDownloadingEpub
+                      ? "Preparing..."
+                      : "Download to Read"
+                    : "Read Now"}
                 </button>
               ) : (
                 <motion.button
@@ -327,7 +352,8 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                     : "rgba(248, 250, 252, 0.10)", // subtle border when not
                 }}
                 transition={{ duration: 0.2 }}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-text-light"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium 
+                  cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-text-light"
               >
                 <motion.div
                   // Heart icon pops on toggle — scale up briefly then settles
@@ -381,13 +407,20 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
             </div>
 
             {/* Preview button — only show if the book has a preview available (previewPages is set) */}
-            {book.previewPages && book.previewPages > 0 && (
+            {isOwned && book.previewPages && book.previewPages > 0 ? (
+              <button
+                className="btn-ghost btn-sm self-start flex items-center gap-2"
+                onClick={() => navigate("/library")} // Send them straight to their library
+              >
+                <BookOpen size={16} />
+                View in Library
+              </button>
+            ) : (
               <button
                 onClick={() => setIsPreviewOpen(true)} // Open the preview modal
                 className="btn-ghost btn-sm self-start flex items-center gap-2"
               >
-                <BookOpen className="w-4 h-4" />{" "}
-                {/* BookOpen icon from lucide-react */}
+                <BookOpen size={16} /> {/* BookOpen icon from lucide-react */}
                 Preview ({book.previewPages} pages)
               </button>
             )}
@@ -441,6 +474,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
           fileType={book.fileType} // Add this — 'pdf' | 'epub'
           isOpen={isPreviewOpen}
           onClose={() => setIsPreviewOpen(false)}
+          mode={isOwned && !isLibraryLoading ? "read" : "preview"}
           onBuy={() => {
             document
               .getElementById("book-purchase-section")

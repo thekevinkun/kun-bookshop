@@ -34,6 +34,9 @@ import authRoutes from "./routes/auth.routes";
 // Import the book routes here so we can mount them on the Express app
 import bookRoutes from "./routes/book.routes";
 
+// Import the reading progress routes — handle all the /api/reading-progress enpoints
+import readingProgressRouter from "./routes/readingProgress.routes";
+
 // Import the author router — handles all /api/authors/* endpoints
 import authorRoutes from "./routes/author.routes";
 
@@ -43,6 +46,7 @@ import reviewRoutes from "./routes/review.routes";
 // Import User-scoped orders route
 import ordersRoutes from "./routes/orders.routes";
 
+// Import coupon routes
 import couponRoutes from "./routes/coupon.routes";
 
 // Import the checkout and webhook routes so we can mount them on the Express app
@@ -127,6 +131,8 @@ app.use("/api/admin", adminRoutes);
 
 // add this line after app.use('/api/auth', authRoutes)
 app.use("/api/books", bookRoutes);
+
+app.use("/api/reading-progress", readingProgressRouter);
 
 // Mount the author router — all paths start with /api/authors
 app.use("/api/authors", authorRoutes);

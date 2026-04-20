@@ -9,6 +9,7 @@ import {
   searchAutocomplete,
   getBookPreview,
   getEpubPreviewAsset,
+  getBookRead,
   createBook,
   updateBook,
   getRecommendations,
@@ -26,7 +27,7 @@ import {
 
 const router = Router();
 
-// --- PUBLIC ROUTES ---
+// PUBLIC ROUTES
 // Anyone can browse the catalog — no login required
 
 // GET /api/books — paginated catalog with filters
@@ -54,13 +55,16 @@ router.get("/:id/preview", getBookPreview);
 // GET /api/books/:id/preview/epub/* — serves extracted EPUB assets for epubjs
 router.get("/:id/preview/epub/*assetPath", getEpubPreviewAsset);
 
+// GET /api/books/:id/read/* — serves as authenticate buyers to read full book
+router.get("/:id/read", authenticate, getBookRead);
+
 // GET /api/books/:id/similar — related books based on shared categories
 router.get("/:id/similar", getSimilarBooks);
 
 // GET /api/books/:id — single book detail
 router.get("/:id", getBookById);
 
-// --- ADMIN ONLY ROUTES ---
+// ADMIN ONLY ROUTES
 // authenticate verifies the JWT, isAdmin checks the role
 // uploadBookFiles handles multer, verifyFileTypes checks magic bytes
 

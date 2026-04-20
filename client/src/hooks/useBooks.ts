@@ -190,3 +190,24 @@ export const useBookPreview = (bookId: string | null) => {
     retry: false,
   });
 };
+
+// useBookRead — fetches the full-access signed URL for an owned book
+// Only fires when the user opens the reader modal (bookId is non-null)
+// Returns readUrl + fileType — no previewPages, so frontend knows there's no cap
+export const useBookRead = (bookId: string | null) => {
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
+  return useQuery({
+    queryKey: ["bookRead", bookId],
+    queryFn: async () => {
+      const response = await api.get(`/books/${bookId}/read`);
+      // Returns { readUrl: string, fileType: "pdf" | "epub" }
+      return response.data as { readUrl: string; fileType: "pdf" | "epub" };
+    },
+    // Only fire when hydrated, authenticated, and a bookId is provided
+    enabled: isHydrated && isAuthenticated && !!bookId,
+    staleTime: 45 * 60 * 1000, // 45 min — under the 1hr Cloudinary expiry
+    retry: false,
+  });
+};

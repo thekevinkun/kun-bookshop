@@ -86,7 +86,7 @@ export interface IReview {
   comment: string;
   isPurchaseVerified: boolean;
   helpfulCount: number;
-  helpfulVoters?: []
+  helpfulVoters?: [];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -115,6 +115,13 @@ export interface IDownloadRecord {
   _id: string;
   bookId: IBook; // Populated by the backend with the book's title and authorName
   downloadedAt: string;
+}
+
+// Shape of a reading progress record returned by the backend
+export interface ReadingProgressData {
+  currentPage: number; // PDF: page number (1-indexed)
+  totalPages: number; // PDF: total pages in the document
+  lastReadAt: string; // ISO timestamp of last save
 }
 
 export interface EpubLocation {

@@ -109,3 +109,13 @@ export interface IAuthor extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// This document stores where a user left off reading a specific book.
+// One record per user+book pair — upserted on every progress save.
+export interface IReadingProgress extends Document {
+  userId: mongoose.Types.ObjectId; // The user who is reading
+  bookId: mongoose.Types.ObjectId; // The book being read
+  currentPage: number; // PDF: current page number (1-indexed)
+  totalPages: number; // PDF: total pages in the document
+  lastReadAt: Date; // When the user last saved progress
+}

@@ -1,5 +1,5 @@
 // Import React and the useState hook for managing local UI state (e.g. which book is downloading)
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 
 // Import useNavigate so we can redirect unauthenticated users to login
 import { useNavigate, Link } from "react-router-dom";
@@ -13,6 +13,7 @@ import { useAuthStore } from "../../store/auth";
 // Import icons from lucide-react for the UI
 import {
   BookOpen, // Used for the empty state illustration
+  BookText,
   Download, // Used on the download button
   Loader2, // Spinning loader shown while downloading
   AlertCircle, // Used for the error state
@@ -22,6 +23,8 @@ import SEO from "../../components/common/SEO";
 import { toast } from "sonner";
 
 import type { IBook } from "../../types/book"; // Import the IBook type for type-checking the library data
+
+const BookPreview = lazy(() => import("../../components/features/BookPreview"));
 
 // The main Library page component
 export default function LibraryPage() {
@@ -42,6 +45,13 @@ export default function LibraryPage() {
   const [downloadingBookId, setDownloadingBookId] = useState<string | null>(
     null,
   );
+
+  // Track which book the user is currently reading in the modal
+  const [readingBook, setReadingBook] = useState<{
+    _id: string;
+    title: string;
+    fileType: string;
+  } | null>(null);
 
   // If the user is not logged in, redirect them to the login page
   // This is a client-side guard — the backend also enforces auth via the authenticate middleware
@@ -273,30 +283,68 @@ export default function LibraryPage() {
                     {/* Spacer pushes the download button to the bottom of the card */}
                     <div className="flex-1" />
 
-                    {/* Download button */}
-                    <button
-                      onClick={() =>
-                        handleDownload(book._id, book.title, book.fileType)
-                      }
-                      // Disable the button while any download is in progress to prevent double-clicks
-                      disabled={isDownloading}
-                      className="btn-primary w-full flex items-center justify-center gap-2 text-sm 
-                      disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isThisDownloading ? (
-                        // Show spinner only on the card that is actively downloading
-                        <>
-                          <Loader2 size={15} className="animate-spin" />
-                          Preparing...
-                        </>
-                      ) : (
-                        // Default state — download icon + label
-                        <>
-                          <Download size={15} />
-                          Download
-                        </>
-                      )}
-                    </button>
+                    {/* Read button — opens full book reader, no page cap */}
+                    {book.fileType === "pdf" ? (
+                      // PDF — read button + separate download button
+                      <>
+                        <button
+                          onClick={() =>
+                            setReadingBook({
+                              _id: book._id,
+                              title: book.title,
+                              fileType: book.fileType,
+                            })
+                          }
+                          className="btn-primary w-full flex items-center justify-center gap-2 text-sm mb-2"
+                        >
+                          <BookText size={15} />
+                          Read
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            handleDownload(book._id, book.title, book.fileType)
+                          }
+                          disabled={isDownloading}
+                          className="btn-ghost w-full flex items-center justify-center gap-2 text-sm 
+                            disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isThisDownloading ? (
+                            <>
+                              <Loader2 size={15} className="animate-spin" />
+                              Preparing...
+                            </>
+                          ) : (
+                            <>
+                              <Download size={15} />
+                              Download
+                            </>
+                          )}
+                        </button>
+                      </>
+                    ) : (
+                      // EPUB — single button, download to read in native app
+                      <button
+                        onClick={() =>
+                          handleDownload(book._id, book.title, book.fileType)
+                        }
+                        disabled={isDownloading}
+                        className="btn-primary w-full flex items-center justify-center gap-2 text-sm
+                          disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isThisDownloading ? (
+                          <>
+                            <Loader2 size={15} className="animate-spin" />
+                            Preparing...
+                          </>
+                        ) : (
+                          <>
+                            <Download size={15} />
+                            Download
+                          </>
+                        )}
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -304,6 +352,21 @@ export default function LibraryPage() {
           </div>
         </div>
       </section>
+
+      {/* Full book reader modal — only mounts when a book is selected */}
+      <Suspense fallback={null}>
+        {readingBook && (
+          <BookPreview
+            bookId={readingBook._id}
+            bookTitle={readingBook.title}
+            fileType={readingBook.fileType as "pdf" | "epub"}
+            isOpen={!!readingBook}
+            onClose={() => setReadingBook(null)}
+            mode="read"
+            onBuy={() => {}} // Owners never see the buy CTA — required prop, no-op here
+          />
+        )}
+      </Suspense>
     </>
   );
 }
