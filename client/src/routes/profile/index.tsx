@@ -399,7 +399,7 @@ export default function ProfilePage() {
                         <div
                           key={book._id}
                           className="group bg-text-light/5 border border-text-light/10 rounded-2xl p-4 
-                          flex gap-4 hover:border-golden hover:bg-text-light/[0.07] transition-all duration-200"
+                          flex gap-4 hover:bg-text-light/[0.07] transition-all duration-200"
                         >
                           {/* Cover thumbnail */}
                           <img
@@ -442,8 +442,8 @@ export default function ProfilePage() {
                                 disabled={isRemoving}
                                 title="Remove from wishlist"
                                 className="w-8 h-8 flex items-center justify-center rounded-lg border 
-                                border-text-light/10 text-gray-500 hover:text-burgundy-400 hover:border-burgundy-500/30 
-                                hover:bg-burgundy-500/10 disabled:opacity-50 transition-all duration-200"
+                                border-text-light/10 text-gray-500 hover:text-red-400 hover:border-red-500/20
+                                hover:bg-red-500/10 disabled:opacity-50 transition-all duration-200"
                               >
                                 <Trash2 size={14} />
                               </button>

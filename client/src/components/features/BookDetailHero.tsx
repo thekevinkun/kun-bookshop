@@ -341,19 +341,27 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
               <motion.button
                 onClick={handleWishlistToggle}
                 disabled={isWishlistPending}
-                whileTap={{ scale: 0.93 }} // press feedback
-                // Animate background/border color change when wishlist state toggles
+                whileTap={{ scale: 0.93 }}
+                whileHover={{
+                  scale: 1.03,
+                  backgroundColor: isWishlisted
+                    ? "rgba(136, 19, 55, 0.4)" // slightly stronger burgundy
+                    : "rgba(248, 250, 252, 0.08)", // slightly brighter ghost
+                  borderColor: isWishlisted
+                    ? "rgba(136, 19, 55, 1)" // stronger border
+                    : "rgba(248, 250, 252, 0.2)",
+                }}
                 animate={{
                   backgroundColor: isWishlisted
-                    ? "rgba(136, 19, 55, 0.3)" // burgundy tint when wishlisted
-                    : "rgba(248, 250, 252, 0.05)", // ghost when not
+                    ? "rgba(136, 19, 55, 0.3)"
+                    : "rgba(248, 250, 252, 0.05)",
                   borderColor: isWishlisted
-                    ? "rgba(136, 19, 55, 0.85)" // burgundy border when wishlisted
-                    : "rgba(248, 250, 252, 0.10)", // subtle border when not
+                    ? "rgba(136, 19, 55, 0.85)"
+                    : "rgba(248, 250, 252, 0.10)",
                 }}
                 transition={{ duration: 0.2 }}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium 
-                  cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-text-light"
+    cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-text-light"
               >
                 <motion.div
                   // Heart icon pops on toggle — scale up briefly then settles
@@ -418,7 +426,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
             ) : (
               <button
                 onClick={() => setIsPreviewOpen(true)} // Open the preview modal
-                className="btn-ghost btn-sm self-start flex items-center gap-2"
+                className="btn-ghost btn-sm self-start flex items-center gap-2 hover:border-text-muted/35"
               >
                 <BookOpen size={16} /> {/* BookOpen icon from lucide-react */}
                 Preview ({book.previewPages} pages)

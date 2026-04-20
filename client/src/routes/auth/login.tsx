@@ -38,7 +38,7 @@ export default function LoginPage() {
                 <img 
                   src="/images/logo.webp"
                   alt="Logo"
-                  className="w-12 h-12 sm:w-14 sm:h-14 object-cover"
+                  className="w-13 h-13 sm:w-15 sm:h-15 object-cover"
                 />
                 <span className="text-text-light text-gradient font-cinzel font-medium text-3xl sm:text-4xl">
                   un <span className="text-golden">Bookshop</span>

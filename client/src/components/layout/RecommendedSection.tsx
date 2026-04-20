@@ -17,7 +17,9 @@ const RecommendedSection = () => {
   const books = data?.books ?? [];
 
   return (
-    <section className="section bg-bg-dark">
+    <section className="relative section bg-bg-dark">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(230,190,119,0.06),transparent_60%)] pointer-events-none" />
+
       <div className="container-page">
         <div className="flex items-center justify-between mb-8">
           <div>

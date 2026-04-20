@@ -23,7 +23,7 @@ const Footer = () => {
               <img 
                 src="/images/logo.webp"
                 alt="Logo"
-                className="w-6 h-6 object-cover"
+                className="w-7 h-7 object-cover"
               />
               <span className="text-gradient font-cinzel font-medium text-lg">
                 un <span className="text-golden">Bookshop</span>
@@ -31,7 +31,7 @@ const Footer = () => {
             </Link>
 
             <p className="text-text-muted text-sm leading-relaxed">
-              A quieter place to discover digital books that are worth keeping.
+              A quieter space to discover digital books that are worth keeping.
               Read instantly in PDF and ePub, with a catalog built for focused
               browsing rather than noise.
             </p>
