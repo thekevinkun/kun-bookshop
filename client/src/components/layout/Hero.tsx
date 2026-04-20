@@ -89,10 +89,19 @@ const Hero = ({
       onMouseLeave={() => setIsPaused(false)}
     >
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_#1e3a5f33_0%,_transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_#1e3a5f33_0%,_transparent_70%)] z-15" />
+        <div className="absolute inset-0 h-10 bg-gradient-to-b from-navy/35 to-transparent z-15" />
+        <div 
+          style={{
+            backgroundImage: "url('/images/bg-texture.jpg')",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+          }}
+          className="absolute inset-0 opacity-15 z-10"
+        />
       </div>
 
-      <div className="container-page relative z-10 w-full">
+      <div className="container-page relative z-20 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* LEFT: Book info */}
           {isLoading ? (
@@ -122,7 +131,9 @@ const Hero = ({
                     {activeBook.category[0]}
                   </span>
 
-                  <h1 className="text-text-light leading-tight line-clamp-1 md:line-clamp-none">
+                  <h1 className="text-text-light !text-[1.85rem] sm:!text-[2rem] md:!text-[2.75rem] 
+                    leading-tight line-clamp-1 md:line-clamp-none"
+                  >
                     {activeBook.title}
                   </h1>
 
@@ -279,7 +290,7 @@ const Hero = ({
                       aria-hidden="true"
                       className="absolute top-6 left-9 sm:left-12 w-full rounded-xl object-cover aspect-[2/3]
                         rotate-[12deg] scale-[0.94] opacity-55 blur-[1.5px] brightness-[0.55]
-                        saturate-[0.8] shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
+                        saturate-[0.8] shadow-[0_20px_50px_rgba(0,0,0,0.45)] z-15"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src =
                           "/images/placeholder-cover.webp";
@@ -292,7 +303,7 @@ const Hero = ({
                       aria-hidden="true"
                       className="absolute top-3 left-5 sm:left-8 w-full rounded-xl object-cover aspect-[2/3]
                         rotate-[10deg] scale-[0.97] opacity-75 blur-[0.5px] brightness-[0.72]
-                        saturate-[0.9] shadow-[0_18px_40px_rgba(0,0,0,0.38)]"
+                        saturate-[0.9] shadow-[0_18px_40px_rgba(0,0,0,0.38)] z-15"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src =
                           "/images/placeholder-cover.webp";
@@ -304,7 +315,7 @@ const Hero = ({
                       alt={`Cover of ${activeBook.title}`}
                       fetchPriority="high"
                       className="relative z-10 w-full rounded-xl shadow-[0_24px_60px_rgba(0,0,0,0.5)]
-                        object-cover aspect-[2/3]"
+                        object-cover aspect-[2/3] z-20"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src =
                           "/images/placeholder-cover.webp";

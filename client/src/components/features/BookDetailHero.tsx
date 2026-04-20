@@ -144,13 +144,21 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
     : null;
 
   return (
-    <section className="relative min-h-[85vh] flex items-center bg-navy overflow-hidden">
+    <section className="relative min-h-[92vh] flex items-center bg-navy overflow-hidden">
       {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_#1e3a5f33_0%,_transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_#1e3a5f33_0%,_transparent_70%)] z-15" />
+        <div 
+          style={{
+            backgroundImage: "url('/images/bg-texture.jpg')",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+          }}
+          className="absolute inset-0 opacity-10 z-10 pointer-events-none"
+        />
       </div>
 
-      <div className="container-page relative z-10 w-full py-16">
+      <div className="container-page relative z-20 w-full py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* LEFT: Info */}
           <div className="mt-4 md:mt-0 flex flex-col gap-5 order-2 md:order-1">
@@ -158,7 +166,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
               {visibleCategories.map((category) => (
                 <span
                   key={category}
-                  className="badge-primary self-start !text-[11px] uppercase tracking-widest"
+                  className="badge-primary self-start !text-[10px] sm:!text-[11px] uppercase tracking-widest"
                 >
                   {category}
                 </span>
@@ -168,7 +176,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
             {/* "Owned" badge — only shows when the logged-in user has purchased this book */}
             {isOwned ? (
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-text-light leading-tight">{book.title}</h1>
+                <h1 className="text-text-light !text-[2.25rem] md:!text-[2.75rem] leading-tight">{book.title}</h1>
 
                 <span className="badge-primary text-[8px] uppercase tracking-widest">
                   <CheckCircle size={11} className="shrink-0 mr-1" />
@@ -176,7 +184,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 </span>
               </div>
             ) : (
-              <h1 className="text-text-light leading-tight">{book.title}</h1>
+              <h1 className="text-text-light !text-[2.25rem] md:!text-[2.75rem] leading-tight">{book.title}</h1>
             )}
 
             <p className="text-text-muted text-base">

@@ -11,7 +11,7 @@ const AuthLayout = () => {
       </div>
 
       {/* BOTTOM BAR FOOTER */}
-      <footer className="h-12.5 border-t border-bg-hover">
+      <footer className="h-12.5 border-t border-gray-800">
         <div className="px-12 py-3 flex flex-wrap flex-col lg:flex-row items-center justify-center md:justify-between gap-3">
           <p className="text-text-muted text-xs text-center sm:text-left">
             © {new Date().getFullYear()} Kun Bookshop. All rights reserved.
@@ -33,9 +33,9 @@ const AuthLayout = () => {
                       flex items-center justify-center text-text-muted
                       hover:border-golden hover:text-golden transition-all duration-200"
                 >
-                  {social.label === "Twitter" && <FaTwitter size={15} />}
-                  {social.label === "Instagram" && <FaInstagram size={15} />}
-                  {social.label === "GitHub" && <FaGithub size={15} />}
+                  {social.label === "Twitter" && <FaTwitter size={12} />}
+                  {social.label === "Instagram" && <FaInstagram size={12} />}
+                  {social.label === "GitHub" && <FaGithub size={12} />}
                 </a>
               ))}
             </div>

@@ -1,4 +1,3 @@
-// Import hooks for location check and cycling logic
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";

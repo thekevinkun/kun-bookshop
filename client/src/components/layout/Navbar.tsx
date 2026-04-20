@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 // Import useQueryClient so we can wipe the cache on logout
@@ -26,6 +26,7 @@ import api from "../../lib/api";
 const Navbar = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const location = useLocation();
   const { user, isAuthenticated, logout } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -75,7 +76,19 @@ const Navbar = () => {
       {/* Coupon announcement banner — only visible on homepage, auto-hides when no active coupons */}
       <CouponBanner />
 
-      <div className="container-page py-0 h-16 flex items-center justify-between">
+      <div className="relative container-page py-0 h-16 flex items-center justify-between">
+        {location.pathname === "/" ||
+        location.pathname.startsWith("/books/") ? (
+          <div
+            style={{
+              backgroundImage: "url('/images/bg-texture.jpg')",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+            }}
+            className="absolute inset-0 opacity-10 pointer-events-none"
+          />
+        ) : null}
+
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img

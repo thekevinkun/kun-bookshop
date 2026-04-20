@@ -9,7 +9,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-dark border-t border-bg-hover">
+    <footer className="bg-dark border-t border-golden/25">
       {/* MAIN FOOTER CONTENT */}
       <div className="container-page py-12">
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.9fr_0.9fr] gap-10 lg:gap-14 items-start">
@@ -93,7 +93,7 @@ const Footer = () => {
             <p className="text-text-light text-xs font-semibold uppercase tracking-[0.22em]">
               Support
             </p>
-            <div className="rounded-2xl border border-bg-hover/80 bg-card/35 p-5">
+            <div className="rounded-2xl border border-golden/50 bg-card/35 p-5">
               <p className="text-text-light text-sm leading-relaxed">
                 Need help with downloads, formats, or an order issue?
               </p>
@@ -114,7 +114,7 @@ const Footer = () => {
       </div>
 
       {/* BOTTOM BAR */}
-      <div className="border-t border-bg-hover">
+      <div className="border-t border-gray-800">
         <div className="container-page py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-text-muted text-xs text-center sm:text-left">
             © 2026 Kun Bookshop. All rights reserved.
