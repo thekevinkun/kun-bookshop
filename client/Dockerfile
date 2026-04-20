@@ -17,11 +17,13 @@ COPY . .
 # Declare build arguments — these come from docker-compose args section
 ARG VITE_API_URL
 ARG VITE_SERVER_BASE_URL
+ARG VITE_SITE_URL
 ARG VITE_STRIPE_PUBLISHABLE_KEY
 
 # Make them available as environment variables so Vite picks them up during build
 ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_SERVER_BASE_URL=$VITE_SERVER_BASE_URL
+ENV VITE_SITE_URL=$VITE_SITE_URL
 ENV VITE_STRIPE_PUBLISHABLE_KEY=$VITE_STRIPE_PUBLISHABLE_KEY
 
 # Build the React app — outputs static files to /app/dist

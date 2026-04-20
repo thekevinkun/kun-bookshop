@@ -89,6 +89,7 @@ services:
         # Vite bakes these into the JS bundle at build time — must be passed as build args
         VITE_API_URL: ${VITE_API_URL}
         VITE_SERVER_BASE_URL: ${VITE_SERVER_BASE_URL}
+        VITE_SITE_URL: ${VITE_SITE_URL}
         VITE_STRIPE_PUBLISHABLE_KEY: ${VITE_STRIPE_PUBLISHABLE_KEY}
     container_name: bookstore-frontend
     restart: unless-stopped
