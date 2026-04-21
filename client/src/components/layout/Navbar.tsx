@@ -94,7 +94,7 @@ const Navbar = () => {
           <img
             src="/images/logo.webp"
             alt="Logo"
-            className="w-6 h-6 sm:w-8 sm:h-8 object-cover"
+            className="w-7 h-7 sm:w-8 sm:h-8 object-cover"
           />
           <span className="text-gradient-secondary font-cinzel font-medium text-base sm:text-xl">
             un <span className="text-golden">Bookshop</span>

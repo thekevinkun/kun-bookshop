@@ -11,6 +11,7 @@ import {
   SimilarBooks,
 } from "../../components/features";
 import { addRecentlyViewed } from "../../lib/recentlyViewed";
+import { SkeletonHero } from "../../components/ui";
 
 export default function BookDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -36,13 +37,8 @@ export default function BookDetailPage() {
       <main className="min-h-screen bg-navy">
         <div className="container-page py-16 animate-pulse">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center min-h-[85vh]">
-            <div className="flex flex-col gap-4">
-              <div className="skeleton h-16 w-3/4 rounded" />
-              <div className="skeleton h-6 w-1/3 rounded" />
-              <div className="skeleton h-4 w-full rounded" />
-              <div className="skeleton h-4 w-2/3 rounded" />
-            </div>
-            <div className="skeleton aspect-[2/3] w-64 mx-auto rounded-xl" />
+            <SkeletonHero />
+            <div className="skeleton aspect-[2/3] w-64 mx-auto rounded-xl md:order-2" />
           </div>
         </div>
       </main>

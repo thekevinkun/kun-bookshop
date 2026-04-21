@@ -45,7 +45,7 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
 
       {/* Author name */}
       <h3
-        className="text-text-light !text-lg !leading-tight line-clamp-2 mb-1
+        className="text-text-light !text-base sm:!text-lg !leading-tight line-clamp-2 mb-1
           min-h-[3.5rem] md:min-h-0 group-hover:text-golden transition-colors duration-200"
       >
         {author.name}

@@ -369,7 +369,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 }}
                 transition={{ duration: 0.2 }}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium 
-    cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-text-light"
+                  cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-text-light"
               >
                 <motion.div
                   // Heart icon pops on toggle — scale up briefly then settles

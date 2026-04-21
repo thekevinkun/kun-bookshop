@@ -8,7 +8,7 @@ interface AuthorsCarouselProps {
 }
 
 const carouselItemClassName =
-  "shrink-0 snap-start basis-[calc(50%-0.5rem)] min-[30rem]:basis-[calc(33.333%-0.75rem)]";
+  "shrink-0 snap-start basis-[calc(40.333%-0.45rem)] min-[33rem]:basis-[calc(33.333%-0.75rem)]";
 
 const AuthorsCarousel = ({ authors }: AuthorsCarouselProps) => {
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -113,7 +113,8 @@ const AuthorsCarousel = ({ authors }: AuthorsCarouselProps) => {
 
       <div
         ref={trackRef}
-        className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-3 md:gap-4 overflow-x-auto pb-2 snap-x snap-mandatory 
+          scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {authors.map((author) => (
           <div key={author._id} className={carouselItemClassName}>

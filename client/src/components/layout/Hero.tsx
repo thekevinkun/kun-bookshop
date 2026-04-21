@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Star, ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { SkeletonHero } from "../ui";
 import type { IBook } from "../../types/book";
 
 const Hero = ({
@@ -105,12 +106,7 @@ const Hero = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* LEFT: Book info */}
           {isLoading ? (
-            <div className="hidden md:block animate-pulse w-full">
-              <div className="w-32 h-4 bg-bg-hover rounded mb-4" />
-              <div className="w-48 h-6 bg-bg-hover rounded mb-2" />
-              <div className="w-24 h-3 bg-bg-hover rounded mb-6" />
-              <div className="w-40 h-4 bg-bg-hover rounded" />
-            </div>
+            <SkeletonHero />
           ) : (
             <div className="mt-4 sm:mt-0 flex flex-col gap-5 order-2 md:order-1">
               {/* AnimatePresence animates content out before new content animates in */}
