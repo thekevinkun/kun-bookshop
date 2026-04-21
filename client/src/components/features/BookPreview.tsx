@@ -19,10 +19,9 @@ import {
 } from "../../hooks/useReadingProgress";
 import type { Book, Rendition } from "epubjs";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url,
-).toString();
+// Use CDN-hosted worker to bypass Railway's Fastly edge cache MIME type issue.
+// The local .mjs file gets cached by Fastly with wrong content-type on first deploy.
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface BookPreviewProps {
   bookId: string;
@@ -233,6 +232,7 @@ const BookPreview = ({
           width: "100%",
           height: "100%",
           spread: "none",
+          allowScriptedContent: true,
         });
         epubRenditionRef.current = rendition;
 
