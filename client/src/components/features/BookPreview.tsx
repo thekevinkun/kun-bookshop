@@ -332,10 +332,25 @@ const BookPreview = ({
   // Body scroll lock
   useEffect(() => {
     if (!isOpen) return;
-    const prev = document.body.style.overflow;
+
+    const scrollY = window.scrollY;
+
+    // Standard — works everywhere except iOS Safari
     document.body.style.overflow = "hidden";
+
+    // iOS Safari fix — overflow:hidden on body is ignored, need position:fixed
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+
+      // Restore scroll position — position:fixed resets it to 0
+      window.scrollTo(0, scrollY);
     };
   }, [isOpen]);
 
@@ -351,11 +366,14 @@ const BookPreview = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="relative bg-navy rounded-2xl w-full max-w-4xl h-[95vh] max-h-[900px] flex flex-col overflow-hidden sm:max-w-5xl lg:max-w-6xl xl:max-w-7xl">
+      <div
+        className="relative bg-navy rounded-2xl w-full h-[95dvh] max-h-[900px] 
+        flex flex-col overflow-hidden max-w-7xl"
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-gray-400">
           <div>
-            <h2 className="!text-sm min-[30rem]:!text-lg sm:!text-2xl font-semibold text-golden truncate max-w-lg">
+            <h2 className="!text-sm min-[30rem]:!text-lg sm:!text-2xl font-semibold text-golden truncate max-w-[15rem] min-[30rem]:max-w-xs md:max-w-xl">
               {bookTitle}
             </h2>
             <p className="text-[10px] sm:text-[11px] text-text-muted mt-0.5">
@@ -402,7 +420,7 @@ const BookPreview = ({
             {/*  PDF  */}
             {bookUrl && fileType === "pdf" && (
               <div className="h-full flex items-center justify-center bg-reader">
-                <div className="w-full h-full flex items-center justify-center p-4">
+                <div className="w-full h-full flex items-center justify-center p-3 sm:p-4">
                   <motion.div
                     className="w-full max-w-[90vw] max-h-[90vh] flex items-center justify-center overflow-hidden"
                     initial={false}
@@ -428,12 +446,12 @@ const BookPreview = ({
                       <Page
                         pageNumber={currentPage}
                         width={Math.min(
-                          window.innerWidth < 640 ? 400 : 450,
+                          window.innerWidth < 480 ? 400 : 438,
                           window.innerWidth * 0.85,
                         )}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        className="shadow-2xl ring-1 ring-black/10 bg-text-light"
+                        className="shadow-2xl ring-1 ring-black/10 bg-[#FFFACC]"
                       />
                     </Document>
                   </motion.div>
@@ -457,7 +475,8 @@ const BookPreview = ({
                   </div>
                 )}
                 <motion.div
-                  className="w-[327px] min-[30rem]:w-[400px] sm:w-[560px] h-full overflow-hidden bg-text-light mx-auto"
+                  className="w-[327px] min-[30rem]:w-[400px] sm:w-[560px] 
+                    h-full overflow-hidden bg-text-light mx-auto"
                   initial={false}
                   animate={epubPageControls}
                   style={{
@@ -478,11 +497,17 @@ const BookPreview = ({
         </div>
 
         {/*  Footer  */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-3 sm:px-4 py-2.5 border-t border-gray-400 bg-black/35">
-          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto order-3 sm:order-1">
+        <div
+          className="flex flex-col min-[41rem]:flex-row items-start sm:items-center sm:justify-between gap-3 px-3 
+          sm:px-4 py-2.5 border-t border-gray-400 bg-black/35"
+        >
+          <div className="flex flex-row items-start gap-3 order-3 min-[41rem]:order-1">
             {isReadMode ? (
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 sm:w-7 sm:h-7 rounded-full bg-teal-500/20 flex items-center justify-center flex-shrink-0">
+                <div
+                  className="w-8 h-8 sm:w-7 sm:h-7 rounded-full bg-teal-500/20 
+                  flex items-center justify-center flex-shrink-0"
+                >
                   <BookOpen className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-teal-400" />
                 </div>
                 <div>
@@ -496,15 +521,15 @@ const BookPreview = ({
               </div>
             ) : (
               <>
-                <div className="flex items-center gap-2 flex-1 sm:flex-none text-center sm:text-left">
-                  <div className="w-8 h-8 sm:w-7 sm:h-7 rounded-full bg-burgundy/75 flex items-center justify-center flex-shrink-0">
-                    <Lock className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-text-light" />
+                <div className="flex items-center gap-2 flex-1 min-[41rem]:flex-none text-center min-[41rem]:text-left">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-red-600/75 flex items-center justify-center flex-shrink-0">
+                    <Lock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-text-light" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm font-medium text-golden truncate">
+                    <p className="text-[11px] sm:text-sm font-medium text-golden truncate">
                       Preview • {allowedPages} pages
                     </p>
-                    <p className="text-[10px] sm:text-[11px] text-text-muted">
+                    <p className="!text-[9px] sm:text-[11px] text-text-muted">
                       Buy to unlock full book
                     </p>
                   </div>
@@ -514,7 +539,7 @@ const BookPreview = ({
                     onBuy();
                     onClose();
                   }}
-                  className="flex-1 sm:flex-none btn-ghost btn-sm"
+                  className="flex-1 min-[41rem]:flex-none btn-ghost btn-sm !text-[10px] sm:!text-sm"
                 >
                   Unlock Full Book
                 </button>
@@ -522,14 +547,14 @@ const BookPreview = ({
             )}
           </div>
 
-          <div className="flex items-center justify-between w-full sm:w-auto gap-2 sm:gap-0 order-1 sm:order-2">
+          <div className="flex items-center justify-between w-full min-[41rem]:w-auto gap-2 min-[41rem]:gap-0 order-1 min-[41rem]:order-2">
             <span className="text-xs sm:text-sm text-text-muted text-center sm:text-right min-w-[120px] sm:min-w-0">
               {footerProgressLabel}
               {!isReadMode &&
                 fileType === "pdf" &&
                 numPages &&
                 numPages > maxAccessiblePage && (
-                  <span className="text-golden block sm:inline ml-0 sm:ml-1 text-[10px] sm:text-xs">
+                  <span className="text-golden block inline ml-1 text-[10px] sm:text-xs">
                     ({numPages} total)
                   </span>
                 )}
@@ -543,10 +568,12 @@ const BookPreview = ({
                     ? currentPage === 1
                     : epubLoading || epubError || epubCurrentPage <= 1
                 }
-                className="flex items-center gap-1 px-2.5 py-2 sm:px-2.5 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium text-text-light hover:bg-dark disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
+                className="flex items-center gap-1 px-2.5 py-2 sm:px-2.5 sm:py-1.5 rounded-lg 
+                  text-xs sm:text-sm font-medium text-text-light hover:bg-dark disabled:opacity-40 
+                  disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
               >
-                <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                {window.innerWidth < 640 ? "" : "Prev"}
+                <ChevronLeft className="w-4 h-4" />
+                Prev
               </button>
               <button
                 onClick={fileType === "pdf" ? goToNext : epubNext}
@@ -557,10 +584,12 @@ const BookPreview = ({
                       epubError ||
                       (!isReadMode && epubCurrentPage >= (allowedPages ?? 5))
                 }
-                className="flex items-center gap-1 px-2.5 py-2 sm:px-2.5 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium text-text-light hover:bg-dark disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
+                className="flex items-center gap-1 px-2.5 py-2 sm:px-2.5 sm:py-1.5 rounded-lg 
+                  text-xs sm:text-sm font-medium text-text-light hover:bg-dark disabled:opacity-40 
+                  disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
               >
-                {window.innerWidth < 640 ? "" : "Next"}
-                <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                Next
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>
