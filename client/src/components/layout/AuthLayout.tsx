@@ -18,7 +18,7 @@ const AuthLayout = () => {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-5">
-            <p className="text-text-muted text-xs text-center">
+            <p className="text-text-muted text-xs text-center max-w-xs sm:max-w-full">
               Digital books delivered instantly · PDF & ePub formats · Powered
               by <span className="text-emerald-500 font-medium">Stripe</span>
             </p>

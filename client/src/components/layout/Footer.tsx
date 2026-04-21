@@ -115,11 +115,11 @@ const Footer = () => {
 
       {/* BOTTOM BAR */}
       <div className="border-t border-gray-800">
-        <div className="container-page py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="container-page py-5 flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="text-text-muted text-xs text-center sm:text-left">
             © 2026 Kun Bookshop. All rights reserved.
           </p>
-          <p className="text-text-muted text-xs text-center">
+          <p className="text-text-muted text-xs text-center max-w-xs sm:max-w-full">
             Digital books delivered instantly · PDF & ePub formats · Powered by{" "}
             <span className="text-emerald-500 font-medium">Stripe</span>
           </p>

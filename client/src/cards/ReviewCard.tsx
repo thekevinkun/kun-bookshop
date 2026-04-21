@@ -125,21 +125,23 @@ const ReviewCard = ({
       {/* Review footer — helpful vote + edit/delete for owner */}
       <div className="flex items-center justify-between mt-1">
         {/* Helpful button */}
-        <button
-          onClick={() => markHelpful(review._id)}
-          title={hasVoted ? "You already voted" : ""}
-          className={`flex items-center gap-1.5 text-xs transition-colors
-            ${
-              hasVoted
-                ? "text-teal/80 hover:text-text-muted"
-                : "text-text-muted hover:text-teal/80"
-            }
-          `}
-        >
-          <ThumbsUp size={13} />
-          Helpful ({review.helpfulCount})
-        </button>
-
+        {currentUserId && (
+          <button
+            onClick={() => markHelpful(review._id)}
+            title={hasVoted ? "You already voted" : ""}
+            className={`flex items-center gap-1.5 text-xs transition-colors
+              ${
+                hasVoted
+                  ? "text-teal/80 hover:text-text-muted"
+                  : "text-text-muted hover:text-teal/80"
+              }
+            `}
+          >
+            <ThumbsUp size={13} />
+            Helpful ({review.helpfulCount})
+          </button>
+        )}
+        
         {/* Edit + Delete — only for the review owner or an admin */}
         {(isOwner || isAdmin) && (
           <div className="flex items-center gap-2">
