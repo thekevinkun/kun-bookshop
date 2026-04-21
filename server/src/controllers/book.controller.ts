@@ -128,11 +128,31 @@ const ensureStoredEpubPreview = async (book: {
   epubPreviewDir?: string | null;
   epubPackagePath?: string | null;
 }) => {
+  // Check if DB has stored paths AND the directory still exists on disk.
+  // Railway containers are ephemeral — a redeploy wipes the filesystem,
+  // so stored paths can become stale. We must verify before trusting them.
   if (book.epubPreviewDir && book.epubPackagePath) {
-    return {
-      previewDir: book.epubPreviewDir,
-      packagePath: book.epubPackagePath,
-    };
+    const dirExists = await fs
+      .access(book.epubPreviewDir)
+      .then(() => true)
+      .catch(() => false);
+
+    if (dirExists) {
+      return {
+        previewDir: book.epubPreviewDir,
+        packagePath: book.epubPackagePath,
+      };
+    }
+
+    // Dir is gone (container was redeployed) — clear stale DB fields and re-extract below
+    logger.warn("EPUB preview dir missing on disk, re-extracting", {
+      bookId: book._id,
+      staleDir: book.epubPreviewDir,
+    });
+    await Book.findByIdAndUpdate(book._id, {
+      epubPreviewDir: null,
+      epubPackagePath: null,
+    });
   }
 
   if (!book.fileUrl) {

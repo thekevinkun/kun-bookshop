@@ -75,6 +75,11 @@ import { createContext } from "./graphql/context";
 // Create the Express application — this is the core of our backend
 const app = express();
 
+// Trust Railway's reverse proxy so req.protocol returns "https" in production
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
 // MIDDLEWARE SETUP
 // Middleware runs on every request before it reaches our route handlers
 
