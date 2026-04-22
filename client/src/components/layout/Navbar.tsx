@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 // Import useQueryClient so we can wipe the cache on logout
@@ -32,6 +33,10 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Tracks whether the avatar dropdown is open — needed to drive the exit animation
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const { itemCount } = useCartStore();
 
   const handleLogout = async () => {
@@ -64,6 +69,37 @@ const Navbar = () => {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Close on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  // Handle click outside element and touch on mobile screen
+  useEffect(() => {
+    const handlePointer = (event: PointerEvent) => {
+      if (mobileOpen) {
+        const navbar = document.querySelector("nav");
+        const hamburger = document.querySelector('[aria-label="Toggle menu"]');
+        const logo = document.querySelector('a[href="/"]');
+
+        const target = event.target as Node;
+        if (
+          navbar?.contains(target) ||
+          hamburger?.contains(target) ||
+          logo?.contains(target)
+        ) {
+          return; // Keep menu open
+        }
+
+        setMobileOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointer, true); // 👈 Capture phase
+    return () =>
+      document.removeEventListener("pointerdown", handlePointer, true);
+  }, [mobileOpen]);
 
   return (
     <nav
@@ -144,7 +180,7 @@ const Navbar = () => {
               </button>
 
               {/* RADIX DROPDOWN MENU */}
-              <DropdownMenu.Root modal={false}>
+              <DropdownMenu.Root modal={false} onOpenChange={setDropdownOpen}>
                 {/* The button that opens the dropdown */}
                 <DropdownMenu.Trigger asChild>
                   <button
@@ -158,11 +194,11 @@ const Navbar = () => {
                       <img
                         src={user.avatar}
                         alt={user.firstName}
-                        className="h-8 w-8 rounded-full object-cover"
+                        className="h-8.5 w-8.5 rounded-full object-cover"
                       />
                     ) : (
                       <div
-                        className="flex h-8 w-8 items-center justify-center rounded-full 
+                        className="flex h-8.5 w-8.5 items-center justify-center rounded-full 
                           backdrop-blur-md border-2 border-golden/80
                           text-[11px] font-bold tracking-[0.08em] text-text-light"
                       >
@@ -174,82 +210,118 @@ const Navbar = () => {
                 </DropdownMenu.Trigger>
 
                 {/* Radix handles the portal, positioning, and accessibility */}
-                <DropdownMenu.Portal>
-                  <DropdownMenu.Content
-                    align="end"
-                    sideOffset={8}
-                    className="min-w-48 bg-card border border-bg-hover rounded-xl
-                        shadow-2xl p-1.5 z-50 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out 
-                        data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
-                  >
-                    {/* User info header */}
-                    <div className="px-3 py-2 mb-1">
-                      <p className="text-text-light text-sm font-semibold">
-                        {user?.firstName} {user?.lastName}
-                      </p>
-                      <p className="text-text-muted text-xs">{user?.email}</p>
-                    </div>
-
-                    <DropdownMenu.Separator className="h-px bg-bg-hover my-1" />
-
-                    {/* My Library */}
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        to="/library"
-                        className="flex items-center gap-2 px-3 py-2 text-sm
-                        text-text-muted rounded-lg cursor-pointer hover:bg-bg-hover
-                        hover:text-golden focus:outline-none focus:bg-bg-hover focus:text-golden
-                        transition-colors duration-150"
+                <DropdownMenu.Portal forceMount>
+                  <AnimatePresence mode="wait">
+                    {dropdownOpen && (
+                      <DropdownMenu.Content
+                        forceMount
+                        align="end"
+                        sideOffset={8}
+                        className="min-w-48 bg-card border border-bg-hover rounded-xl shadow-2xl p-1.5 z-50"
+                        asChild
                       >
-                        <Library size={15} />
-                        My Library
-                      </Link>
-                    </DropdownMenu.Item>
-
-                    {/* Profile */}
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        to="/profile"
-                        className="flex items-center gap-2 px-3 py-2 text-sm
-                        text-text-muted rounded-lg cursor-pointer
-                        hover:bg-bg-hover hover:text-golden focus:outline-none focus:bg-bg-hover 
-                        focus:text-golden transition-colors duration-150"
-                      >
-                        <User size={15} />
-                        Profile
-                      </Link>
-                    </DropdownMenu.Item>
-
-                    {/* Admin Dashboard — only for admin role */}
-                    {user?.role === "admin" && (
-                      <DropdownMenu.Item asChild>
-                        <Link
-                          to="/admin"
-                          className="flex items-center gap-2 px-3 py-2 text-sm
-                          text-text-muted rounded-lg cursor-pointer
-                          hover:bg-bg-hover hover:text-golden
-                            focus:outline-none focus:bg-bg-hover focus:text-golden
-                            transition-colors duration-150"
+                        <motion.div
+                          initial={{
+                            opacity: 0,
+                            scale: 0.8,
+                            rotateX: -20,
+                            rotateY: 10,
+                            y: 30,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            scale: 1,
+                            rotateX: 0,
+                            rotateY: 0,
+                            y: 0,
+                          }}
+                          exit={{
+                            opacity: 0,
+                            scale: 0.8,
+                            rotateX: 10,
+                            rotateY: -5,
+                            y: -10,
+                          }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 20,
+                            mass: 0.6,
+                          }}
                         >
-                          <LayoutDashboard size={15} />
-                          Admin Dashboard
-                        </Link>
-                      </DropdownMenu.Item>
+                          {/* User info header */}
+                          <div className="px-3 py-2 mb-1">
+                            <p className="text-text-light text-sm font-semibold">
+                              {user?.firstName} {user?.lastName}
+                            </p>
+                            <p className="text-text-muted text-xs">
+                              {user?.email}
+                            </p>
+                          </div>
+
+                          <DropdownMenu.Separator className="h-px bg-bg-hover my-1" />
+
+                          {/* My Library */}
+                          <DropdownMenu.Item asChild>
+                            <Link
+                              to="/library"
+                              className="flex items-center gap-2 px-3 py-2 text-sm
+                            text-text-muted rounded-lg cursor-pointer hover:bg-bg-hover
+                            hover:text-golden focus:outline-none focus:bg-bg-hover focus:text-golden
+                            transition-colors duration-150"
+                            >
+                              <Library size={15} />
+                              My Library
+                            </Link>
+                          </DropdownMenu.Item>
+
+                          {/* Profile */}
+                          <DropdownMenu.Item asChild>
+                            <Link
+                              to="/profile"
+                              className="flex items-center gap-2 px-3 py-2 text-sm
+                            text-text-muted rounded-lg cursor-pointer
+                            hover:bg-bg-hover hover:text-golden focus:outline-none focus:bg-bg-hover 
+                            focus:text-golden transition-colors duration-150"
+                            >
+                              <User size={15} />
+                              Profile
+                            </Link>
+                          </DropdownMenu.Item>
+
+                          {/* Admin Dashboard — only for admin role */}
+                          {user?.role === "admin" && (
+                            <DropdownMenu.Item asChild>
+                              <Link
+                                to="/admin"
+                                className="flex items-center gap-2 px-3 py-2 text-sm
+                            text-text-muted rounded-lg cursor-pointer
+                            hover:bg-bg-hover hover:text-golden
+                              focus:outline-none focus:bg-bg-hover focus:text-golden
+                              transition-colors duration-150"
+                              >
+                                <LayoutDashboard size={15} />
+                                Admin Dashboard
+                              </Link>
+                            </DropdownMenu.Item>
+                          )}
+
+                          <DropdownMenu.Separator className="h-px bg-bg-hover my-1" />
+
+                          {/* Logout */}
+                          <DropdownMenu.Item
+                            onSelect={handleLogout}
+                            className="flex items-center gap-2 px-3 py-2 text-sm
+                          text-error rounded-lg cursor-pointer hover:bg-bg-hover 
+                          focus:outline-none focus:bg-bg-hover transition-colors duration-150"
+                          >
+                            <LogOut size={15} />
+                            Log out
+                          </DropdownMenu.Item>
+                        </motion.div>
+                      </DropdownMenu.Content>
                     )}
-
-                    <DropdownMenu.Separator className="h-px bg-bg-hover my-1" />
-
-                    {/* Logout */}
-                    <DropdownMenu.Item
-                      onSelect={handleLogout}
-                      className="flex items-center gap-2 px-3 py-2 text-sm
-                        text-error rounded-lg cursor-pointer hover:bg-bg-hover 
-                        focus:outline-none focus:bg-bg-hover transition-colors duration-150"
-                    >
-                      <LogOut size={15} />
-                      Log out
-                    </DropdownMenu.Item>
-                  </DropdownMenu.Content>
+                  </AnimatePresence>
                 </DropdownMenu.Portal>
               </DropdownMenu.Root>
             </>
@@ -271,7 +343,7 @@ const Navbar = () => {
           )}
         </div>
 
-        <div className="md:hidden flex items-center gap-3">
+        <div className="md:hidden flex items-center gap-4 md:gap-3">
           {/* Cart button on mobile */}
           {isAuthenticated && (
             <button
@@ -296,85 +368,110 @@ const Navbar = () => {
 
           {/* Mobile hamburger */}
           <button
-            className="btn-ghost btn-sm"
+            className="btn-ghost btn-sm !border-golden/80 !px-3"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileOpen ? (
+              <X size={20} />
+            ) : (
+              <Menu size={20} />
+            )}
           </button>
         </div>
       </div>
 
       {/* Mobile menu — plain list, no Radix needed here */}
-      {mobileOpen && (
-        <div
-          className="md:hidden bg-dark border-t border-golden/55
-            px-4 py-4 flex flex-col justify-center items-center gap-3"
-        >
-          <Link
-            to="/books"
-            className="text-text-muted hover:text-golden font-medium py-2"
-            onClick={() => setMobileOpen(false)}
-          >
-            Browse
-          </Link>
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Invisible overlay - blocks ALL clicks */}
+            {/* <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 z-[45] md:hidden bg-black"
+              style={{ pointerEvents: "auto" }}
+              onClick={() => setMobileOpen(false)}
+            /> */}
 
-          {isAuthenticated ? (
-            <>
+            {/* FIXED: position: fixed + SAME exact styling */}
+            <motion.div
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className={`fixed left-0 w-full md:hidden z-[46] bg-navy border-t border-golden/55
+                px-4 py-4 flex flex-col justify-center items-center gap-3
+                ${location.pathname === "/" ? "top-25" : "top-16"}`}
+            >
               <Link
-                to="/library"
-                className="text-text-muted hover:text-golden font-medium py-2"
+                to="/books"
+                className="text-text-muted hover:text-golden font-medium py-2 w-full text-center"
                 onClick={() => setMobileOpen(false)}
               >
-                My Library
+                Browse
               </Link>
-              <Link
-                to="/profile"
-                className="text-text-muted hover:text-golden font-medium py-2"
-                onClick={() => setMobileOpen(false)}
-              >
-                Profile
-              </Link>
-              {user?.role === "admin" && (
-                <Link
-                  to="/admin"
-                  className="text-text-muted hover:text-golden font-medium py-2"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Admin Dashboard
-                </Link>
+
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/library"
+                    className="text-text-muted hover:text-golden font-medium py-2 w-full text-center"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    My Library
+                  </Link>
+                  <Link
+                    to="/profile"
+                    className="text-text-muted hover:text-golden font-medium py-2 w-full text-center"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  {user?.role === "admin" && (
+                    <Link
+                      to="/admin"
+                      className="text-text-muted hover:text-golden font-medium py-2 w-full text-center"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      Admin Dashboard
+                    </Link>
+                  )}
+                  <button
+                    className="text-error font-medium py-2 w-full text-center"
+                    onClick={handleLogout}
+                  >
+                    Log out
+                  </button>
+                </>
+              ) : (
+                <div className="flex w-full gap-3 pt-5">
+                  <button
+                    className="w-full btn-ghost btn-sm flex-1"
+                    onClick={() => {
+                      navigate("/login");
+                      setMobileOpen(false);
+                    }}
+                  >
+                    Log in
+                  </button>
+                  <button
+                    className="w-full btn-primary btn-sm flex-1"
+                    onClick={() => {
+                      navigate("/register");
+                      setMobileOpen(false);
+                    }}
+                  >
+                    Sign up
+                  </button>
+                </div>
               )}
-              <button
-                className="text-error font-medium py-2 text-left"
-                onClick={handleLogout}
-              >
-                Log out
-              </button>
-            </>
-          ) : (
-            <div className="flex w-full gap-3 pt-2">
-              <button
-                className="w-full btn-ghost btn-sm flex-1"
-                onClick={() => {
-                  navigate("/login");
-                  setMobileOpen(false);
-                }}
-              >
-                Log in
-              </button>
-              <button
-                className="w-full btn-primary btn-sm flex-1"
-                onClick={() => {
-                  navigate("/register");
-                  setMobileOpen(false);
-                }}
-              >
-                Sign up
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </nav>
