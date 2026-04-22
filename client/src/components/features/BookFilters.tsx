@@ -53,6 +53,13 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
   // Fetch autocomplete suggestions from the real API
   const { data: suggestions = [] } = useAutocomplete(debouncedSearch);
 
+  // Close all three panels at once — used by outside-click and mutual-exclusion logic
+  const closeAll = () => {
+    setShowFilters(false);
+    setShowSuggestions(false);
+    setShowSortDropdown(false);
+  };
+
   // When the component mounts, apply any filters that were set via URL params
   // This makes navigating from DiscountSection (?sortBy=rating) work correctly
   useEffect(() => {
@@ -127,9 +134,9 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
   useEffect(() => {
     // This closes floating panels when the user clicks somewhere else.
     const handlePointerDown = (event: MouseEvent) => {
+      // If the click landed outside our entire container, close everything
       if (!containerRef.current?.contains(event.target as Node)) {
-        setShowSuggestions(false);
-        setShowFilters(false);
+        closeAll();
       }
     };
 
@@ -168,7 +175,12 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
                 clearFilters();
               }
             }}
-            onFocus={() => setShowSuggestions(true)}
+            onFocus={() => {
+              // Close the other two panels before opening suggestions
+              setShowFilters(false);
+              setShowSortDropdown(false);
+              setShowSuggestions(true);
+            }}
             onKeyDown={(e) => {
               // This lets Enter commit the search without clicking a suggestion.
               if (e.key === "Enter") {
@@ -228,7 +240,12 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
           {/* Filter toggle button */}
           <button
             className="btn-ghost btn-sm relative flex items-center gap-2"
-            onClick={() => setShowFilters(!showFilters)}
+            onClick={() => {
+              // Close the other panels before toggling Filters
+              setShowSuggestions(false);
+              setShowSortDropdown(false);
+              setShowFilters((prev) => !prev);
+            }}
           >
             <SlidersHorizontal size={16} />
             <span className="inline">Filters</span>
@@ -246,7 +263,12 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
           <div className="relative">
             <button
               className="btn-ghost btn-sm flex items-center gap-2 min-w-[130px] justify-between"
-              onClick={() => setShowSortDropdown((prev) => !prev)}
+              onClick={() => {
+                // Close the other panels before toggling Sort
+                setShowSuggestions(false);
+                setShowFilters(false);
+                setShowSortDropdown((prev) => !prev);
+              }}
             >
               {/* Show the currently active sort label */}
               <span className="text-sm text-text-light">
