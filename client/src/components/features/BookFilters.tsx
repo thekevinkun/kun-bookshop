@@ -7,11 +7,10 @@ import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 // Import icons for the search bar and filter panel
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 
 // Import our hooks — useAutocomplete for search suggestions
 import { useAutocomplete } from "../../hooks/useBooks";
-import { BOOK_CATEGORY_BUCKETS } from "../../constants/bookCategoryBuckets";
 
 // Import useDebouncedValue — delays search so we don't fire on every keystroke
 import { useDebouncedValue } from "@mantine/hooks";
@@ -19,20 +18,12 @@ import { useDebouncedValue } from "@mantine/hooks";
 // Import the BookFilters type that defines the shape of our filter state
 import type { BookFilters, IBook } from "../../types/book";
 
+import { BOOK_CATEGORY_BUCKETS, SORT_OPTIONS } from "../../lib/constants";
+
 interface BookFiltersProps {
   filters: BookFilters;
   onChange: (filters: BookFilters) => void;
 }
-
-// Sort options — these don't come from the DB, they're fixed UI choices
-const SORT_OPTIONS = [
-  { label: "Newest", value: "createdAt", order: "desc" },
-  { label: "Oldest", value: "createdAt", order: "asc" },
-  { label: "Price: Low to High", value: "price", order: "asc" },
-  { label: "Price: High to Low", value: "price", order: "desc" },
-  { label: "Top Rated", value: "rating", order: "desc" },
-  { label: "Bestselling", value: "purchaseCount", order: "desc" },
-];
 
 const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
   // This lets us detect clicks outside the whole search/filter area.
@@ -52,6 +43,9 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
 
   // Whether the autocomplete dropdown is visible
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Whether the custom sort dropdown is open
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
 
   // Debounce the search input — only update after 400ms of no typing
   const [debouncedSearch] = useDebouncedValue(searchInput, 400);
@@ -175,7 +169,6 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
               }
             }}
             onFocus={() => setShowSuggestions(true)}
-            onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
             onKeyDown={(e) => {
               // This lets Enter commit the search without clicking a suggestion.
               if (e.key === "Enter") {
@@ -194,9 +187,9 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
                 exit={{ opacity: 0, y: -8 }} // reverses out when hidden
                 transition={{ duration: 0.15, ease: "easeOut" }}
                 className="absolute top-full left-0 right-0 mt-1 bg-card border border-bg-hover
-        rounded-lg shadow-xl z-50 overflow-hidden"
+                  rounded-lg shadow-xl z-50 overflow-hidden"
               >
-                {suggestions.map((book: IBook, index: number) => (
+                {suggestions.slice(0, 6).map((book: IBook, index: number) => (
                   <motion.button
                     key={book._id}
                     // Each suggestion staggers in slightly after the container
@@ -204,7 +197,7 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.12, delay: index * 0.04 }}
                     className="w-full flex items-center gap-3 px-4 py-2 hover:bg-bg-hover
-            text-left transition-colors duration-150"
+                      text-left transition-colors duration-150"
                     onClick={() => {
                       setSearchInput(book.title);
                       applySearch(book.title);
@@ -249,33 +242,68 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
             )}
           </button>
 
-          {/* Sort dropdown */}
-          <select
-            className="input-field w-auto cursor-pointer"
-            value={`${filters.sortBy}-${filters.sortOrder}`}
-            onChange={(e) => {
-              const option = SORT_OPTIONS.find(
-                (o) => `${o.value}-${o.order}` === e.target.value,
-              );
-              if (option) {
-                onChange({
-                  ...filters,
-                  sortBy: option.value as BookFilters["sortBy"],
-                  sortOrder: option.order as BookFilters["sortOrder"],
-                  page: 1,
-                });
-              }
-            }}
-          >
-            {SORT_OPTIONS.map((opt) => (
-              <option
-                key={`${opt.value}-${opt.order}`}
-                value={`${opt.value}-${opt.order}`}
-              >
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          {/* Sort dropdown — custom styled to match category pills */}
+          <div className="relative">
+            <button
+              className="btn-ghost btn-sm flex items-center gap-2 min-w-[130px] justify-between"
+              onClick={() => setShowSortDropdown((prev) => !prev)}
+            >
+              {/* Show the currently active sort label */}
+              <span className="text-sm text-text-light">
+                {SORT_OPTIONS.find(
+                  (o) =>
+                    `${o.value}-${o.order}` ===
+                    `${filters.sortBy}-${filters.sortOrder}`,
+                )?.label ?? "Sort"}
+              </span>
+              <ChevronDown
+                size={14}
+                className={`transition-transform duration-150 ${showSortDropdown ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            <AnimatePresence>
+              {showSortDropdown && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute right-0 top-full mt-1 bg-card border border-bg-hover
+                    rounded-lg shadow-xl z-50 overflow-hidden min-w-[170px]"
+                >
+                  {SORT_OPTIONS.map((opt) => {
+                    // Check if this option is the currently active sort
+                    const isActive =
+                      `${opt.value}-${opt.order}` ===
+                      `${filters.sortBy}-${filters.sortOrder}`;
+                    return (
+                      <button
+                        key={`${opt.value}-${opt.order}`}
+                        className={`w-full text-left px-4 py-2 text-sm transition-colors duration-150
+                          ${
+                            isActive
+                              ? "text-golden bg-golden/10"
+                              : "text-text-muted hover:bg-bg-hover hover:text-text-light"
+                          }`}
+                        onClick={() => {
+                          onChange({
+                            ...filters,
+                            sortBy: opt.value as BookFilters["sortBy"],
+                            sortOrder: opt.order as BookFilters["sortOrder"],
+                            page: 1,
+                          });
+                          setShowSortDropdown(false); // close after selection
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 

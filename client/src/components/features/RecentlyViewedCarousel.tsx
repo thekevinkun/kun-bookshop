@@ -4,7 +4,7 @@ import { BookCard } from "../../cards";
 import type { IBook } from "../../types/book";
 
 const carouselItemClassName = `shrink-0 snap-start basis-[calc(27.333%-0.35rem)] min-[30rem]:basis-[calc(21.666%-0.475rem)] 
-    sm:basis-[calc(17.666%-0.725rem)] md:basis-[calc(15%-1rem)] lg:basis-[calc(13.333%-1.5rem)]`;
+    sm:basis-[calc(17.666%-0.5rem)] md:basis-[calc(15.333%-1rem)] lg:basis-[calc(13.666%-1.35rem)]`;
 
 const RecentlyViewedCarousel = ({ books }: { books: IBook[] }) => {
   const trackRef = useRef<HTMLDivElement | null>(null);

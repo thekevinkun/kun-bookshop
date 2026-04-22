@@ -20,6 +20,7 @@ import { BookGrid, BookFiltersComponent } from "../../components/features";
 
 // Import the BookFilters type
 import type { BookFilters } from "../../types/book";
+import { BOOK_CATEGORY_BUCKETS, SORT_OPTIONS } from "../../lib/constants";
 
 export default function BooksPage() {
   const [searchParams] = useSearchParams();
@@ -60,6 +61,10 @@ export default function BooksPage() {
   const currentPage = data?.currentPage ?? 1;
   const totalCount = data?.total ?? 0;
 
+  // Non-default sort = anything that isn't the default "Newest" (createdAt desc)
+  const hasNonDefaultSort =
+    filters.sortBy !== "createdAt" || filters.sortOrder !== "desc";
+
   // True when the user has applied any actual filter — sort doesn't count
   // Used to hide RecentlyViewed and relabel the catalog heading
   const hasActiveFilters = Boolean(
@@ -70,7 +75,8 @@ export default function BooksPage() {
     filters.minPrice ||
     filters.maxPrice ||
     filters.discountMin !== undefined ||
-    filters.discountMax !== undefined,
+    filters.discountMax !== undefined ||
+    hasNonDefaultSort,
   );
 
   // Blur the clicked pagination button so the browser does not snap it back into view.
@@ -90,6 +96,31 @@ export default function BooksPage() {
     }
 
     setFilters((prev) => ({ ...prev, page }));
+  };
+
+  // Derive a human-readable heading label based on active filters, in priority order
+  const getHeading = (): string => {
+    if (discountLabel) return `${discountLabel} Results`;
+
+    // Category bucket label — e.g. "Romance Books"
+    if (filters.categoryBucket) {
+      const bucket = BOOK_CATEGORY_BUCKETS.find(
+        (b) => b.key === filters.categoryBucket,
+      );
+      if (bucket) return `${bucket.label} Books`;
+    }
+
+    if (filters.search) return "Search Results";
+
+    // Non-default sort label — e.g. "Bestselling Books"
+    if (hasNonDefaultSort) {
+      const sortOption = SORT_OPTIONS.find(
+        (o) => o.value === filters.sortBy && o.order === filters.sortOrder,
+      );
+      if (sortOption) return `${sortOption.label} Books`;
+    }
+
+    return "All Library Books";
   };
 
   return (
@@ -143,11 +174,7 @@ export default function BooksPage() {
             <div className="mb-8">
               <h2 className="text-text-light uppercase tracking-wider">
                 {/* Label changes based on whether the user is filtering or browsing */}
-                {hasActiveFilters
-                  ? discountLabel
-                    ? `${discountLabel} Results`
-                    : "Search Results"
-                  : "All Library Books"}
+                {getHeading()}
               </h2>
 
               <div className="w-10 h-1 bg-golden rounded-full mt-1" />
