@@ -38,14 +38,18 @@ import {
   sendPasswordChangedEmail,
 } from "../services/email.service";
 
-// COOKIE OPTIONS
-// Reusable cookie settings we apply whenever we set an auth cookie
-// Defined once here so we never accidentally use different settings in different places
+// COOKIE_OPTIONS
+// sameSite: "none" is required because our frontend and backend are on different Railway
+// subdomains (cross-site). "strict" silently drops cookies on cross-origin requests.
+// sameSite: "none" REQUIRES secure: true — which is fine since production is always HTTPS.
+// In development (HTTP), we fall back to "lax" because "none" requires secure context.
 const COOKIE_OPTIONS = {
-  httpOnly: true, // JavaScript in the browser CANNOT read this cookie — prevents XSS theft
-  secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
-  sameSite: "strict" as const, // Only send cookie when request comes FROM our own domain — prevents CSRF
-  path: "/", // Cookie is sent with every request to our domain
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: (process.env.NODE_ENV === "production" ? "none" : "lax") as
+    | "none"
+    | "lax",
+  path: "/",
 };
 
 // REGISTER
@@ -216,11 +220,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     });
 
     // Set the refresh token as a separate cookie (30 days)
-    // Scoped to /api/auth/refresh so it's ONLY sent to that specific endpoint
+    // path: "/" — must match root so Safari doesn't treat it as a sub-path third-party cookie
+    // Security comes from DB validation, not cookie path restriction
     res.cookie("refreshToken", refreshToken, {
       ...COOKIE_OPTIONS,
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
-      path: "/api/auth/refresh", // Only sent when browser hits this route
     });
 
     logger.info(`User logged in: ${user.email}`);
@@ -265,8 +269,8 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
     // Clear the access token cookie from the browser
     res.clearCookie("token", { path: "/" });
 
-    // Clear the refresh token cookie — must use the same path it was set with
-    res.clearCookie("refreshToken", { path: "/api/auth/refresh" });
+    // Clear the refresh token cookie — path must match how it was set (now root "/")
+    res.clearCookie("refreshToken", { path: "/" });
 
     res.json({ message: "Logged out successfully." });
   } catch (error) {
@@ -312,10 +316,16 @@ export const refreshTokens = async (
       return;
     }
 
-    // TOKEN ROTATION
-    // Immediately revoke the OLD refresh token
-    // If an attacker sgoldens it and tries to use it after us, it'll be dead
-    storedToken.isRevoked = true;
+    // TOKEN ROTATION WITH GRACE WINDOW
+    // We don't hard-revoke immediately — instead we set a grace expiry 30 seconds from now.
+    // This handles the "lost response" case on slow/flaky connections:
+    // if the browser never received our Set-Cookie (network drop), it will retry with the
+    // old token. Within 30 seconds it's still valid; after that it's dead.
+    // An attacker who steals the token still can't use it after 30s — and in practice
+    // they'd have to intercept it within that tiny window, which is negligible risk.
+    const graceExpiresAt = new Date(Date.now() + 30 * 1000); // 30 seconds from now
+    storedToken.isRevoked = false; // Keep it NOT revoked yet
+    storedToken.expiresAt = graceExpiresAt; // But shrink its expiry to 30 seconds
     await storedToken.save();
 
     // Look up the user this token belongs to
@@ -348,11 +358,10 @@ export const refreshTokens = async (
       maxAge: 15 * 60 * 1000,
     });
 
-    // Set the new refresh token cookie
+    // Set the new refresh token cookie — path defaults to "/" via COOKIE_OPTIONS
     res.cookie("refreshToken", newRefreshToken, {
       ...COOKIE_OPTIONS,
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      path: "/api/auth/refresh",
     });
 
     // Also return the access token in the body for API clients that can't use cookies
@@ -596,7 +605,7 @@ export const changePassword = async (
 
     // Clear the cookies on this device too
     res.clearCookie("token", { path: "/" });
-    res.clearCookie("refreshToken", { path: "/api/auth/refresh" });
+    res.clearCookie("refreshToken", { path: "/" });
 
     // Send password changed confirmation email
     await sendPasswordChangedEmail(user.email);

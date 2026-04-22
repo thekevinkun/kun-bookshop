@@ -5,7 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { useAuthStore } from "./store/auth";
 import App from "./App.tsx";
 import { queryClient } from "./lib/react-query";
-import api from "./lib/api";
+import { performRefresh } from "./lib/api";
 import "./styles/globals.css";
 
 // Check if the stored token is expired before the app renders.
@@ -13,7 +13,7 @@ import "./styles/globals.css";
 // This covers the case where authenticateOptional silently ignores expired tokens
 // instead of returning 401 — meaning the response interceptor never fires.
 const initAuth = async () => {
-  const { token, logout, setToken } = useAuthStore.getState();
+  const { token, logout } = useAuthStore.getState();
 
   if (token) {
     // Decode the payload — we just need the exp field, no need to verify signature here
@@ -25,8 +25,7 @@ const initAuth = async () => {
       if (isExpired) {
         // Token is expired — try a silent refresh before the app mounts
         try {
-          const res = await api.post("/auth/refresh");
-          setToken(res.data.token); // Store the new token so all queries use it
+          await performRefresh(); // Uses shared lock — safe if interceptor fires simultaneously
         } catch {
           // Refresh failed — clear stale cache before mounting so no previous user's data leaks
           queryClient.clear();

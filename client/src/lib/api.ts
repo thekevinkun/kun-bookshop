@@ -6,6 +6,31 @@ import { useAuthStore } from "../store/auth";
 
 import { useCartStore } from "../store/cart";
 
+// SHARED REFRESH LOCK
+// A single promise that represents an in-flight refresh request.
+// Both initAuth and the response interceptor check this before firing their own refresh.
+// This prevents two simultaneous refresh calls from revoking each other's tokens.
+let refreshPromise: Promise<string> | null = null;
+
+// Call this anywhere a refresh is needed — it deduplicates concurrent callers.
+// If a refresh is already running, returns the same promise instead of starting a new one.
+export const performRefresh = (): Promise<string> => {
+  if (refreshPromise) return refreshPromise; // Already in flight — reuse it
+
+  refreshPromise = api
+    .post("/auth/refresh")
+    .then((res) => {
+      const newToken = res.data.token;
+      useAuthStore.getState().setToken(newToken); // Save to store
+      return newToken;
+    })
+    .finally(() => {
+      refreshPromise = null; // Clear the lock when done, success or failure
+    });
+
+  return refreshPromise;
+};
+
 // CREATE AXIOS INSTANCE
 // Instead of using axios directly, we create a configured instance
 // This way every request automatically gets our base URL and credentials setting
@@ -111,12 +136,9 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Attempt to get a new access token using our refresh token cookie
-        const response = await api.post("/auth/refresh");
-        const newToken = response.data.token;
-
-        // Save the new token to the Zustand store
-        useAuthStore.getState().setToken(newToken);
+        // Use the shared refresh lock — if initAuth already fired a refresh,
+        // this reuses that same promise instead of sending a second request
+        const newToken = await performRefresh();
 
         // Update the Authorization header on the original failed request
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
@@ -128,19 +150,14 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         // Refresh failed — the session is truly expired
-        // Reject all queued requests
         processQueue(refreshError, null);
 
-        // Log the user out — clear the store and redirect to login
         useAuthStore.getState().logout();
-        // Load the guest cart now that the user is logged out
-        // This switches the cart key from "cart-user-{id}" back to "cart-guest"
         useCartStore.getState().loadCart();
-        window.location.href = "/login"; // Hard redirect so all state is cleared
+        window.location.href = "/login";
 
         return Promise.reject(refreshError);
       } finally {
-        // Always reset the refreshing flag when done, success or failure
         isRefreshing = false;
       }
     }
