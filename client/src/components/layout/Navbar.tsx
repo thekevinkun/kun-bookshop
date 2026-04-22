@@ -308,12 +308,12 @@ const Navbar = () => {
       {/* Mobile menu — plain list, no Radix needed here */}
       {mobileOpen && (
         <div
-          className="md:hidden bg-dark border-t border-bg-hover
-            px-4 py-4 flex flex-col gap-3"
+          className="md:hidden bg-dark border-t border-golden/55
+            px-4 py-4 flex flex-col justify-center items-center gap-3"
         >
           <Link
             to="/books"
-            className="text-text-muted hover:text-golden text-sm font-medium py-2"
+            className="text-text-muted hover:text-golden font-medium py-2"
             onClick={() => setMobileOpen(false)}
           >
             Browse
@@ -323,14 +323,14 @@ const Navbar = () => {
             <>
               <Link
                 to="/library"
-                className="text-text-muted hover:text-golden text-sm font-medium py-2"
+                className="text-text-muted hover:text-golden font-medium py-2"
                 onClick={() => setMobileOpen(false)}
               >
                 My Library
               </Link>
               <Link
                 to="/profile"
-                className="text-text-muted hover:text-golden text-sm font-medium py-2"
+                className="text-text-muted hover:text-golden font-medium py-2"
                 onClick={() => setMobileOpen(false)}
               >
                 Profile
@@ -338,23 +338,23 @@ const Navbar = () => {
               {user?.role === "admin" && (
                 <Link
                   to="/admin"
-                  className="text-text-muted hover:text-golden text-sm font-medium py-2"
+                  className="text-text-muted hover:text-golden font-medium py-2"
                   onClick={() => setMobileOpen(false)}
                 >
                   Admin Dashboard
                 </Link>
               )}
               <button
-                className="text-error text-sm font-medium py-2 text-left"
+                className="text-error font-medium py-2 text-left"
                 onClick={handleLogout}
               >
                 Log out
               </button>
             </>
           ) : (
-            <div className="flex gap-3 pt-2">
+            <div className="flex w-full gap-3 pt-2">
               <button
-                className="btn-ghost btn-sm flex-1"
+                className="w-full btn-ghost btn-sm flex-1"
                 onClick={() => {
                   navigate("/login");
                   setMobileOpen(false);
@@ -363,7 +363,7 @@ const Navbar = () => {
                 Log in
               </button>
               <button
-                className="btn-primary btn-sm flex-1"
+                className="w-full btn-primary btn-sm flex-1"
                 onClick={() => {
                   navigate("/register");
                   setMobileOpen(false);

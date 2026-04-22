@@ -91,8 +91,15 @@ export default function LibraryPage() {
   if (isLoading) {
     return (
       // Full-page centered spinner while we wait for the library to load
-      <main className="container-page min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin text-golden/75" size={40} />
+      <main
+        style={{ backgroundColor: "#0a1628" }}
+        className="min-h-screen flex items-center justify-center"
+      >
+        <img 
+          src="/images/logo.webp"
+          alt="logo loading"
+          className="w-10 h-10 object-cover animate-pulse"
+        />
       </main>
     );
   }

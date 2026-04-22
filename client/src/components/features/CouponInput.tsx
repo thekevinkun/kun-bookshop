@@ -112,7 +112,7 @@ const CouponInput = ({
         onChange={(e) => setInputValue(e.target.value.toUpperCase())} // Auto-uppercase as they type
         onKeyDown={handleKeyDown}
         placeholder="Coupon code"
-        className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm
+        className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-base
           focus:outline-none focus:ring-2 focus:ring-golden/70 focus:border-transparent
           placeholder:text-gray-400 uppercase"
         disabled={isPending} // Disable while the request is in-flight
@@ -122,7 +122,7 @@ const CouponInput = ({
       <button
         onClick={handleApply}
         disabled={isPending || !inputValue.trim()}
-        className="rounded-lg bg-teal/75 px-4 py-2 text-sm font-medium 
+        className="rounded-lg bg-teal/75 px-4 py-2 text-base font-medium 
           text-text-light hover:bg-teal disabled:opacity-50 
           disabled:cursor-not-allowed transition-colors flex items-center gap-1.5"
       >
