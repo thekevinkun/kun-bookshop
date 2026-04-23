@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useAuthStore } from "./store/auth";
+import { useCartStore } from "./store/cart";
 import App from "./App.tsx";
 import { queryClient } from "./lib/react-query";
 import { performRefresh } from "./lib/api";
@@ -41,6 +42,12 @@ const initAuth = async () => {
 
   // Mark hydration complete regardless of outcome so queries are unblocked
   useAuthStore.setState({ isHydrated: true });
+
+  // If the user is authenticated after hydration, load their server cart into Zustand
+  // Without this, cart is empty on every page refresh even though MongoDB has their items
+  if (useAuthStore.getState().isAuthenticated) {
+    await useCartStore.getState().loadCart();
+  }
 };
 
 // Run auth init first, then render — this ensures the first query

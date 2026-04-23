@@ -59,6 +59,12 @@ import downloadsRoutes from "./routes/downloads.routes";
 // Import the users router to handle library and wishlist endpoints
 import usersRoutes from "./routes/users.routes";
 
+// Server-side cart routes
+import cartRoutes from "./routes/cart.routes";
+
+// Server-side recently viewed routes
+import recentlyViewedRoutes from "./routes/recentlyViewed.routes";
+
 // Import the admin router — handles all /api/admin/* endpoints
 import adminRoutes from "./routes/admin.routes";
 
@@ -150,6 +156,12 @@ app.use("/api/downloads", downloadsRoutes);
 
 // Register the users routes — handles /api/users/library and /api/users/wishlist
 app.use("/api/users", usersRoutes);
+
+// Mount cart routes
+app.use("/api/cart", cartRoutes);
+
+// Mount recently viewed routes
+app.use("/api/recently-viewed", recentlyViewedRoutes);
 
 // Mount the review router — all paths start with /api/reviews
 app.use("/api/reviews", reviewRoutes);

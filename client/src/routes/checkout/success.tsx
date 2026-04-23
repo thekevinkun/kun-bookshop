@@ -40,7 +40,7 @@ export default function CheckoutSuccessPage() {
 
         if (httpStatus === 200 && data.status === "completed") {
           // Webhook has fired and order is fulfilled — show success
-          clearCart();
+          await clearCart();
           setOrderNumber(data.orderNumber);
           setStatus("success");
           return;

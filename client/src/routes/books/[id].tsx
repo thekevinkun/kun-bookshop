@@ -10,13 +10,14 @@ import {
   BookDetailTabs,
   SimilarBooks,
 } from "../../components/features";
-import { addRecentlyViewed } from "../../lib/recentlyViewed";
+import { useRecentlyViewed } from "../../hooks/useRecentlyViewed";
 import { SkeletonHero } from "../../components/ui";
 
 export default function BookDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
+  const { addRecentlyViewed } = useRecentlyViewed();
 
   // Fetch the book from the real API — no placeholder fallback
   const { data: book, isLoading, isError } = useBook(id!);

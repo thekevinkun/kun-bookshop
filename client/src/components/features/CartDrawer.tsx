@@ -59,12 +59,13 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
     setIsCheckingOut(false);
   };
 
-  const handleRemoveItem = (bookId: string) => {
+  const handleRemoveItem = async (bookId: string) => {
     // Clear any checkout error state before modifying the cart
     clearCheckoutState();
     // Remove coupon if cart becomes empty after this removal
-    if (items.length === 1 && appliedCoupon) removeCoupon();
-    removeItem(bookId);
+    if (items.length === 1 && appliedCoupon) await removeCoupon();
+    // Then remove the item itself from server cart
+    await removeItem(bookId);
   };
 
   const handleBrowseBooks = () => {
@@ -156,7 +157,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             {/* Close button — top right corner */}
             <Dialog.Close asChild>
               <button
-                className="text-text-muted hover:text-text-light transition-colors"
+                className="text-text-muted hover:text-text-light transition-colors cursor-pointer"
                 aria-label="Close cart"
               >
                 <X size={22} />
@@ -221,7 +222,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                           {item.title}
                         </p>
                         <p className="text-sm text-text-muted truncate">
-                          {item.author}
+                          {item.authorName}
                         </p>
                         <p className="text-golden font-bold mt-1">
                           ${item.price.toFixed(2)}

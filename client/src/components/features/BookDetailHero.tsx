@@ -111,7 +111,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
     addItem({
       bookId: book._id,
       title: book.title,
-      author: book.authorName,
+      authorName: book.authorName,
       price: book.discountPrice ?? book.price, // Use sale price if available
       coverImage: book.coverImage,
     });

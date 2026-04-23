@@ -54,3 +54,29 @@ export interface IDownload extends Document {
   ipAddress: string; // The user's IP address — for abuse detection
   downloadedAt: Date; // When the download happened
 }
+
+// CartItem is the shape of each book stored in the cart
+export interface ICartItem {
+  bookId: mongoose.Types.ObjectId; // Reference to the Book document
+  title: string; // Denormalized book title — fast display without populate
+  authorName: string; // Denormalized author name — never book.author (ObjectId)
+  price: number; // Snapshot of price at time of adding to cart
+  coverImage: string; // Cloudinary URL for cover thumbnail in cart
+}
+
+// CouponData stores the applied coupon details inline with the cart
+export interface ICouponData {
+  code: string; // The coupon code string e.g. "SAVE20"
+  discountType: "percentage" | "fixed"; // How the discount is calculated
+  discountValue: number; // The raw discount value e.g. 20 for 20%
+  discountAmount: number; // Computed dollar amount saved e.g. 2.80
+  finalTotal: number; // Computed final price after discount
+}
+
+// ICart is the full cart document interface
+export interface ICart extends Document {
+  userId: mongoose.Types.ObjectId; // One cart per user — indexed unique
+  items: ICartItem[]; // Array of cart items
+  coupon: ICouponData | null; // Applied coupon, or null if none
+  updatedAt: Date; // Auto-managed by timestamps: true
+}

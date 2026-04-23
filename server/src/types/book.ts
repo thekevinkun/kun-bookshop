@@ -119,3 +119,10 @@ export interface IReadingProgress extends Document {
   totalPages: number; // PDF: total pages in the document
   lastReadAt: Date; // When the user last saved progress
 }
+
+// IRecentlyViewed is the document interface for a user's recently viewed books
+export interface IRecentlyViewed extends Document {
+  userId: mongoose.Types.ObjectId; // One document per user — unique index
+  bookIds: mongoose.Types.ObjectId[]; // Ordered list of book IDs, newest first, max 10
+  updatedAt: Date; // Auto-managed by timestamps: true
+}

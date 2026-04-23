@@ -93,7 +93,7 @@ const CouponInput = ({
         {/* Right side: remove button */}
         <button
           onClick={onRemove}
-          className="text-error/85 hover:text-error transition-colors"
+          className="p-0.5 text-error/85 hover:text-error hover:bg-red-500/25 rounded-full transition-colors"
           aria-label="Remove coupon"
         >
           <X className="h-4 w-4" />
