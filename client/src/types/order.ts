@@ -2,6 +2,7 @@
 export interface ICartItem {
   bookId: string; // The book's MongoDB _id
   title: string; // Book title — shown in the cart drawer
+  author?: string; // Author name from the backend (deprecated, but still included for backward compatibility)
   authorName: string; // Author name — shown in the cart drawer
   price: number; // The actual price (discountPrice if on sale, else price)
   coverImage: string; // Cover URL — shown as thumbnail in the cart

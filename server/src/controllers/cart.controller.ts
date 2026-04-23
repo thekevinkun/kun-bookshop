@@ -26,28 +26,26 @@ export const getCart = async (req: Request, res: Response): Promise<void> => {
 // Adds a single book to the cart. Silently ignores if bookId already exists (digital goods = qty 1).
 export const addItem = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user!.userId; // Authenticated user's ID from JWT
-
-    // Destructure the item fields from the request body
+    const userId = req.user!.userId;
     const { bookId, title, authorName, price, coverImage } =
       req.body as ICartItem;
 
-    // $addToSet won't add duplicate bookIds — enforces one copy per book in cart
-    // We use $addToSet on the bookId field via a custom approach:
-    // First check if bookId already exists, then push if not
+    // Add the item only if bookId is not already in the cart
+    // Then ALWAYS clear the coupon — adding a book changes the subtotal,
+    // making the previously stored discountAmount and finalTotal stale
     const cart = await Cart.findOneAndUpdate(
-      { userId, "items.bookId": { $ne: bookId } }, // Only match if bookId is NOT already in items
+      { userId, "items.bookId": { $ne: bookId } }, // Only if not already in cart
       {
-        $push: { items: { bookId, title, authorName, price, coverImage } }, // Add the new item
-        $setOnInsert: { coupon: null }, // Don't overwrite coupon if cart already exists
+        $push: { items: { bookId, title, authorName, price, coverImage } }, // Add item
+        $set: { coupon: null }, // Always wipe coupon — total has changed
       },
-      { upsert: true, new: true }, // Create cart if it doesn't exist, return new doc
+      { upsert: true, new: true, returnDocument: "after" },
     );
 
-    // If cart is null here, it means the bookId was already in the cart — that's fine, just fetch it
+    // If cart is null the bookId was already present — fetch current state
     const finalCart = cart ?? (await Cart.findOne({ userId }));
 
-    res.json({ items: finalCart!.items, coupon: finalCart!.coupon }); // Return updated cart
+    res.json({ items: finalCart!.items, coupon: finalCart!.coupon });
   } catch (err) {
     res.status(500).json({ error: "Failed to add item to cart" });
   }
@@ -60,23 +58,24 @@ export const removeItem = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const userId = req.user!.userId; // Authenticated user from JWT
-    const bookId = req.params.bookId as string; // The book to remove, from URL param
+    const userId = req.user!.userId;
+    const bookId = req.params.bookId as string;
 
-    // $pull removes all array elements where bookId matches
     const cart = await Cart.findOneAndUpdate(
-      { userId }, // Find this user's cart
-      { $pull: { items: { bookId } } }, // Remove the matching item
-      { new: true }, // Return the updated document
+      { userId },
+      {
+        $pull: { items: { bookId } }, // Remove the matching item
+        $set: { coupon: null }, // Wipe coupon — total has changed
+      },
+      { new: true, returnDocument: "after" },
     );
 
     if (!cart) {
-      // No cart found for this user — return empty state
       res.json({ items: [], coupon: null });
       return;
     }
 
-    res.json({ items: cart.items, coupon: cart.coupon }); // Return updated cart
+    res.json({ items: cart.items, coupon: cart.coupon });
   } catch (err) {
     res.status(500).json({ error: "Failed to remove item from cart" });
   }

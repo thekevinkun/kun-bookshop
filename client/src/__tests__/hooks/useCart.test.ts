@@ -8,7 +8,7 @@ import { useCartStore } from "../../store/cart";
 const fakeItem = {
   bookId: "book-001",
   title: "Clean Code",
-  author: "Robert Martin",
+  authorName: "Robert Martin",
   price: 19.99,
   coverImage: "https://example.com/cover1.jpg",
 };
@@ -16,7 +16,7 @@ const fakeItem = {
 const fakeItem2 = {
   bookId: "book-002",
   title: "The Pragmatic Programmer",
-  author: "David Thomas",
+  authorName: "David Thomas",
   price: 24.99,
   coverImage: "https://example.com/cover2.jpg",
 };
