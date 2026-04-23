@@ -20,4 +20,4 @@ Disallow: /verify-email
 Disallow: /api/
 
 # Tell crawlers where the sitemap lives
-Sitemap: https://kunbookshop.com/sitemap.xml
+Sitemap: https://api-kunbookshop.up.railway.app/sitemap.xml
