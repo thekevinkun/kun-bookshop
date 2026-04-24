@@ -1,8 +1,11 @@
 // Import React hooks
 import { useState } from "react";
 
-// Import React Query for the books data (reusing Phase 3 hooks)
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+// Import the new admin-specific books hook
+import { useAdminBooks } from "../../hooks/useBooks";
+
+// Import React Query for cache invalidation after delete
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Import icons
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
@@ -22,6 +25,9 @@ import api from "../../lib/api";
 export default function AdminBooks() {
   const queryClient = useQueryClient();
 
+  // Current page — resets to 1 whenever the search term changes
+  const [page, setPage] = useState(1);
+
   // Search input value — raw (updates on every keystroke)
   const [search, setSearch] = useState("");
 
@@ -29,32 +35,20 @@ export default function AdminBooks() {
   // This prevents firing a new API request on every single keystroke
   const [debouncedSearch] = useDebouncedValue(search, 400);
 
-  // Which book is currently being edited (null = no modal open)
+  // Which book is currently being edited (undefined = modal closed, null = create mode)
   const [editingBook, setEditingBook] = useState<IBook | null | undefined>(
     undefined,
   );
 
-  // Fetch books list — reusing the existing /api/books endpoint from Phase 3
-  const { data, isLoading } = useQuery({
-    queryKey: ["books", debouncedSearch],
-    queryFn: async () => {
-      const params = new URLSearchParams({
-        limit: "50",
-        sortBy: "purchaseCount", // Sort by number of purchases — most sold first
-        sortOrder: "desc", // Highest purchase count at the top
-      });
-      if (debouncedSearch) params.set("search", debouncedSearch);
-      const { data } = await api.get(`/books?${params}`);
-      return data;
-    },
-  });
+  // Fetch paginated books — uses the same /api/books endpoint but with page param
+  const { data, isLoading } = useAdminBooks(page, debouncedSearch);
 
   // Mutation to soft-delete a book (sets isActive: false via DELETE /api/books/:id)
   const { mutate: deleteBook } = useMutation({
     mutationFn: (bookId: string) => api.delete(`/books/${bookId}`),
     onSuccess: (_response, bookId) => {
-      // Refresh the books list after deletion
-      queryClient.invalidateQueries({ queryKey: ["books"] });
+      // Invalidate admin books cache so the table refreshes after deletion
+      queryClient.invalidateQueries({ queryKey: ["books", "admin"] });
       const deletedBook = data?.books?.find(
         (item: IBook) => item._id === bookId,
       );
@@ -87,13 +81,14 @@ export default function AdminBooks() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-white">Books</h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Manage your book catalog.
+          {/* Show total book count — same pattern as AdminAuthors */}
+          <p className="text-golden/80 text-sm mt-1">
+            {data?.total ?? 0} books in the catalog.
           </p>
         </div>
         {/* Add book button — opens modal with no pre-filled book (create mode) */}
         <button
-          onClick={() => setEditingBook(null)} // null = create mode
+          onClick={() => setEditingBook(null)}
           className="btn-primary flex items-center gap-2"
         >
           <Plus size={16} />
@@ -109,7 +104,10 @@ export default function AdminBooks() {
         />
         <input
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1); // Reset to page 1 whenever the search term changes
+          }}
           className="input-field pl-9"
           placeholder="Search books..."
         />
@@ -119,6 +117,8 @@ export default function AdminBooks() {
       <div className="bg-[#1E293B] rounded-xl border border-slate-700/50 overflow-hidden">
         {isLoading ? (
           <div className="p-8 text-center text-slate-400">Loading books...</div>
+        ) : data?.books?.length === 0 ? (
+          <div className="p-8 text-center text-slate-400">No books found.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -228,6 +228,33 @@ export default function AdminBooks() {
             </table>
           </div>
         )}
+
+        {/* Pagination — only shown when there is more than one page */}
+        {data?.totalPages > 1 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-700">
+            <p className="text-slate-400 text-sm">
+              Page {data.currentPage} of {data.totalPages}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPage((p) => p - 1)}
+                disabled={page === 1}
+                className="px-3 py-1.5 text-sm bg-slate-700 text-slate-300 rounded-lg
+                  hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => setPage((p) => p + 1)}
+                disabled={page === data.totalPages}
+                className="px-3 py-1.5 text-sm bg-slate-700 text-slate-300 rounded-lg
+                  hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Render the Add/Edit modal when editingBook is not undefined */}
@@ -235,7 +262,7 @@ export default function AdminBooks() {
       {editingBook !== undefined && (
         <BookForm
           book={editingBook}
-          onClose={() => setEditingBook(undefined)} // Close modal by resetting to undefined
+          onClose={() => setEditingBook(undefined)}
         />
       )}
     </div>

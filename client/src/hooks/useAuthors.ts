@@ -26,12 +26,13 @@ export const useAuthors = (page = 1, search = "") => {
 
 // useAllAuthors
 // Fetches ALL authors with no pagination — used by the book form dropdown
-// We request a high limit so the dropdown has the full list
+// We pass limit=9999 to bypass the default limit=20 in the backend
+// This guarantees every author appears in the dropdown, no matter how many exist
 export const useAllAuthors = () => {
   return useQuery({
     queryKey: [...AUTHORS_KEY, "all"],
     queryFn: async () => {
-      const { data } = await api.get("/authors");
+      const { data } = await api.get("/authors?limit=9999"); // Explicit high limit — never truncates
       return data.authors; // Returns a flat array, not paginated
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes — author list doesn't change often

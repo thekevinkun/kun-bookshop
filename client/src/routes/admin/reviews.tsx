@@ -74,7 +74,7 @@ export default function AdminReviews() {
       {/* Page header */}
       <div>
         <h1 className="text-white">Reviews</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-golden/80 text-sm mt-1">
           {data?.total ?? 0} total reviews across all books.
         </p>
       </div>

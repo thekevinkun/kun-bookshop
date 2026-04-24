@@ -101,7 +101,7 @@ export default function AdminUsers() {
       {/* Page header */}
       <div>
         <h1 className="text-white">Users</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-golden/80 text-sm mt-1">
           {data?.total ?? 0} total users registered.
         </p>
       </div>

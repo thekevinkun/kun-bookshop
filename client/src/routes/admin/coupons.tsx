@@ -96,7 +96,7 @@ export default function AdminCoupons() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-white">Coupons</h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-golden/80 text-sm mt-1">
             Create and manage discount codes.
           </p>
         </div>

@@ -211,3 +211,29 @@ export const useBookRead = (bookId: string | null) => {
     retry: false,
   });
 };
+
+// useAdminBooks — paginated book list for the admin dashboard
+// Separate from useBooks (the public catalog) because it needs different defaults:
+// - higher limit per page (20 rows in a table vs 12 cards in a grid)
+// - sorted by purchaseCount so the most-sold books appear first
+// - no isActive filter — admin needs to see soft-deleted books too (future-proofing)
+export const useAdminBooks = (page = 1, search = "") => {
+  return useQuery({
+    // Include page and search in the key so each combination gets its own cache entry
+    queryKey: ["books", "admin", page, search],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        page: String(page),
+        limit: "20", // 20 rows per page — readable without excessive scrolling
+        sortBy: "purchaseCount",
+        sortOrder: "desc",
+      });
+      if (search) params.set("search", search); // Only append if non-empty
+
+      const { data } = await api.get(`/books?${params}`);
+      return data; // { books, total, totalPages, currentPage }
+    },
+    placeholderData: (prev) => prev, // Keep previous page visible while next page loads
+    staleTime: 2 * 60 * 1000, // 2 minutes — same as useAuthors
+  });
+};

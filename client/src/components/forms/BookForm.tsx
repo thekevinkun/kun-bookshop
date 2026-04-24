@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAllAuthors } from "../../hooks/useAuthors";
 
 import { toast } from "sonner";
-import { AdminModal } from "../ui";
+import { AdminModal, AuthorSelect } from "../ui";
 
 import type { IBook } from "../../types/book";
 import api from "../../lib/api";
@@ -133,21 +133,14 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           />
         </div>
 
-        {/* Author dropdown — required, populated from authors query */}
+        {/* Author — searchable combobox, no MantineProvider required */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">Author *</label>
-          <select
+          <AuthorSelect
+            authors={authors.data}
             value={authorId}
-            onChange={(e) => setAuthorId(e.target.value)}
-            className="input-field"
-          >
-            <option value="">Select an author...</option>
-            {authors.data?.map((a: { _id: string; name: string }) => (
-              <option key={a._id} value={a._id}>
-                {a.name}
-              </option>
-            ))}
-          </select>
+            onChange={setAuthorId}
+          />
           {authors.data?.length === 0 && (
             <p className="text-amber-400 text-xs mt-1">
               No authors found. Add an author first before adding books.
@@ -183,7 +176,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           </div>
         </div>
 
-        {/* Category input — required, comma-separated */}
+        {/* File type input — pdf/epub */}
         <div>
           <label className="block text-slate-400 text-sm mb-1">
             File Type *
@@ -191,7 +184,7 @@ const BookForm = ({ book, onClose }: BookFormProps) => {
           <select
             value={fileType}
             onChange={(e) => setFileType(e.target.value as "pdf" | "epub")}
-            className="input-field"
+            className="input-field "
           >
             <option value="pdf">PDF</option>
             <option value="epub">ePub</option>

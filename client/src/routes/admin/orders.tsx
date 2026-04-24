@@ -33,7 +33,7 @@ export default function AdminOrders() {
       {/* Page header */}
       <div>
         <h1 className="text-white">Orders</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-golden/80 text-sm mt-1">
           {data?.total ?? 0} total orders.
         </p>
       </div>

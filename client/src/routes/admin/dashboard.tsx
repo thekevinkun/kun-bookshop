@@ -84,7 +84,7 @@ export default function AdminDashboard() {
       {/* Page title */}
       <div>
         <h1 className="text-white">Dashboard</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-golden/80 text-sm mt-1">
           Welcome back, here's what's happening.
         </p>
       </div>

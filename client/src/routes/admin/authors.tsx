@@ -62,7 +62,7 @@ export default function AdminAuthors() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-white">Authors</h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-golden/80 text-sm mt-1">
             {data?.total ?? 0} authors in the system.
           </p>
         </div>
@@ -152,7 +152,7 @@ export default function AdminAuthors() {
                         {author.specialty?.slice(0, 2).map((s: string) => (
                           <span
                             key={s}
-                            className="px-2 py-0.5 bg-burgundy/75 text-text-light rounded text-xs border border-burgundy/85"
+                            className="px-2 py-0.5 bg-slate-700 text-slate-300 rounded text-xs borderd"
                           >
                             {s}
                           </span>
