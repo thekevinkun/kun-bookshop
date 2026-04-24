@@ -129,7 +129,7 @@ const DealsSection = () => {
             {card.covers.map((book, coverIndex) => (
               <div
                 key={book._id}
-                className={`w-14 sm:w-20 rounded-lg overflow-hidden shadow-2xl ${
+                className={`w-15 sm:w-20 rounded-lg overflow-hidden shadow-2xl ${
                   index === 0
                     ? coverIndex === 0
                       ? "rotate-[-8deg] translate-y-2"

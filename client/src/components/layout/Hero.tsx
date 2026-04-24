@@ -284,8 +284,8 @@ const Hero = ({
                       alt=""
                       fetchPriority="high"
                       aria-hidden="true"
-                      className="absolute top-6 left-9 sm:left-12 w-full rounded-xl object-cover aspect-[2/3]
-                        rotate-[12deg] scale-[0.94] opacity-55 blur-[1.5px] brightness-[0.55]
+                      className="absolute top-6 left-9 sm:left-13 w-full rounded-xl object-cover aspect-[2/3]
+                        rotate-[10deg] sm:rotate-[12deg] scale-[0.94] opacity-55 blur-[1.5px] brightness-[0.55]
                         saturate-[0.8] shadow-[0_20px_50px_rgba(0,0,0,0.45)] z-15"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src =
@@ -298,7 +298,7 @@ const Hero = ({
                       fetchPriority="high"
                       aria-hidden="true"
                       className="absolute top-3 left-5 sm:left-8 w-full rounded-xl object-cover aspect-[2/3]
-                        rotate-[10deg] scale-[0.97] opacity-75 blur-[0.5px] brightness-[0.72]
+                        rotate-[8deg] sm:rotate-[10deg] scale-[0.97] opacity-75 blur-[0.5px] brightness-[0.72]
                         saturate-[0.9] shadow-[0_18px_40px_rgba(0,0,0,0.38)] z-15"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src =
