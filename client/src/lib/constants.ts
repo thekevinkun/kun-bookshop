@@ -1,7 +1,8 @@
 export const BOOK_CATEGORY_BUCKETS = [
   { key: "fiction", label: "Fiction" },
-  { key: "fantasy", label: "Fantasy" },
-  { key: "romance", label: "Romance" },
+  { key: "fantasy-adventure", label: "Fantasy & Adventure" },
+  { key: "classics", label: "Classics" },
+  { key: "romance-comedy", label: "Romance & Comedy" },
   { key: "mystery-crime", label: "Mystery & Crime" },
   { key: "sci-fi-dystopian", label: "Sci-Fi & Dystopian" },
   { key: "historical-fiction", label: "Historical Fiction" },
