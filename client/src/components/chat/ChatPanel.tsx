@@ -7,16 +7,20 @@ import QuickReplies from "./QuickReplies";
 import type { ChatMessage as ChatMessageType } from "../../types/chat";
 
 interface ChatPanelProps {
-  messages: ChatMessageType[]; // Full conversation history
-  isLoading: boolean; // true = show typing indicator
-  onSendMessage: (text: string) => void; // Called when user sends a message
-  className?: string; // Optional extra classes for sizing
+  messages: ChatMessageType[];
+  isLoading: boolean;
+  onSendMessage: (text: string) => void;
+  firstName?: string | null; // Add this
+  isAuthenticated?: boolean; // Add this
+  className?: string;
 }
 
 const ChatPanel = ({
   messages,
   isLoading,
   onSendMessage,
+  firstName,
+  isAuthenticated,
   className = "",
 }: ChatPanelProps) => {
   // inputValue — controlled input state for the message text field
@@ -54,6 +58,13 @@ const ChatPanel = ({
     // Shift+Enter falls through and adds a newline naturally
   };
 
+  // Build the personalized greeting — mirrors KUN's backend greeting logic exactly
+  // Shows in the empty state UI before any conversation starts
+  const greetingHelpText =
+    isAuthenticated && firstName
+      ? `I can help you find books, answer questions, or manage your cart and library.`
+      : `I can help you find books or answer any questions.`;
+
   return (
     // Panel wrapper — flex column so messages take all space, input stays at bottom
     <div className={`flex flex-col bg-navy ${className}`}>
@@ -73,9 +84,17 @@ const ChatPanel = ({
                 className="w-16 h-16 object-contain"
               />
 
-              <p className="text-slate-300 text-sm font-medium">Hi! I'm KUN</p>
-              <p className="text-slate-500 text-xs">
-                Your Kun Bookshop assistant. Ask me anything!
+              {/* Personalized greeting — uses firstName if available */}
+              <p className="text-slate-300 text-sm font-medium">
+                {isAuthenticated && firstName
+                  ? `Hi, ${firstName}! I'm KUN`
+                  : `Hi! I'm KUN`}
+              </p>
+              <p className="mt-1 text-slate-400 text-xs max-w-xs">
+                Your Kun Bookshop assistant. {greetingHelpText}
+              </p>
+              <p className="text-slate-400 text-xs max-w-xs">
+                What can I do for you?
               </p>
             </div>
           )}

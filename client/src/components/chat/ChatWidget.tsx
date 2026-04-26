@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"; // Add Framer Motion
 
 import { X, ChevronUp } from "lucide-react";
 
+import { useAuthStore } from "../../store/auth";
 import { useChat } from "../../hooks/useChat";
 
 import ChatPanel from "./ChatPanel";
@@ -11,16 +12,20 @@ import ChatPanel from "./ChatPanel";
 import { panelVariants } from "../../lib/animations";
 
 const ChatWidget = () => {
+  // Pull user from auth store to personalize the greeting
+  const { user } = useAuthStore();
+
   const [isOpen, setIsOpen] = useState(false);
   const { pathname } = useLocation();
-  const { messages, isLoading, sendMessage, clearMessages } = useChat();
-
-  if (pathname === "/contact") return null;
+  const { messages, isLoading, sendMessage, clearMessages, isAuthenticated } =
+    useChat();
 
   const handleClose = () => {
     setIsOpen(false);
     clearMessages();
   };
+
+  if (pathname === "/contact") return null;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
@@ -70,6 +75,8 @@ const ChatWidget = () => {
               messages={messages}
               isLoading={isLoading}
               onSendMessage={sendMessage}
+              firstName={user?.firstName ?? null}
+              isAuthenticated={isAuthenticated}
               className="flex-1 min-h-0"
             />
           </motion.div>

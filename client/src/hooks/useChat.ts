@@ -76,7 +76,7 @@ export const useChat = () => {
           firstName: user?.firstName ?? null, // First name for personalized greeting
           isAuthenticated, // Whether user is logged in
         };
-
+        console.log("user context: ", userContext);
         // Build the messages array to send — strip frontend-only fields (id, isStreaming)
         // Only send the last 20 messages to stay within context limits
         const historyToSend = [...messages, userMessage]
@@ -113,7 +113,7 @@ export const useChat = () => {
         // Hide the typing indicator — first token is about to arrive
         setIsLoading(false);
 
-        // ── Stream reading loop ──────────────────────────────────────────
+        // Stream reading loop
         // Read chunks from the SSE stream until the server signals [done]
         while (true) {
           const { done, value } = await reader.read(); // Read the next chunk
@@ -210,5 +210,6 @@ export const useChat = () => {
     error, // Error string or null
     sendMessage, // Call this to send a user message
     clearMessages, // Call this to reset the conversation
+    isAuthenticated, // Whether the user is logged in (for personalized greeting)
   };
 };
