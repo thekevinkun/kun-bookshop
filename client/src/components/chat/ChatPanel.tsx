@@ -30,13 +30,30 @@ const ChatPanel = ({
   // We scroll to it whenever new messages arrive
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+
   // showQuickReplies — true until the user sends their first message
   // Once the conversation starts, chips disappear permanently
   const showQuickReplies = messages.length === 0;
 
   // Auto-scroll to the bottom whenever messages change or loading state changes
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); // Smooth scroll to latest message
+    const container = messagesContainerRef.current;
+    if (container) {
+      const currentScroll = container.scrollTop;
+      const targetScroll = container.scrollHeight - container.clientHeight;
+
+      if (Math.abs(currentScroll - targetScroll) > 100) {
+        // Only smooth scroll if not already near bottom
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: "smooth",
+        });
+      } else {
+        // Instant if already near bottom (feels snappier)
+        container.scrollTop = container.scrollHeight;
+      }
+    }
   }, [messages, isLoading]);
 
   // handleSend — called by button click or Enter key
@@ -71,6 +88,7 @@ const ChatPanel = ({
       {/* Message list */}
       <div className="flex-1 overflow-hidden">
         <div
+          ref={messagesContainerRef}
           className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 
         scrollbar-track-transparent hover:scrollbar-thumb-white/30"
         >

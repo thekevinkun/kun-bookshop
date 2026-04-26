@@ -16,11 +16,8 @@ const Footer = () => {
           {/* Brand */}
           <div className="flex flex-col gap-5 max-w-sm">
             {/* Logo — reuses same markup as Navbar */}
-            <Link
-              to="/"
-              className="flex items-center w-fit"
-            >
-              <img 
+            <Link to="/" className="flex items-center w-fit">
+              <img
                 src="/images/logo.webp"
                 alt="Logo"
                 className="w-7 h-7 object-cover"
@@ -80,7 +77,8 @@ const Footer = () => {
                 <Link
                   key={link.label}
                   to={link.to}
-                  className="group inline-flex items-center gap-2 text-sm text-text-muted hover:text-text-light transition-colors duration-150 w-fit"
+                  className="group inline-flex items-center gap-2 text-sm text-text-muted hover:text-golden 
+                    transition-colors duration-150 w-fit"
                 >
                   {link.label}
                 </Link>
@@ -97,16 +95,17 @@ const Footer = () => {
               <p className="text-text-light text-sm leading-relaxed">
                 Need help with downloads, formats, or an order issue?
               </p>
-              <a
-                href={`mailto:${FOOTER_CONTACT.email}`}
+              <Link
+                to="/contact"
                 className="inline-flex items-center gap-2 mt-4 text-sm text-golden hover:text-white transition-colors"
               >
-                Contact support
+                Contact & Help
                 <ArrowRight size={14} />
-              </a>
+              </Link>
               <p className="text-text-muted text-xs mt-4">
                 Secure checkout with Stripe.
-                <br />PDF and ePub formats.
+                <br />
+                PDF and ePub formats.
               </p>
             </div>
           </div>
