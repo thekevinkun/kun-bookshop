@@ -65,6 +65,9 @@ import cartRoutes from "./routes/cart.routes";
 // Server-side recently viewed routes
 import recentlyViewedRoutes from "./routes/recentlyViewed.routes";
 
+// Import the chat router — handles POST /api/chat for KUN AI Chatbot
+import chatRoutes from "./routes/chat.routes";
+
 // Import the admin router — handles all /api/admin/* endpoints
 import adminRoutes from "./routes/admin.routes";
 
@@ -162,6 +165,9 @@ app.use("/api/cart", cartRoutes);
 
 // Mount recently viewed routes
 app.use("/api/recently-viewed", recentlyViewedRoutes);
+
+// Mount the chat router — handles KUN AI Chatbot at POST /api/chat
+app.use("/api/chat", chatRoutes);
 
 // Mount the review router — all paths start with /api/reviews
 app.use("/api/reviews", reviewRoutes);

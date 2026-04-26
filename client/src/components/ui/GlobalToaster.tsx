@@ -3,7 +3,7 @@ import { Toaster } from "sonner";
 const GlobalToaster = () => {
   return (
     <Toaster
-      position="bottom-right"
+      position="bottom-left"
       expand
       closeButton
       richColors
@@ -11,21 +11,21 @@ const GlobalToaster = () => {
       className="
         !fixed 
         !bottom-4 
-        !right-4 
-        sm:!right-6 
-        !left-auto 
-        !w-[min(90vw,420px)] 
-        !max-w-[420px] 
+        !left-4 
+        sm:!left-6 
+        !right-auto 
+        !w-[min(90vw,340px)] 
+        !max-w-[340px] 
         !z-[9999]
-        [--mobile-offset-left:0px]
-        [--offset-left:0px]
-        [--mobile-offset-right:1rem]
-        [--offset-right:1.5rem]
+        [--mobile-offset-right:0px]
+        [--offset-right:0px]
+        [--mobile-offset-left:1rem]
+        [--offset-left:1.5rem]
         [--mobile-offset-bottom:1rem]
         [--offset-bottom:1rem]
       "
       toastOptions={{
-        duration: 4500,
+        duration: Infinity,
         unstyled: true,
         classNames: {
           toast:
@@ -37,7 +37,7 @@ const GlobalToaster = () => {
           error:
             "!border-red-400/30 !bg-gradient-to-br !from-[#5B1D29] !to-[#2B1218]",
           closeButton:
-            "!border !border-white/10 !bg-white/5 !text-slate-200 !transition-colors hover:!bg-white/10 hover:!text-white",
+            "!mt-0.75 !bg-transparent !text-slate-200 !transition-colors hover:!bg-white/10 hover:!text-white ml-auto !order-last",
         },
       }}
     />

@@ -8,7 +8,7 @@ const PageLoader = () => (
     style={{ backgroundColor: "#0a1628" }}
     className="min-h-screen flex items-center justify-center"
   >
-    <img 
+    <img
       src="/images/logo.webp"
       alt="logo loading"
       className="w-10 h-10 object-cover animate-pulse"
@@ -45,6 +45,7 @@ const CheckoutSuccessPage = lazy(() =>
 const CheckoutCancelPage = lazy(() =>
   import("./routes/checkout").then((m) => ({ default: m.CheckoutCancelPage })),
 );
+const ContactPage = lazy(() => import("./routes/contact/index"));
 
 const LibraryPage = lazy(() => import("./routes/library/index"));
 const ProfilePage = lazy(() => import("./routes/profile/index"));
@@ -152,6 +153,7 @@ const App = () => {
             />
             <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
             <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
+            <Route path="/contact" element={<ContactPage />} />
           </Route>
 
           {/* ADMIN ROUTES */}
