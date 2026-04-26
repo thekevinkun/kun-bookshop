@@ -41,17 +41,18 @@ const contains = (message: string, keywords: string[]): boolean => {
 
 // Pick a scripted mock response based on what the user said
 // Returns a plain string — streamText handles the actual streaming
+// Fake tool results are shaped exactly like real tool results so the pipeline is identical
 const getMockResponse = (
   userMessage: string,
   firstName: string | null,
 ): string => {
   // Greeting / hello
   if (contains(userMessage, ["hello", "hi", "hey", "halo", "hei"])) {
-    const name = firstName ? ` ${firstName}` : ""; // Personalize if we know the user's name
+    const name = firstName ? ` ${firstName}` : "";
     return `Hi${name}! I'm KUN, your Kun Bookshop assistant. I can help you find books, answer questions, or manage your cart and library. What can I do for you?`;
   }
 
-  // Book search
+  // Book search — fake tool result shape: { success: true, data: book[] }
   if (
     contains(userMessage, [
       "find",
@@ -62,35 +63,43 @@ const getMockResponse = (
       "buku",
     ])
   ) {
-    return `I found some books that might interest you! Here are a few results:\n\n📖 **Dune** by Frank Herbert — $12.99\n📖 **The Hobbit** by J.R.R. Tolkien — $9.99\n📖 **1984** by George Orwell — $8.99\n\nWould you like to add any of these to your cart, or would you like more details on a specific book?`;
+    return `I searched for that and found a few results!\n\n📖 **Dune** by Frank Herbert — $12.99 (PDF)\nRating: 4.8 ⭐ | Category: Science Fiction\n\n📖 **The Hobbit** by J.R.R. Tolkien — $9.99 (ePub)\nRating: 4.9 ⭐ | Category: Fantasy\n\n📖 **1984** by George Orwell — $8.99 (PDF)\nRating: 4.7 ⭐ | Category: Dystopian\n\nWant more details on any of these, or should I add one to your cart?`;
   }
 
-  // Add to cart
+  // Add to cart — fake tool result: { success: true, data: { message } }
   if (
     contains(userMessage, [
       "add to cart",
       "add it",
       "tambah",
-      "cart",
-      "keranjang",
+      "add dune",
+      "add the",
+      "add 1984",
+      "add hobbit",
     ])
   ) {
-    return `I've added that book to your cart! 🛒 You can view your cart anytime by clicking the cart icon, or just ask me "show my cart".`;
+    return `Done! I've added that book to your cart. 🛒\n\nWant to keep browsing, apply a coupon, or head to checkout?`;
   }
 
-  // View cart
+  // Already in cart — fake tool result: { success: false, alreadyInCart: true }
+  if (contains(userMessage, ["already in cart"])) {
+    return `That book is already in your cart! Head to checkout when you're ready, or would you like to keep browsing?`;
+  }
+
+  // View cart — fake tool result: { success: true, data: { items, coupon, itemCount } }
   if (
     contains(userMessage, [
       "my cart",
       "show cart",
       "view cart",
       "keranjang saya",
+      "show my cart",
     ])
   ) {
-    return `Here's what's in your cart right now:\n\n🛒 **Dune** by Frank Herbert — $12.99\n\nSubtotal: $12.99\n\nWant to apply a coupon, or are you ready to checkout?`;
+    return `Here's your cart:\n\n🛒 **Dune** by Frank Herbert — $12.99\n\nSubtotal: $12.99 | 1 item\nNo coupon applied.\n\nWant to apply a coupon code, remove an item, or go to checkout?`;
   }
 
-  // Library / purchased books
+  // Library — fake tool result: { success: true, data: { books, totalOwned } }
   if (
     contains(userMessage, [
       "my library",
@@ -98,19 +107,25 @@ const getMockResponse = (
       "purchased",
       "library",
       "perpustakaan",
+      "show my library",
     ])
   ) {
-    return `Here are the books in your library:\n\n📚 **The Great Gatsby** by F. Scott Fitzgerald\n📚 **To Kill a Mockingbird** by Harper Lee\n\nYou can read PDF books directly in your browser, or download ePub books to your reader app.`;
+    return `Here are the books in your library:\n\n📚 **The Great Gatsby** by F. Scott Fitzgerald (PDF)\n📚 **To Kill a Mockingbird** by Harper Lee (ePub)\n\n2 books total. PDF books can be read right here in your browser. ePub books can be downloaded to any reader app.`;
   }
 
-  // Orders
+  // Orders — fake tool result: { success: true, data: { orders, totalOrders } }
   if (
-    contains(userMessage, ["my orders", "order history", "pesanan", "order"])
+    contains(userMessage, [
+      "my orders",
+      "order history",
+      "pesanan",
+      "show my orders",
+    ])
   ) {
-    return `Here's your recent order history:\n\n📦 **Order #ORD-001** — $12.99 — Completed\nPlaced 3 days ago — 1 book\n\nNeed help with a specific order?`;
+    return `Here's your recent order history:\n\n📦 **ORD-20260401-XYZ** — $12.99 — 1 book\nCompleted 3 days ago\n\n📦 **ORD-20260315-ABC** — $18.98 — 2 books\nCompleted 2 weeks ago\n\nNeed help with a specific order?`;
   }
 
-  // Coupon / discount
+  // Coupon — fake tool result: { success: true, data: { code, discountAmount, finalTotal } }
   if (
     contains(userMessage, [
       "coupon",
@@ -119,28 +134,64 @@ const getMockResponse = (
       "kode",
       "diskon",
       "voucher",
+      "check coupon",
     ])
   ) {
-    return `I can check a coupon for you! Just give me the coupon code and I'll validate it. For example: "Check coupon WELCOME10".`;
+    return `I checked that coupon for you!\n\n🎟 **WELCOME10** — 10% off\nDiscount: -$1.30\nFinal total: $11.69\n\nWant me to apply it to your cart, or is there anything else I can help with?`;
+  }
+
+  // Featured books — fake tool result: { success: true, data: book[] }
+  if (
+    contains(userMessage, [
+      "featured",
+      "recommend",
+      "popular",
+      "bestseller",
+      "trending",
+    ])
+  ) {
+    return `Here are some of our featured books right now:\n\n⭐ **Atomic Habits** by James Clear — $11.99 (PDF)\n⭐ **Sapiens** by Yuval Noah Harari — $13.99 (ePub)\n⭐ **The Alchemist** by Paulo Coelho — $8.99 (PDF)\n\nWant details on any of these, or shall I add one to your cart?`;
+  }
+
+  // Categories — fake tool result: { success: true, data: string[] }
+  if (
+    contains(userMessage, [
+      "categories",
+      "genres",
+      "kategori",
+      "what kind",
+      "what type",
+    ])
+  ) {
+    return `Here are the categories available at Kun Bookshop:\n\n📚 Fiction · Non-Fiction · Science Fiction · Fantasy · Biography · Self-Help · History · Science · Technology · Psychology\n\nWant me to search for books in a specific category?`;
   }
 
   // Download / format questions
-  if (contains(userMessage, ["download", "format", "pdf", "epub", "how to"])) {
-    return `Great question! Here's how downloads work at Kun Bookshop:\n\n📄 **PDF books** — Read directly in your browser, or download for offline use. Download links are valid for 1 hour.\n📱 **ePub books** — Download and open in your favourite reading app (Apple Books, Kindle, etc.).\n\nAll downloads are instant after purchase!`;
-  }
-
-  // Payment / Stripe
   if (
-    contains(userMessage, ["payment", "pay", "stripe", "bayar", "checkout"])
+    contains(userMessage, ["download", "format", "pdf", "epub", "how to read"])
   ) {
-    return `Payments at Kun Bookshop are processed securely by Stripe — one of the world's most trusted payment platforms. We accept all major credit and debit cards. Your card details are never stored on our servers.`;
+    return `Here's how it works at Kun Bookshop:\n\n📄 **PDF books** — Read directly in your browser with full progress tracking, or download for offline use. Download links are valid for 1 hour and can be regenerated anytime from your library.\n\n📱 **ePub books** — Download and open in your favourite reading app (Apple Books, Google Play Books, Kindle, etc.)\n\nAll downloads are instant after purchase — no waiting!`;
   }
 
-  // Refund / return
+  // Payment questions
+  if (
+    contains(userMessage, [
+      "payment",
+      "pay",
+      "stripe",
+      "bayar",
+      "checkout",
+      "secure",
+    ])
+  ) {
+    return `Payments at Kun Bookshop are processed by **Stripe** — one of the world's most trusted payment platforms. We accept all major credit and debit cards. Your card details are never stored on our servers.`;
+  }
+
+  // Refund policy
   if (
     contains(userMessage, ["refund", "return", "refund policy", "pengembalian"])
   ) {
-    return `Since all our books are digital products, we generally don't offer refunds after a successful download. However, if you experienced a technical issue with your purchase, please contact us and we'll do our best to help!`;
+    return `Since all our books are digital products, we generally don't offer refunds after a successful download. However, if you experienced a technical issue with your purchase, reach out and we'll do our best to help!`;
   }
 
   // Wishlist
@@ -148,15 +199,22 @@ const getMockResponse = (
     contains(userMessage, [
       "wishlist",
       "wish list",
-      "save",
+      "save for later",
       "bookmark",
       "favorit",
     ])
   ) {
-    return `I've added that book to your wishlist! 💛 You can find all your saved books in your account under "Wishlist".`;
+    return `Done! I've added that book to your wishlist. 💛\n\nYou can find all your saved books in your account under "Wishlist". Want to keep browsing?`;
   }
 
-  // Off-topic — redirect politely
+  // Guest tries an action — fake tool result: { success: false, requiresAuth: true }
+  if (
+    contains(userMessage, ["log in", "login", "sign in", "masuk", "daftar"])
+  ) {
+    return `You'll need to be logged in to do that. You can log in at the top right of the page — it only takes a second! Once you're in, I can help you manage your cart, library, and orders.`;
+  }
+
+  // Off-topic redirect
   if (
     contains(userMessage, [
       "weather",
@@ -166,13 +224,15 @@ const getMockResponse = (
       "cuaca",
       "berita",
       "news",
+      "movie",
+      "film",
     ])
   ) {
-    return `Ha, I wish I could help with that! But I'm KUN — I'm only able to assist with things related to Kun Bookshop. Is there a book I can help you find, or a question about your account?`;
+    return `Ha, I wish I could help with that! I'm KUN — I'm only set up to assist with things related to Kun Bookshop. Is there a book I can help you find, or a question about your account?`;
   }
 
-  // Default fallback — friendly and helpful
-  return `I'm not quite sure I understood that. I can help you:\n\n🔍 **Find books** — just tell me what you're looking for\n🛒 **Manage your cart** — add, remove, or view items\n📚 **Check your library** — see your purchased books\n❓ **Answer questions** — downloads, formats, payments, coupons\n\nWhat would you like to do?`;
+  // Default fallback
+  return `I'm not quite sure I understood that. Here's what I can do:\n\n🔍 **Find books** — just tell me what you're looking for\n🛒 **Manage your cart** — add, remove, or view items\n📚 **Check your library** — see your purchased books\n📦 **Order history** — review past purchases\n🎟 **Validate coupons** — check if a code is valid\n❓ **Answer questions** — downloads, formats, payments\n\nWhat would you like to do?`;
 };
 
 // mockChatController — main handler for POST /api/chat in mock mode
@@ -222,12 +282,10 @@ export const mockChatController = async (
 
     // If headers haven't been sent yet, return a normal JSON error
     if (!res.headersSent) {
-      res
-        .status(500)
-        .json({
-          success: false,
-          message: "Something went wrong. Please try again.",
-        });
+      res.status(500).json({
+        success: false,
+        message: "Something went wrong. Please try again.",
+      });
       return;
     }
 

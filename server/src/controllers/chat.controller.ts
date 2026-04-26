@@ -31,8 +31,11 @@ export const chatController = async (
   }
 
   if (mode === "openai") {
-    // OpenAI mode — will be wired up in Phase D when chat.service.ts is built
-    // For now, return a clear error so we know this path isn't ready yet
+    // Phase D — openAIChatController will be imported and called here
+    // For now, return a clear 503 so we know this path isn't wired yet
+    // When Phase D is done, replace this block with:
+    //   const { openAIChatController } = await import("../services/chat.service");
+    //   await openAIChatController(req, res);
     res.status(503).json({
       success: false,
       message:
