@@ -30,7 +30,7 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
           max-w-[80%] px-3 py-2 rounded-2xl text-sm leading-relaxed
           ${
             isUser
-              ? "bg-teal-500 text-white rounded-br-sm" // User: teal, right corner flat
+              ? "bg-[#173e82] text-white rounded-br-sm" // User: teal, right corner flat
               : "bg-white/5 border border-white/10 text-slate-200 rounded-bl-sm" // KUN: glass, left corner flat
           }
         `}
@@ -50,7 +50,7 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 
         {/* Blinking cursor — only shown while KUN is still streaming this message */}
         {message.isStreaming && (
-          <span className="inline-block w-0.5 h-3.5 bg-teal-400 ml-0.5 animate-pulse align-middle" />
+          <span className="inline-block w-0.5 h-3.5 bg-golden/85 ml-0.5 animate-pulse align-middle" />
         )}
       </div>
     </div>

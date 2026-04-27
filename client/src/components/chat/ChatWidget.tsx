@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion"; // Add Framer Motion
 
@@ -16,19 +16,44 @@ const ChatWidget = () => {
   const { user } = useAuthStore();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isLayoutOnMobile, setIsLayoutOnMobile] = useState(false);
   const { pathname } = useLocation();
   const { messages, isLoading, sendMessage, clearMessages, isAuthenticated } =
     useChat();
 
   const handleClose = () => {
     setIsOpen(false);
+    setIsLayoutOnMobile(false);
     clearMessages();
   };
+
+  const handleLayoutOnMobile = () => {
+    if (window.innerWidth < 768) {
+      setIsLayoutOnMobile((prev) => !prev);
+    }
+  };
+
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+
+    if (isOpen && isMobile) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   if (pathname === "/contact") return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div
+      className={`fixed z-50 flex flex-col items-end gap-3
+      ${isLayoutOnMobile ? "inset-0 w-full h-full" : "bottom-6 right-6"}`}
+    >
       {/* Animated Chat panel with AnimatePresence */}
       <AnimatePresence mode="wait">
         {isOpen && (
@@ -43,9 +68,11 @@ const ChatWidget = () => {
               originY: 1, // Bottom edge
             }}
             className="
-              w-80 sm:w-98 h-[670px] rounded-2xl overflow-hidden
-              border border-white/10 shadow-2xl shadow-black/50
-              flex flex-col bg-navy
+              !w-[100vw] md:!w-auto md:w-98 h-[100vh] 
+              md:max-h-[min(675px,85vh)] md:h-[min(675px,calc(100vh-3.5rem))]
+              md:rounded-2xl overflow-hidden border border-white/10 
+              flex flex-col bg-navy shadow-2xl shadow-black/50
+              
             "
           >
             {/* Panel header */}
@@ -84,42 +111,47 @@ const ChatWidget = () => {
       </AnimatePresence>
 
       {/* Floating bubble button */}
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="
+      {!isLayoutOnMobile && (
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            setIsOpen((prev) => !prev);
+            handleLayoutOnMobile();
+          }}
+          className="
           w-14 h-14 rounded-full bg-gradient-to-br from-[#173e82] to-[#123573] 
           hover:bg-gradient-to-tr hover:from-[#102347] hover:to-[#173B7A] 
           shadow-sm shadow-golden/20 flex items-center justify-center 
           transition-all duration-100 cursor-pointer relative overflow-hidden
         "
-      >
-        {/* Animated Icon Container */}
-        <motion.div
-          className="w-8 h-8 flex items-center justify-center rounded-full"
-          // Rotate 90° clockwise when closing, -90° counterclockwise when opening
-          animate={{
-            rotate: isOpen ? -180 : 0,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 20,
-            duration: 0.4,
-          }}
         >
-          {isOpen ? (
-            <ChevronUp className="w-6 h-6 text-golden drop-shadow-sm" />
-          ) : (
-            <img
-              src="/images/kun-chatbot-golden.webp"
-              alt="KUN Chatbot"
-              className="w-full h-full rounded-full object-contain"
-            />
-          )}
-        </motion.div>
-      </motion.button>
+          {/* Animated Icon Container */}
+          <motion.div
+            className="w-8 h-8 flex items-center justify-center rounded-full"
+            // Rotate 90° clockwise when closing, -90° counterclockwise when opening
+            animate={{
+              rotate: isOpen ? -180 : 0,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 20,
+              duration: 0.4,
+            }}
+          >
+            {isOpen ? (
+              <ChevronUp className="w-6 h-6 text-golden drop-shadow-sm" />
+            ) : (
+              <img
+                src="/images/kun-chatbot-golden.webp"
+                alt="KUN Chatbot"
+                className="w-full h-full rounded-full object-contain"
+              />
+            )}
+          </motion.div>
+        </motion.button>
+      )}
     </div>
   );
 };

@@ -133,12 +133,13 @@ const ChatPanel = ({
                   className="w-7 h-7 object-contain"
                 />
               </div>
+              
               {/* Three animated dots */}
               <div className="bg-white/5 border border-white/10 rounded-2xl rounded-bl-sm px-3 py-2">
                 <div className="flex gap-1 items-center h-4">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-bounce [animation-delay:0ms]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-bounce [animation-delay:150ms]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-bounce [animation-delay:300ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-golden/80 animate-bounce [animation-delay:0ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-golden/80 animate-bounce [animation-delay:150ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-golden/80 animate-bounce [animation-delay:300ms]" />
                 </div>
               </div>
             </div>
