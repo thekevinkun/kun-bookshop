@@ -154,9 +154,11 @@ export const useChat = () => {
                   ),
                 );
 
-                // Re-sync cart with server — if KUN added/removed a book,
-                // the Zustand store needs to reflect it immediately without a page refresh
-                await loadCart();
+                // Re-sync cart only if authenticated — guests have no cart
+                // and calling loadCart as guest triggers a 401 which redirects to login
+                if (isAuthenticated) {
+                  await loadCart();
+                }
 
                 break; // Exit the line-processing loop
               }
