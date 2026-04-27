@@ -31,16 +31,15 @@ export const chatController = async (
   }
 
   if (mode === "openai") {
-    // Phase D — openAIChatController will be imported and called here
-    // For now, return a clear 503 so we know this path isn't wired yet
-    // When Phase D is done, replace this block with:
-    //   const { openAIChatController } = await import("../services/chat.service");
-    //   await openAIChatController(req, res);
-    res.status(503).json({
-      success: false,
-      message:
-        "OpenAI mode is not yet configured. Set CHAT_MODE=mock to use the chatbot.",
-    });
+    const { openAIChatController } = await import("../services/chat.service");
+    await openAIChatController(req, res);
+
+    // res.status(503).json({
+    //   success: false,
+    //   message:
+    //     "OpenAI mode is not yet configured. Set CHAT_MODE=mock to use the chatbot.",
+    // });
+    
     return;
   }
 

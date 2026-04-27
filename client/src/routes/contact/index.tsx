@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, Mail, MessageCircle } from "lucide-react";
 
 import { useAuthStore } from "../../store/auth";

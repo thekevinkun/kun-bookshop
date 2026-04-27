@@ -7,6 +7,9 @@ import { useState, useCallback } from "react";
 // Zustand auth store — get user info
 import { useAuthStore } from "../store/auth";
 
+// Zustand cart store — we have a shopping tool that can read/write the cart
+import { useCartStore } from "../store/cart";
+
 // Our chat types
 import type { ChatMessage, UserContext } from "../types/chat";
 
@@ -31,6 +34,9 @@ export const useChat = () => {
 
   // Pull auth state from Zustand — we need this to build userContext
   const { user, isAuthenticated } = useAuthStore();
+
+  // Pull loadCart to re-sync cart after KUN actions
+  const { loadCart } = useCartStore();
 
   // sendMessage
   // Main function — called when user submits a message
@@ -147,6 +153,11 @@ export const useChat = () => {
                       : msg,
                   ),
                 );
+
+                // Re-sync cart with server — if KUN added/removed a book,
+                // the Zustand store needs to reflect it immediately without a page refresh
+                await loadCart();
+
                 break; // Exit the line-processing loop
               }
 

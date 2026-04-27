@@ -37,41 +37,66 @@ const alreadyOwned = () => ({ success: false, alreadyOwned: true });
 // limit: how many results to return (default 5, max 8)
 export const searchBooks = async (query: string, limit = 5) => {
   try {
-    // Clamp limit between 1 and 8 — don't let the LLM request 100 results
     const safeLimit = Math.min(Math.max(limit, 1), 8);
 
-    // Use MongoDB $text search on the text index (title + author fields)
-    // Only return active books — isActive: true filters soft-deleted ones
-    const books = await Book.find(
-      { $text: { $search: query }, isActive: true }, // Full-text search filter
+    // First try MongoDB full-text search on title index
+    let books = await Book.find(
+      { $text: { $search: query }, isActive: true },
       {
-        // Project only the fields KUN needs — never expose fileUrl or filePublicId
         title: 1,
         authorName: 1,
         price: 1,
         discountPrice: 1,
-        coverImage: 1,
         rating: 1,
         category: 1,
         fileType: 1,
         description: 1,
       },
     )
-      .limit(safeLimit) // Cap results
-      .lean(); // Return plain JS objects instead of Mongoose documents (faster)
+      .limit(safeLimit)
+      .lean();
 
-    // If nothing found, return a clear failure so LLM can suggest alternatives
+    // If text search found nothing, fall back to regex search
+    // This catches category names, authorName, and partial matches
+    // that the text index doesn't cover
+    if (books.length === 0) {
+      const regex = new RegExp(query, "i"); // Case-insensitive regex
+      books = await Book.find(
+        {
+          isActive: true,
+          $or: [
+            { title: regex }, // Match in title
+            { authorName: regex }, // Match in denormalized author name
+            { category: regex }, // Match in category array
+            { description: regex }, // Match in description
+            { tags: regex }, // Match in tags
+          ],
+        },
+        {
+          title: 1,
+          authorName: 1,
+          price: 1,
+          discountPrice: 1,
+          rating: 1,
+          category: 1,
+          fileType: 1,
+          description: 1,
+        },
+      )
+        .limit(safeLimit)
+        .lean();
+    }
+
     if (books.length === 0) {
       return fail("No books found matching that search.");
     }
 
-    return ok(books); // Return the matching books
+    return ok(books);
   } catch (error) {
-    logger.error("[Tool] searchBooks error:", error); // Log internally
+    logger.error("[Tool] searchBooks error:", error);
     return fail("Search is unavailable right now. Please try again.");
   }
 };
-
 // getBookDetails — fetch a single book's full details by its MongoDB _id
 // bookId: the MongoDB ObjectId string of the book
 export const getBookDetails = async (bookId: string) => {
@@ -122,7 +147,6 @@ export const getFeaturedBooks = async () => {
         authorName: 1,
         price: 1,
         discountPrice: 1,
-        coverImage: 1,
         rating: 1,
         category: 1,
         fileType: 1,
@@ -217,6 +241,78 @@ export const validateCoupon = async (code: string, cartTotal: number) => {
   } catch (error) {
     logger.error("[Tool] validateCoupon error:", error);
     return fail("Could not validate that coupon right now.");
+  }
+};
+
+// applyCoupon — validates a coupon and saves it directly to the user's cart
+// Combines validation + persistence in one step
+// userId: from req.user — null if guest
+export const applyCoupon = async (code: string, userId: string | null) => {
+  try {
+    if (!userId) return requiresAuth(); // Auth boundary — guests have no cart
+
+    // First fetch the user's cart to get the current subtotal
+    const cart = await Cart.findOne({ userId }).lean();
+
+    // If cart is empty or missing, nothing to apply a coupon to
+    if (!cart || cart.items.length === 0) {
+      return fail(
+        "Your cart is empty. Add some books first before applying a coupon.",
+      );
+    }
+
+    // Calculate the current cart subtotal from items
+    const cartTotal = cart.items.reduce(
+      (sum, item) => sum + item.price, // Add each item's price
+      0,
+    );
+
+    // Validate the coupon using existing validateCoupon logic
+    const validation = await validateCoupon(code, cartTotal);
+
+    // If validation failed, return the failure reason directly
+    if (!validation.success) return validation;
+
+    // Coupon is valid — extract the computed discount data
+    const couponData = (
+      validation as {
+        success: true;
+        data: {
+          code: string;
+          discountType: string;
+          discountValue: number;
+          discountAmount: number;
+          finalTotal: number;
+        };
+      }
+    ).data;
+
+    // Save the coupon into the cart document
+    await Cart.findOneAndUpdate(
+      { userId },
+      {
+        $set: {
+          coupon: {
+            code: couponData.code,
+            discountType: couponData.discountType,
+            discountValue: couponData.discountValue,
+            discountAmount: couponData.discountAmount,
+            finalTotal: couponData.finalTotal,
+          },
+        },
+      },
+      { new: true },
+    );
+
+    return ok({
+      message: `Coupon "${couponData.code}" applied! You save $${couponData.discountAmount.toFixed(2)} — final total is $${couponData.finalTotal.toFixed(2)}.`,
+      code: couponData.code,
+      discountAmount: couponData.discountAmount,
+      finalTotal: couponData.finalTotal,
+    });
+  } catch (error) {
+    logger.error("[Tool] applyCoupon error:", error);
+    return fail("Could not apply that coupon right now. Please try again.");
   }
 };
 

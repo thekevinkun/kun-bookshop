@@ -1,3 +1,4 @@
+import ReactMarkdown from "react-markdown"; // Parses markdown from KUN's responses
 import type { ChatMessage as ChatMessageType } from "../../types/chat"; // Our message type
 
 interface ChatMessageProps {
@@ -34,8 +35,18 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
           }
         `}
       >
-        {/* Render the message content — preserve newlines with whitespace-pre-wrap */}
-        <span style={{ whiteSpace: "pre-wrap" }}>{message.content}</span>
+        {/* ReactMarkdown renders bold, lists, line breaks from KUN's responses */}
+        <div
+          className="prose prose-invert prose-sm max-w-none
+          prose-p:my-1 prose-p:leading-relaxed
+          prose-strong:text-white prose-strong:font-semibold
+          prose-ul:my-1 prose-ul:pl-4
+          prose-ol:my-1 prose-ol:pl-4
+          prose-li:my-0.5
+          prose-a:text-teal-400 prose-a:no-underline"
+        >
+          <ReactMarkdown>{message.content}</ReactMarkdown>
+        </div>
 
         {/* Blinking cursor — only shown while KUN is still streaming this message */}
         {message.isStreaming && (
