@@ -4,14 +4,14 @@ import { Send } from "lucide-react";
 import ChatMessage from "./ChatMessage";
 import QuickReplies from "./QuickReplies";
 
+import { useAuthStore } from "../../store/auth";
+
 import type { ChatMessage as ChatMessageType } from "../../types/chat";
 
 interface ChatPanelProps {
   messages: ChatMessageType[];
   isLoading: boolean;
   onSendMessage: (text: string) => void;
-  firstName?: string | null; // Add this
-  isAuthenticated?: boolean; // Add this
   className?: string;
 }
 
@@ -19,10 +19,16 @@ const ChatPanel = ({
   messages,
   isLoading,
   onSendMessage,
-  firstName,
-  isAuthenticated,
   className = "",
 }: ChatPanelProps) => {
+  // Read auth state directly from the store — always fresh, never stale from a parent prop
+  const { user, isAuthenticated, isHydrated } = useAuthStore();
+
+  // Derive firstName only after hydration is confirmed
+  // Before hydration, user is null even for logged-in users — this prevents the "Hi there" flash
+  const firstName = isHydrated ? (user?.firstName ?? null) : null;
+  const authed = isHydrated ? isAuthenticated : false;
+  
   // inputValue — controlled input state for the message text field
   const [inputValue, setInputValue] = useState("");
 
@@ -78,7 +84,7 @@ const ChatPanel = ({
   // Build the personalized greeting — mirrors KUN's backend greeting logic exactly
   // Shows in the empty state UI before any conversation starts
   const greetingHelpText =
-    isAuthenticated && firstName
+    authed && firstName
       ? `I can help you find books, answer questions, or manage your cart and library.`
       : `I can help you find books or answer any questions.`;
 
@@ -104,7 +110,7 @@ const ChatPanel = ({
 
               {/* Personalized greeting — uses firstName if available */}
               <p className="text-slate-300 text-sm font-medium">
-                {isAuthenticated && firstName
+                {authed && firstName
                   ? `Hi, ${firstName}! I'm KUN`
                   : `Hi! I'm KUN`}
               </p>

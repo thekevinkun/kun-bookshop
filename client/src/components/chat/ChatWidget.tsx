@@ -13,7 +13,7 @@ import { panelVariants } from "../../lib/animations";
 
 const ChatWidget = () => {
   // Pull user from auth store to personalize the greeting
-  const { user, isHydrated } = useAuthStore();
+  const { isHydrated } = useAuthStore();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isLayoutOnMobile, setIsLayoutOnMobile] = useState(false);
@@ -107,8 +107,6 @@ const ChatWidget = () => {
               messages={messages}
               isLoading={isLoading}
               onSendMessage={sendMessage}
-              firstName={user?.firstName ?? null}
-              isAuthenticated={isAuthenticated}
               className="flex-1 min-h-0"
             />
           </motion.div>

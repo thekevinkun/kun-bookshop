@@ -140,8 +140,9 @@ export const getBookDetails = async (bookId: string) => {
 // Used when user asks "what books do you recommend?" or "show me featured books"
 export const getFeaturedBooks = async () => {
   try {
-    const books = await Book.find(
-      { isFeatured: true, isActive: true }, // Featured and not soft-deleted
+    // Fetch all active books — mirrors the real getFeatured controller algorithm
+    const allBooks = await Book.find(
+      { isActive: true },
       {
         title: 1,
         authorName: 1,
@@ -150,17 +151,235 @@ export const getFeaturedBooks = async () => {
         rating: 1,
         category: 1,
         fileType: 1,
+        purchaseCount: 1,
+        publishedDate: 1,
       },
-    )
-      .limit(6) // Cap at 6 — enough to present without overwhelming the chat
-      .lean();
+    ).lean();
 
-    if (books.length === 0) return fail("No featured books at the moment.");
+    // Determine cutoff for "new release" bonus — same 60-day window as the controller
+    const sixtyDaysAgo = new Date();
+    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+    // Score every book using the same three signals as getFeatured
+    const scored = allBooks.map((book) => {
+      const purchaseScore = (book.purchaseCount ?? 0) * 10; // Primary driver
+      const isNewRelease =
+        book.publishedDate && new Date(book.publishedDate) >= sixtyDaysAgo;
+      const newReleaseScore = isNewRelease ? 5 : 0; // New release bonus
+      const ratingScore = (book.rating ?? 0) * 2; // Quality tiebreaker
+      const score = purchaseScore + newReleaseScore + ratingScore;
+      return { ...book, score };
+    });
+
+    // Sort descending — highest score first, newest publishedDate as tiebreaker
+    scored.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      const dateA = a.publishedDate ? new Date(a.publishedDate).getTime() : 0;
+      const dateB = b.publishedDate ? new Date(b.publishedDate).getTime() : 0;
+      return dateB - dateA;
+    });
+
+    // Return top 5 — same cap as the homepage carousel
+    const books = scored.slice(0, 5).map(({ score: _score, ...book }) => book); // Strip score field
+
+    if (books.length === 0) return fail("No books available at the moment.");
 
     return ok(books);
   } catch (error) {
     logger.error("[Tool] getFeaturedBooks error:", error);
     return fail("Could not fetch featured books right now.");
+  }
+};
+
+// getRecommendedBooks tool
+// Triggered when the user asks for personalised recommendations based on their taste.
+// Mirrors the exact same algorithm as GET /api/books/recommendations in book.controller.ts.
+export const getRecommendedBooks = async (
+  userId?: string, // The authenticated user's ID — undefined for guests
+): Promise<{ success: boolean; data?: object; error?: string }> => {
+  try {
+    // Fetch the user's library and wishlist if we have a logged-in user
+    const user = userId
+      ? await User.findById(userId).select("library wishlist").lean()
+      : null;
+
+    // Fetch all active books to re-run the hero scoring and exclude those books
+    // We exclude hero books so recommendations don't overlap with the hero carousel
+    const heroBooks = await Book.find({ isActive: true })
+      .select("purchaseCount publishedDate rating")
+      .lean();
+
+    // Re-run the same hero scoring used in getFeaturedBooks
+    const sixtyDaysAgo = new Date();
+    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+    const heroScored = heroBooks.map((book) => ({
+      ...book,
+      score:
+        (book.purchaseCount ?? 0) * 10 +
+        (book.publishedDate && new Date(book.publishedDate) >= sixtyDaysAgo
+          ? 5
+          : 0) +
+        (book.rating ?? 0) * 2,
+    }));
+    heroScored.sort((a, b) => b.score - a.score);
+
+    // The top 5 hero book IDs — excluded from recommendations to avoid overlap
+    const heroIds = heroScored.slice(0, 5).map((b) => b._id.toString());
+
+    // Books the user already owns — no point recommending what they have
+    const libraryIds = (user?.library ?? []).map((id) => id.toString());
+
+    // Combined exclusion list: owned books + hero books
+    // Wishlist books are intentionally KEPT — recommending a wishlisted book is a useful nudge
+    const excludeIds = [...new Set([...libraryIds, ...heroIds])];
+
+    // Determine whether we have enough signal to personalise
+    const hasLibrary = libraryIds.length > 0;
+    const hasWishlist = (user?.wishlist ?? []).length > 0;
+    const isPersonalised = !!userId && (hasLibrary || hasWishlist);
+
+    let books;
+
+    if (isPersonalised) {
+      // PERSONALISED PATH — user has library or wishlist history to work with
+
+      // Collect categories from the user's purchased books
+      const libraryBooks = hasLibrary
+        ? await Book.find({ _id: { $in: user!.library }, isActive: true })
+            .select("category")
+            .lean()
+        : [];
+
+      // Collect categories from the user's wishlist
+      const wishlistBooks = hasWishlist
+        ? await Book.find({ _id: { $in: user!.wishlist }, isActive: true })
+            .select("category")
+            .lean()
+        : [];
+
+      // Build a weighted category frequency map
+      // Wishlist categories count double — user is actively interested but hasn't bought yet
+      const categoryWeight: Record<string, number> = {};
+
+      for (const book of libraryBooks) {
+        for (const cat of book.category) {
+          // Each purchased book in this category adds 1 point of interest
+          categoryWeight[cat] = (categoryWeight[cat] ?? 0) + 1;
+        }
+      }
+      for (const book of wishlistBooks) {
+        for (const cat of book.category) {
+          // Wishlist counts double — stronger signal of active interest
+          categoryWeight[cat] = (categoryWeight[cat] ?? 0) + 2;
+        }
+      }
+
+      // All categories the user has shown interest in
+      const interestedCategories = Object.keys(categoryWeight);
+
+      // Find books that match at least one of the user's interested categories
+      const candidates = await Book.find({
+        isActive: true,
+        category: { $in: interestedCategories },
+        _id: { $nin: excludeIds }, // Skip owned and hero books
+      })
+        .select(
+          "title authorName coverImage price discountPrice rating reviewCount purchaseCount category",
+        )
+        .lean();
+
+      // Score each candidate: popularity + personal category relevance + quality
+      const scored = candidates.map((book) => {
+        const categoryScore = book.category.reduce(
+          (sum: number, cat: string) => sum + (categoryWeight[cat] ?? 0),
+          0,
+        );
+        const score =
+          (book.purchaseCount ?? 0) * 10 + // Popularity weight
+          categoryScore * 3 + // Personal relevance weight
+          (book.rating ?? 0) * 2; // Quality tiebreaker
+
+        return { ...book, score };
+      });
+
+      scored.sort((a, b) => b.score - a.score);
+      books = scored.slice(0, 10);
+
+      // If personalised results don't fill 10, pad with top general books
+      // Handles niche tastes where few matching books exist
+      if (books.length < 10) {
+        const alreadyInResults = books.map((b) => b._id.toString());
+        const padExclude = [...excludeIds, ...alreadyInResults];
+
+        const padCandidates = await Book.find({
+          isActive: true,
+          _id: { $nin: padExclude },
+        })
+          .select(
+            "title authorName coverImage price discountPrice rating reviewCount purchaseCount category",
+          )
+          .lean();
+
+        const padScored = padCandidates
+          .map((book) => ({
+            ...book,
+            score: (book.purchaseCount ?? 0) * 10 + (book.rating ?? 0) * 2,
+          }))
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 10 - books.length); // Only pad up to 10 total
+
+        books = [...books, ...padScored];
+      }
+    } else {
+      // FALLBACK PATH — guest or brand new user with no history
+      // Show top-scored books overall, still excluding hero books to avoid overlap
+      const candidates = await Book.find({
+        isActive: true,
+        _id: { $nin: excludeIds },
+      })
+        .select(
+          "title authorName coverImage price discountPrice rating reviewCount purchaseCount category",
+        )
+        .lean();
+
+      const scored = candidates
+        .map((book) => ({
+          ...book,
+          score: (book.purchaseCount ?? 0) * 10 + (book.rating ?? 0) * 2,
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+
+      books = scored;
+    }
+
+    // Return the results along with whether they were personalised
+    // The LLM uses the `personalised` flag to frame the response correctly
+    return {
+      success: true,
+      data: {
+        books: books.map((b) => ({
+          // Only expose fields useful in a chat context — no Cloudinary internals
+          id: b._id,
+          title: b.title,
+          authorName: b.authorName,
+          price: b.price,
+          discountPrice: b.discountPrice ?? null,
+          rating: b.rating ?? null,
+          reviewCount: b.reviewCount ?? 0,
+          category: b.category,
+        })),
+        personalised: isPersonalised, // Let LLM know whether to say "based on your taste"
+      },
+    };
+  } catch (error) {
+    // Log the real error server-side, return a clean message to the LLM
+    logger.error("getRecommendedBooks tool error", { error });
+    return {
+      success: false,
+      error: "Could not fetch recommendations right now.",
+    };
   }
 };
 

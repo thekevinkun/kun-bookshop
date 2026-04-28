@@ -33,10 +33,10 @@ export const useChat = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Pull auth state from Zustand — we need this to build userContext
-  const { user, isAuthenticated } = useAuthStore();
+  const authStore = useAuthStore;
 
   // Pull loadCart to re-sync cart after KUN actions
-  const { loadCart } = useCartStore();
+  const cartStore = useCartStore;
 
   // sendMessage
   // Main function — called when user submits a message
@@ -45,6 +45,11 @@ export const useChat = () => {
     async (content: string) => {
       // Trim and ignore empty submissions
       if (!content.trim()) return;
+
+      // Read auth state fresh at call time — not from a stale closure
+      // This guarantees we get the actual current user, even right after login
+      const { user, isAuthenticated } = authStore.getState();
+      const { loadCart } = cartStore.getState();
 
       // Clear any previous error
       setError(null);
@@ -82,7 +87,7 @@ export const useChat = () => {
           firstName: user?.firstName ?? null, // First name for personalized greeting
           isAuthenticated, // Whether user is logged in
         };
-        console.log("user context: ", userContext);
+
         // Build the messages array to send — strip frontend-only fields (id, isStreaming)
         // Only send the last 20 messages to stay within context limits
         const historyToSend = [...messages, userMessage]
@@ -207,7 +212,7 @@ export const useChat = () => {
         );
       }
     },
-    [messages, user, isAuthenticated],
+    [messages],
   );
 
   // clearMessages — resets the conversation (called when widget closes/reopens)
@@ -223,6 +228,6 @@ export const useChat = () => {
     error, // Error string or null
     sendMessage, // Call this to send a user message
     clearMessages, // Call this to reset the conversation
-    isAuthenticated, // Whether the user is logged in (for personalized greeting)
+    isAuthenticated: useAuthStore.getState().isAuthenticated, // Whether the user is logged in (for personalized greeting)
   };
 };
