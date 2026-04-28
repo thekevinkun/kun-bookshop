@@ -13,7 +13,7 @@ import { panelVariants } from "../../lib/animations";
 
 const ChatWidget = () => {
   // Pull user from auth store to personalize the greeting
-  const { user } = useAuthStore();
+  const { user, isHydrated } = useAuthStore();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isLayoutOnMobile, setIsLayoutOnMobile] = useState(false);
@@ -47,7 +47,12 @@ const ChatWidget = () => {
     };
   }, [isOpen]);
 
+  // Don't render widget on contact page since it has its own embedded chatbot
   if (pathname === "/contact") return null;
+
+  // Don't render widget at all until auth store is hydrated from localStorage
+  // Prevents sending messages with null userContext before auth is ready
+  if (!isHydrated) return null;
 
   return (
     <div
@@ -68,7 +73,7 @@ const ChatWidget = () => {
               originY: 1, // Bottom edge
             }}
             className="
-              !w-[100vw] md:!w-auto md:w-98 h-[100vh] 
+              !w-[100vw] md:!w-98 h-[100vh] 
               md:max-h-[min(675px,85vh)] md:h-[min(675px,calc(100vh-3.5rem))]
               md:rounded-2xl overflow-hidden border border-white/10 
               flex flex-col bg-navy shadow-2xl shadow-black/50
