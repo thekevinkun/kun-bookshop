@@ -15,6 +15,7 @@ export interface UserContext {
   userId: string | null; // MongoDB _id of the user, null if guest
   firstName: string | null; // User's first name for personalized greeting
   isAuthenticated: boolean; // true = logged in, false = guest
+  timePeriod: "morning" | "afternoon" | "evening" | "latenight";
 }
 
 // Shape of the POST /api/chat request body

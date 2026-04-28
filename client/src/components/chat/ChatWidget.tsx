@@ -18,7 +18,7 @@ const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLayoutOnMobile, setIsLayoutOnMobile] = useState(false);
   const { pathname } = useLocation();
-  const { messages, isLoading, sendMessage, clearMessages, isAuthenticated } =
+  const { messages, isLoading, sendMessage, clearMessages } =
     useChat();
 
   const handleClose = () => {

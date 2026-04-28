@@ -7,6 +7,7 @@ import QuickReplies from "./QuickReplies";
 import { useAuthStore } from "../../store/auth";
 
 import type { ChatMessage as ChatMessageType } from "../../types/chat";
+import { getGreetingPhrase } from "../../lib/helpers";
 
 interface ChatPanelProps {
   messages: ChatMessageType[];
@@ -28,7 +29,7 @@ const ChatPanel = ({
   // Before hydration, user is null even for logged-in users — this prevents the "Hi there" flash
   const firstName = isHydrated ? (user?.firstName ?? null) : null;
   const authed = isHydrated ? isAuthenticated : false;
-  
+
   // inputValue — controlled input state for the message text field
   const [inputValue, setInputValue] = useState("");
 
@@ -81,6 +82,9 @@ const ChatPanel = ({
     // Shift+Enter falls through and adds a newline naturally
   };
 
+  // Compute once when ChatPanel renders — fresh each time widget opens
+  const greetingPhrase = getGreetingPhrase();
+
   // Build the personalized greeting — mirrors KUN's backend greeting logic exactly
   // Shows in the empty state UI before any conversation starts
   const greetingHelpText =
@@ -111,11 +115,11 @@ const ChatPanel = ({
               {/* Personalized greeting — uses firstName if available */}
               <p className="text-slate-300 text-sm font-medium">
                 {authed && firstName
-                  ? `Hi, ${firstName}! I'm KUN`
-                  : `Hi! I'm KUN`}
+                  ? `Hi, ${firstName}! ${greetingPhrase}`
+                  : `Hi! ${greetingPhrase}`}
               </p>
               <p className="mt-1 text-slate-400 text-xs max-w-xs">
-                Your Kun Bookshop assistant. {greetingHelpText}
+                I'm KUN. Your Kun Bookshop assistant. <br />{greetingHelpText}
               </p>
               <p className="text-slate-400 text-xs max-w-xs">
                 What can I do for you?
@@ -139,7 +143,7 @@ const ChatPanel = ({
                   className="w-7 h-7 object-contain"
                 />
               </div>
-              
+
               {/* Three animated dots */}
               <div className="bg-white/5 border border-white/10 rounded-2xl rounded-bl-sm px-3 py-2">
                 <div className="flex gap-1 items-center h-4">

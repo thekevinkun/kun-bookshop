@@ -13,6 +13,8 @@ import { useCartStore } from "../store/cart";
 // Our chat types
 import type { ChatMessage, UserContext } from "../types/chat";
 
+import { getTimePeriod } from "../lib/helpers";
+
 // Generate a simple unique ID for each message
 // Used as the React key and to identify which message is streaming
 const generateId = () =>
@@ -86,6 +88,7 @@ export const useChat = () => {
           userId: user?.id ?? null, // MongoDB _id or null for guests
           firstName: user?.firstName ?? null, // First name for personalized greeting
           isAuthenticated, // Whether user is logged in
+          timePeriod: getTimePeriod(), // Computed fresh at send time from browser clock
         };
 
         // Build the messages array to send — strip frontend-only fields (id, isStreaming)

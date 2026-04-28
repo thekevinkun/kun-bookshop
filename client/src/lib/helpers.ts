@@ -1,6 +1,32 @@
+import { toast } from "sonner";
+
 import type { IBook } from "../types/book";
 import type { Coupon } from "../types/order";
-import { toast } from "sonner";
+import type { UserContext } from "../types/chat";
+
+export const getTimePeriod = (): UserContext["timePeriod"] => {
+  const hour = new Date().getHours(); // 0–23 in local time
+  if (hour >= 5 && hour < 12) return "morning"; // 5am–11am
+  if (hour >= 12 && hour < 18) return "afternoon"; // 12pm–5pm
+  if (hour >= 18 && hour < 24) return "evening"; // 6pm–11pm
+  return "latenight"; // 12am–4am
+};
+
+export const getGreetingPhrase = (): string => {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) return "Good Morning";
+  if (hour >= 12 && hour < 18) return "Good Afternoon";
+  if (hour >= 18 && hour < 24) return "Good Evening";
+  // Late night — pick one from the pool, same options as KUN's system prompt
+  const lateNightPhrases = [
+    "You're up late!",
+    "Burning the midnight oil?",
+    "Night owl mode?",
+    "Late night reading session?",
+  ];
+  // Pick randomly — changes each time the widget opens (clearMessages resets it)
+  return lateNightPhrases[Math.floor(Math.random() * lateNightPhrases.length)];
+};
 
 export const formatFileSize = (bytes: number) => {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;

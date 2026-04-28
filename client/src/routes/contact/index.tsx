@@ -153,8 +153,6 @@ const ContactPage = () => {
                 messages={messages}
                 isLoading={isLoading}
                 onSendMessage={sendMessage}
-                firstName={user?.firstName ?? null}
-                isAuthenticated={isAuthenticated}
                 className="h-[420px]" // Fixed height on desktop — scrollable inside
               />
             </div>
