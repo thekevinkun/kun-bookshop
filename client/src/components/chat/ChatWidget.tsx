@@ -57,7 +57,7 @@ const ChatWidget = () => {
   return (
     <div
       className={`fixed z-50 flex flex-col items-end gap-3
-      ${isLayoutOnMobile ? "inset-0 w-full h-full" : "bottom-6 right-6"}`}
+      ${isLayoutOnMobile ? "inset-0 w-full" : "bottom-6 right-6"}`}
     >
       {/* Animated Chat panel with AnimatePresence */}
       <AnimatePresence mode="wait">
@@ -73,7 +73,7 @@ const ChatWidget = () => {
               originY: 1, // Bottom edge
             }}
             className="
-              !w-[100vw] md:!w-98 h-[100vh] 
+              !w-[100vw] md:!w-98 h-[100dvh] 
               md:max-h-[min(675px,85vh)] md:h-[min(675px,calc(100vh-3.5rem))]
               md:rounded-2xl overflow-hidden border border-white/10 
               flex flex-col bg-navy shadow-2xl shadow-black/50
