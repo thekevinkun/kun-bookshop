@@ -177,14 +177,14 @@ export default function BooksPage() {
                 {getHeading()}
               </h2>
 
-              <div className="w-10 h-1 bg-golden rounded-full mt-1" />
-
               {!isLoading && (
-                <p className="text-golden text-xs mt-2">
+                <p className="text-golden text-xs mt-1">
                   {totalCount.toLocaleString()}{" "}
                   {totalCount === 1 ? "book" : "books"} found
                 </p>
               )}
+
+              <div className="w-10 h-1 bg-golden rounded-full mt-2" />
             </div>
 
             {/* Loading state — skeleton grid */}

@@ -65,9 +65,12 @@ const RecentlyViewedSection = () => {
       <div className="container-page pt-8 pb-0">
         <div className="mb-6">
           <h2 className="text-text-light uppercase tracking-wider text-sm sm:text-base">
-            Recently Viewed By You
+            Recently Viewed
           </h2>
-          <div className="w-10 h-1 bg-golden rounded-full mt-1" />
+          <p className="text-golden text-xs uppercase tracking-widest mt-1">
+            Based on Your Activity
+          </p>
+          <div className="w-10 h-1 bg-golden rounded-full mt-2" />
         </div>
 
         <RecentlyViewedCarousel books={books} />

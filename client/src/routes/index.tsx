@@ -40,6 +40,9 @@ export default function HomePage() {
           <div className="container-page">
             {/* Section header */}
             <div className="mb-8">
+              <p className="text-golden text-xs font-semibold uppercase tracking-widest mb-1">
+                Fresh books and limited-time offers
+              </p>
               <h2 className="text-text-light uppercase tracking-wider">
                 New Arrivals & Deals
               </h2>
