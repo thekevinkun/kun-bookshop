@@ -40,10 +40,26 @@ const Hero = ({
     );
   }, []); // stable — no deps that change
 
+  useEffect(() => {
+    // When the tab becomes visible or window gets focus again,
+    // always release the pause — the mouse is no longer over the element
+    const resetPause = () => {
+      if (!document.hidden) setIsPaused(false);
+    };
+
+    document.addEventListener("visibilitychange", resetPause);
+    window.addEventListener("focus", resetPause);
+
+    return () => {
+      document.removeEventListener("visibilitychange", resetPause);
+      window.removeEventListener("focus", resetPause);
+    };
+  }, []); // Runs once on mount
+
   // Clean autoplay — next and isPaused are both stable now so this never resets
   useEffect(() => {
     if (isPaused) return;
-    const timer = setInterval(next, 10000);
+    const timer = setInterval(next, 6000);
     return () => clearInterval(timer);
   }, [isPaused, next]);
 
@@ -92,7 +108,7 @@ const Hero = ({
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_#1e3a5f33_0%,_transparent_70%)] z-15" />
         <div className="absolute inset-0 h-10 bg-gradient-to-b from-navy/35 to-transparent z-15" />
-        <div 
+        <div
           style={{
             backgroundImage: "url('/images/bg-texture.jpg')",
             backgroundRepeat: "no-repeat",
@@ -127,7 +143,8 @@ const Hero = ({
                     {activeBook.category[0]}
                   </span>
 
-                  <h1 className="text-text-light !text-[1.85rem] sm:!text-[2rem] md:!text-[2.75rem] 
+                  <h1
+                    className="text-text-light !text-[1.85rem] sm:!text-[2rem] md:!text-[2.75rem] 
                     leading-tight line-clamp-1 md:line-clamp-none"
                   >
                     {activeBook.title}
