@@ -1,15 +1,16 @@
 export const BOOK_CATEGORY_BUCKETS = [
-  { key: "fiction", label: "Fiction" },
   { key: "fantasy-adventure", label: "Fantasy & Adventure" },
   { key: "classics", label: "Classics" },
-  { key: "romance-comedy", label: "Romance & Comedy" },
-  { key: "mystery-crime", label: "Mystery & Crime" },
+  { key: "romance", label: "Romance" },
+  { key: "mystery-thriller", label: "Mystery & Thriller" },
   { key: "sci-fi-dystopian", label: "Sci-Fi & Dystopian" },
   { key: "historical-fiction", label: "Historical Fiction" },
   { key: "business-finance", label: "Business & Finance" },
   { key: "psychology-self-help", label: "Psychology & Self-Help" },
   { key: "philosophy", label: "Philosophy" },
+  { key: "biography", label: "Biography" },
   { key: "science", label: "Science" },
+  { key: "technology", label: "Technology" },
   { key: "history", label: "History" },
 ] as const;
 

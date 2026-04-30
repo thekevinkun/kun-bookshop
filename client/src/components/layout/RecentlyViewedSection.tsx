@@ -65,7 +65,7 @@ const RecentlyViewedSection = () => {
       <div className="container-page pt-8 pb-0">
         <div className="mb-6">
           <h2 className="text-text-light uppercase tracking-wider text-sm sm:text-base">
-            Recently Viewed
+            Recently Viewed By You
           </h2>
           <div className="w-10 h-1 bg-golden rounded-full mt-1" />
         </div>

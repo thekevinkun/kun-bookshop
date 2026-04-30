@@ -5,9 +5,14 @@ export const BOOK_CATEGORY_BUCKETS = {
     "Contemporary Literary Fiction",
     "Realism",
   ],
-  "fantasy-adventure": ["Fantasy", "Epic Fantasy", "Adventure Fiction"],
+  "fantasy-adventure": [
+    "Fantasy",
+    "Epic Fantasy",
+    "Adventure",
+    "Adventure Fiction",
+  ],
   classics: ["Classics", "Classic Literature"],
-  "romance-comedy": [
+  romance: [
     "Romance",
     "Comedy",
     "Romantic Comedy",
@@ -16,14 +21,16 @@ export const BOOK_CATEGORY_BUCKETS = {
     "Melodrama",
     "Slice of Life",
   ],
-  "mystery-crime": [
+  "mystery-thriller": [
     "Crime",
     "Crime Fiction",
     "Suspense",
     "Detective Fiction",
     "Murder Mystery",
     "Mystery",
+    "Thriller",
     "Surveillance Thriller",
+    "Psychological Thriller",
     "Psychological Fiction",
   ],
   "sci-fi-dystopian": [
@@ -31,14 +38,14 @@ export const BOOK_CATEGORY_BUCKETS = {
     "Social Science Fiction",
     "Dystopian Fiction",
     "Apocalyptic Fiction",
-    "Epic Fiction",
-    "Epic Fantasy",
   ],
   "historical-fiction": ["Historical Fiction", "Political Fiction"],
   "business-finance": ["Business", "Finance"],
   "psychology-self-help": ["Psychology", "Self-Help", "Personal Development"],
   philosophy: ["Philosophy", "Philosophical Fiction", "Political Satire"],
-  science: ["Science", "Astronomy"],
+  biography: ["Biography", "Memoir", "Autobiography"],
+  science: ["Science", "Astronomy", "Physics", "Cosmology"],
+  technology: ["Technology", "Programming", "Computer Science"],
   history: ["History"],
 } as const;
 
