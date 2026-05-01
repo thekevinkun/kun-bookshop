@@ -9,6 +9,7 @@ import {
   useLibrary,
   useDownloadBook,
 } from "../../hooks/useLibrary";
+import { useActiveCoupons } from "../../hooks/useCoupons";
 import { toast } from "sonner";
 import {
   Users,
@@ -38,6 +39,9 @@ interface BookDetailHeroProps {
 const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
   // Read cart actions and state from Zustand store
   const { addItem, isInCart } = useCartStore();
+
+  // Get coupons to conditionally adjust the hero section height when coupons are active
+  const { data: coupons = [] } = useActiveCoupons();
 
   // useNavigate lets us programmatically send the user to /library on button click
   const navigate = useNavigate();
@@ -144,11 +148,14 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
     : null;
 
   return (
-    <section className="relative min-h-[92vh] flex items-center bg-navy overflow-hidden">
+    <section
+      className={`relative flex items-center overflow-hidden bg-navy
+      ${coupons.length > 0 ? "min-h-[87vh]" : "min-h-[92vh]"}`}
+    >
       {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_#1e3a5f33_0%,_transparent_70%)] z-15" />
-        <div 
+        <div
           style={{
             backgroundImage: "url('/images/bg-texture.jpg')",
             backgroundRepeat: "no-repeat",
@@ -176,7 +183,9 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
             {/* "Owned" badge — only shows when the logged-in user has purchased this book */}
             {isOwned ? (
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-text-light !text-[2.25rem] md:!text-[2.75rem] leading-tight">{book.title}</h1>
+                <h1 className="text-text-light !text-[2.25rem] md:!text-[2.75rem] leading-tight">
+                  {book.title}
+                </h1>
 
                 <span className="badge-primary text-[8px] uppercase tracking-widest">
                   <CheckCircle size={11} className="shrink-0 mr-1" />
@@ -184,7 +193,9 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
                 </span>
               </div>
             ) : (
-              <h1 className="text-text-light !text-[2.25rem] md:!text-[2.75rem] leading-tight">{book.title}</h1>
+              <h1 className="text-text-light !text-[2.25rem] md:!text-[2.75rem] leading-tight">
+                {book.title}
+              </h1>
             )}
 
             <p className="text-text-muted text-base">

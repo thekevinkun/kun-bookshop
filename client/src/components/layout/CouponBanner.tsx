@@ -24,7 +24,7 @@ const CouponBanner = () => {
   }, [coupons.length]);
 
   // Only show on homepage — disappears on all other pages
-  if (location.pathname !== "/") return null;
+  if (location.pathname !== "/" && !location.pathname.startsWith("/books/")) return null;
 
   // No active coupons — render nothing, take up no space
   if (coupons.length === 0) return null;
