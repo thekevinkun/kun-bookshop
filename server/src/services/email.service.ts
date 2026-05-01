@@ -1,5 +1,5 @@
-// Import nodemailer — the library that actually sends emails via SMTP
-import nodemailer from "nodemailer";
+// Import Resend — replaces Nodemailer as our email sender (works on Railway, no SMTP ports needed)
+import { Resend } from "resend";
 
 // Import handlebars — the templating engine that fills in dynamic values in our email HTML
 import handlebars from "handlebars";
@@ -14,54 +14,9 @@ import type { ICoupon } from "../types/order";
 // Import our logger — no console.log in this project
 import { logger } from "../utils/logger";
 
-// CREATE TRANSPORTER
-// The transporter is the configured email sender — we create it once and reuse it
-// In development we use Ethereal (a fake SMTP service that catches emails without sending them)
-// In production you'd swap this for a real provider like SendGrid, Mailgun, or Amazon SES
-let cachedTransporter: nodemailer.Transporter | null = null;
-
-const createTransporter = async () => {
-  if (cachedTransporter) {
-    return cachedTransporter;
-  }
-
-  // Check if we're in production and have real SMTP credentials
-  if (process.env.NODE_ENV === "production" && process.env.SMTP_HOST) {
-    // Use real SMTP credentials from .env for production sending
-    cachedTransporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST, // e.g. 'smtp.sendgrid.net'
-      port: Number(process.env.SMTP_PORT) || 587, // 587 is standard for TLS
-      secure: false, // false for port 587 (uses STARTTLS), true for 465
-      auth: {
-        user: process.env.SMTP_USER, // Your SMTP username from .env
-        pass: process.env.SMTP_PASS, // Your SMTP password from .env
-      },
-    });
-
-    return cachedTransporter;
-  }
-
-  // In development, use Ethereal — a fake SMTP inbox you can preview at ethereal.email
-  // No emails actually get delivered, which is perfect for testing
-
-  // Create a test account on Ethereal if we don't have credentials set (only for dev)
-  const testAccount = await nodemailer.createTestAccount();
-
-  logger.info(
-    `Dev email is using Ethereal. Inbox: ${testAccount.user} | Open: ${testAccount.web}`,
-  );
-
-  cachedTransporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
-    },
-  });
-
-  return cachedTransporter;
-};
+// Initialize the Resend client once using our API key from .env
+// Resend sends over HTTPS (port 443) — not blocked by Railway like SMTP ports are
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // LOAD AND COMPILE TEMPLATE
 // Reads an .hbs template file from disk and compiles it with Handlebars
@@ -91,31 +46,28 @@ const compileTemplate = (
 };
 
 // SEND EMAIL
-// The core function — builds the email and sends it
+// The core function — builds the email and sends it via Resend's HTTPS API
 // All other email functions (sendVerificationEmail, etc.) call this one
 const sendEmail = async (
   to: string, // Recipient email address
   subject: string, // Email subject line
   html: string, // The compiled HTML body
 ): Promise<void> => {
-  const transporter = await createTransporter();
-
-  const mailOptions = {
-    from: `"Kun Bookshop" <${process.env.EMAIL_FROM || "noreply@kunbookshop.com"}>`,
-    to,
+  // Send the email using Resend — works on Railway because it uses HTTPS not SMTP
+  const { error } = await resend.emails.send({
+    from: "Kun Bookshop <onboarding@resend.dev>", // Use this until you have a verified custom domain
+    to: process.env.RESEND_TEST_EMAIL || to,
     subject,
     html, // The full rendered HTML string from our Handlebars template
-  };
+  });
 
-  const info = await transporter.sendMail(mailOptions);
-
-  // In development, log the Ethereal preview URL so you can see the email in a browser
-  if (process.env.NODE_ENV !== "production") {
-    const previewUrl = nodemailer.getTestMessageUrl(info);
-    if (previewUrl) {
-      logger.info(`Open this dev email preview: ${previewUrl}`);
-    }
+  // If Resend returns an error object, log it and throw so the caller knows it failed
+  if (error) {
+    logger.error("Resend email failed", { error });
+    throw new Error(`Failed to send email: ${error.message}`);
   }
+
+  logger.info(`Email sent via Resend to: ${to} | Subject: ${subject}`);
 };
 
 // SEND VERIFICATION EMAIL
