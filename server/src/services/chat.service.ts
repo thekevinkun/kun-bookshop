@@ -355,7 +355,11 @@ const executeTool = async (
       return getCategories();
 
     case "validateCoupon":
-      return validateCoupon(args.code as string, args.cartTotal as number);
+      return validateCoupon(
+        args.code as string,
+        args.cartTotal as number,
+        userId,
+      );
 
     case "applyCoupon":
       return applyCoupon(args.code as string, userId);

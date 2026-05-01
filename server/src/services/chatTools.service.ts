@@ -402,7 +402,11 @@ export const getCategories = async () => {
 // validateCoupon — checks if a coupon code is valid and calculates discount
 // code: the coupon code string e.g. "SAVE20"
 // cartTotal: the current cart subtotal in dollars — needed to calculate discount amount
-export const validateCoupon = async (code: string, cartTotal: number) => {
+export const validateCoupon = async (
+  code: string,
+  cartTotal: number,
+  userId?: string | null,
+) => {
   try {
     // Find the coupon by code — case-insensitive by uppercasing both sides
     const coupon = await Coupon.findOne({
@@ -421,6 +425,20 @@ export const validateCoupon = async (code: string, cartTotal: number) => {
     // Check usage limit — if usedCount >= usageLimit, it's exhausted
     if (coupon.usedCount >= coupon.usageLimit) {
       return fail("That coupon has reached its usage limit.");
+    }
+
+    // Check per-user usage — mirrors the real validateCoupon controller
+    // A user cannot apply a coupon they already used on a completed order
+    if (userId) {
+      const previousUse = await Order.findOne({
+        userId,
+        couponCode: code.toUpperCase().trim(),
+        paymentStatus: "completed",
+      });
+
+      if (previousUse) {
+        return fail("You have already used this coupon on a previous order.");
+      }
     }
 
     // Check minimum purchase requirement
@@ -487,7 +505,7 @@ export const applyCoupon = async (code: string, userId: string | null) => {
     );
 
     // Validate the coupon using existing validateCoupon logic
-    const validation = await validateCoupon(code, cartTotal);
+    const validation = await validateCoupon(code, cartTotal, userId);
 
     // If validation failed, return the failure reason directly
     if (!validation.success) return validation;
