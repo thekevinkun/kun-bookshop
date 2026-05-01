@@ -3,229 +3,99 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Exclusive Offer from Kun Bookshop</title>
-    <style>
-      /* Reset styles so the email looks consistent across all email clients */
-      body {
-        font-family:
-          "Inter",
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          sans-serif;
-        background-color: #0f172a;
-        margin: 0;
-        padding: 0;
-      }
-      .container {
-        max-width: 600px;
-        margin: 20px auto;
-        background: #1e293b;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .header {
-        background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
-        color: white;
-        padding: 30px 20px;
-        text-align: center;
-      }
-      .logo-image_wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .logo-image_wrapper .logo-image {
-        width: 38px;
-        height: 38px;
-        object-fit: cover;
-      }
-      .logo-image_wrapper .logo-image_text {
-        font-family: "Cinzel", serif;
-        font-size: 28px;
-        font-weight: 500;
-        background: linear-gradient(
-          135deg,
-          #f8fafc 0%,
-          #e6be77 50%,
-          #f8fafc 100%
-        );
-        background-size: 200% 200%;
-        background-position: left;
-
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .content {
-        padding: 40px 30px;
-        color: #f8fafc;
-        line-height: 1.6;
-        font-size: 16px;
-      }
-      .content h1 {
-        margin: 0;
-        color: #e6be77;
-        font-size: 22px;
-        font-weight: 500;
-      }
-      .greeting {
-        font-size: 20px;
-        color: #f8fafc;
-        margin-bottom: 16px;
-      }
-      .intro {
-        font-size: 16px;
-        color: #f8fafc;
-        line-height: 1.6;
-        margin-bottom: 28px;
-      }
-      /* The coupon code box — visually prominent so it's easy to copy */
-      .coupon-box {
-        background: rgba(20, 184, 166, 0.20);
-        border: 2px dashed #14b8a6;
-        border-radius: 12px;
-        padding: 28px;
-        text-align: center;
-        margin-bottom: 28px;
-      }
-      .coupon-label {
-        font-size: 14px;
-        color: #14b8a6;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
-      }
-      .coupon-code {
-        font-size: 32px;
-        font-weight: 800;
-        color: #14b8a6;
-        letter-spacing: 6px;
-        font-family: "Courier New", monospace;
-      }
-      .coupon-details {
-        margin-top: 12px;
-        font-size: 14px;
-        color: #d1d1d1;
-      }
-      .coupon-details strong {
-        color: #14b8a6;
-      }
-      /* CTA button */
-      .cta-wrapper {
-        text-align: center;
-        margin-bottom: 28px;
-      }
-      .cta-btn {
-        display: inline-block;
-        background: #e6be77;
-        color: #000 !important;
-        padding: 14px 32px;
-        text-decoration: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: 600;
-        margin: 24px 0 8px;
-      }
-      .expiry-note {
-        text-align: center;
-        font-size: 14px;
-        color: #ef4444;
-        margin-bottom: 28px;
-      }
-      .reminder {
-        text-align: center;
-        font-size: 14px;
-        color: #d1d1d1;
-      }
-      .footer {
-        background: rgba(10, 22, 40, 0.5);
-        padding: 20px;
-        text-align: center;
-        font-size: 13px;
-        color: #d1d1d1;
-      }
-      .footer a {
-        color: #e6be77;
-        text-decoration: none;
-      }
-    </style>
   </head>
-  <body>
-    <div class="container">
-      <!-- Header -->
-      <div class="header">
-        <div
-          to="/"
-          class="logo-image_wrapper"
-        >
-          <img 
-            src="{{logoUrl}}"
-            alt="Logo"
-            class="logo-image"
-          />
-          <span class="logo-image_text">
-            un <span class="logo-image_span">Bookshop</span>
-          </span>
-        </div>
-      </div>
+  <body style="margin:0;padding:0;background-color:#0f172a;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
 
-      <!-- Body -->
-      <div class="content">
-        <h1>An exclusive offer, just for you!</h1>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f172a;">
+      <tr>
+        <td align="center" style="padding:20px 0;">
 
-        <p class="greeting">Hi 
-          <span style="color: #e6be77; font-weight: 700;">{{firstName}},</span>
-        </p>
-        <p class="intro">
-          We appreciate you being part of the Kun Bookshop community. Here's an
-          exclusive discount code as a thank-you — use it on your next purchase!
-        </p>
+          <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#1e293b;border-radius:12px;overflow:hidden;">
 
-        <!-- Coupon code box -->
-        <div class="coupon-box">
-          <div class="coupon-label">Your Exclusive Coupon Code</div>
-          <div class="coupon-code">{{code}}</div>
-          <div class="coupon-details">
-            {{#if isPercentage}}
-              Save
-              <strong>{{discountValue}}% off</strong>
-              your order
-              {{#if maxDiscount}}(up to
-                <strong>${{maxDiscount}}</strong>){{/if}}
-            {{else}}
-              Save
-              <strong>${{discountValue}}</strong>
-              off your order
-            {{/if}}
-            {{#if minPurchase}}
-              <br />Minimum purchase:
-              <strong>${{minPurchase}}</strong>
-            {{/if}}
-          </div>
-        </div>
+            <!-- Header -->
+            <tr>
+              <td style="background-color:#0d1f38;padding:30px 20px;text-align:center;">
+                <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                  <tr>
+                    <td style="vertical-align:middle;padding-right:8px;">
+                      <img src="{{logoUrl}}" alt="Logo" width="38" height="38" style="display:block;width:38px;height:38px;object-fit:cover;" />
+                    </td>
+                    <td style="vertical-align:middle;">
+                      <span style="font-size:28px;font-weight:500;color:#e6be77;font-family:Georgia,serif;">un Bookshop</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
 
-        <!-- CTA button -->
-        <div class="cta-wrapper">
-          <a href="{{shopUrl}}" class="cta-btn">Shop Now &rarr;</a>
-        </div>
+            <!-- Body -->
+            <tr>
+              <td style="padding:40px 30px;color:#f8fafc;font-size:16px;line-height:1.6;">
 
-        <!-- Expiry reminder -->
-        <p class="expiry-note">
-          ⏰ This offer expires on
-          <strong>{{validUntil}}</strong>. Don't miss out!
-        </p>
+                <!-- Title -->
+                <p style="margin:0 0 16px;color:#e6be77;font-size:22px;font-weight:500;">An exclusive offer, just for you!</p>
 
-        <p class="reminder">You're receiving this because you have an account at Kun Bookshop.</p>
-      </div>
+                <!-- Greeting -->
+                <p style="margin:0 0 16px;font-size:20px;color:#f8fafc;">Hi <span style="color:#e6be77;font-weight:700;">{{firstName}},</span></p>
 
-      <!-- Footer -->
-      <div class="footer">
-        <p>© 2026 Kun Bookshop. All rights reserved.</p>
-        <p>
-          <a href="{{supportUrl}}">Contact Support</a>
-        </p>
-      </div>
-    </div>
+                <!-- Intro -->
+                <p style="margin:0 0 28px;font-size:16px;color:#f8fafc;">
+                  We appreciate you being part of the Kun Bookshop community. Here's an exclusive discount code as a thank-you — use it on your next purchase!
+                </p>
+
+                <!-- Coupon box -->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px;">
+                  <tr>
+                    <td style="background-color:#0d2e2b;border:2px dashed #14b8a6;border-radius:12px;padding:28px;text-align:center;">
+                      <p style="margin:0 0 10px;font-size:14px;color:#14b8a6;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Your Exclusive Coupon Code</p>
+                      <p style="margin:0 0 12px;font-size:32px;font-weight:800;color:#14b8a6;letter-spacing:6px;font-family:'Courier New',monospace;">{{code}}</p>
+                      <p style="margin:0;font-size:14px;color:#d1d1d1;">
+                        {{#if isPercentage}}
+                          Save <strong style="color:#14b8a6;">{{discountValue}}% off</strong> your order
+                          {{#if maxDiscount}}(up to <strong style="color:#14b8a6;">${{maxDiscount}}</strong>){{/if}}
+                        {{else}}
+                          Save <strong style="color:#14b8a6;">${{discountValue}}</strong> off your order
+                        {{/if}}
+                        {{#if minPurchase}}
+                          <br />Minimum purchase: <strong style="color:#14b8a6;">${{minPurchase}}</strong>
+                        {{/if}}
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- CTA button -->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px;">
+                  <tr>
+                    <td align="center">
+                      <a href="{{shopUrl}}" style="display:inline-block;background-color:#e6be77;color:#000000;padding:14px 32px;text-decoration:none;border-radius:8px;font-size:16px;font-weight:600;">Shop Now &rarr;</a>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Expiry -->
+                <p style="margin:0 0 28px;text-align:center;font-size:14px;color:#ef4444;">
+                  ⏰ This offer expires on <strong>{{validUntil}}</strong>. Don't miss out!
+                </p>
+
+                <p style="margin:0;text-align:center;font-size:14px;color:#d1d1d1;">You're receiving this because you have an account at Kun Bookshop.</p>
+
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background-color:#0a1628;padding:20px;text-align:center;font-size:13px;color:#d1d1d1;">
+                <p style="margin:0 0 8px;">© 2026 Kun Bookshop. All rights reserved.</p>
+                <p style="margin:0;"><a href="{{supportUrl}}" style="color:#e6be77;text-decoration:none;">Contact Support</a></p>
+              </td>
+            </tr>
+
+          </table>
+
+        </td>
+      </tr>
+    </table>
+
   </body>
 </html>

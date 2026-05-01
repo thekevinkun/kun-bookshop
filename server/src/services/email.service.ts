@@ -103,7 +103,7 @@ export const sendWelcomeEmail = async (
     supportUrl: `${process.env.CLIENT_URL}/contact`,
   });
 
-  await sendEmail(email, "Welcome to Kun Bookshop! 📚", html);
+  await sendEmail(email, "Welcome to Kun Bookshop!", html);
   logger.info(`Welcome email sent to: ${email}`);
 };
 
@@ -187,7 +187,7 @@ export const sendOrderConfirmation = async (
     supportUrl: `${process.env.CLIENT_URL}/contact`,
   });
 
-  await sendEmail(email, `Order Confirmed — #${order.orderNumber} 📚`, html);
+  await sendEmail(email, `Order Confirmed - #${order.orderNumber} 📚`, html);
   logger.info(`Order confirmation email sent to: ${email}`, {
     orderNumber: order.orderNumber,
   });
@@ -219,7 +219,7 @@ export const sendCouponBlast = async (
     year: new Date().getFullYear(), // Footer copyright year
   });
 
-  await sendEmail(email, `🎉 Your exclusive coupon: ${coupon.code}`, html);
+  await sendEmail(email, `Your exclusive coupon: ${coupon.code}`, html);
   logger.info(`Coupon has been sent to: ${email}`, {
     code: coupon.code,
   });

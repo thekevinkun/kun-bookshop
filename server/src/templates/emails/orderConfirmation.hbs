@@ -3,300 +3,264 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Order Confirmed</title>
-    <style>
-      body {
-        font-family:
-          "Inter",
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          sans-serif;
-        background-color: #0f172a;
-        margin: 0;
-        padding: 0;
-      }
-      .container {
-        max-width: 600px;
-        margin: 20px auto;
-        background: #1e293b;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .header {
-        background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
-        color: white;
-        padding: 30px 20px;
-        text-align: center;
-      }
-      .logo-image_wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .logo-image_wrapper .logo-image {
-        width: 38px;
-        height: 38px;
-        object-fit: cover;
-      }
-      .logo-image_wrapper .logo-image_text {
-        font-family: "Cinzel", serif;
-        font-size: 28px;
-        font-weight: 500;
-        background: linear-gradient(
-          135deg,
-          #f8fafc 0%,
-          #e6be77 50%,
-          #f8fafc 100%
-        );
-        background-size: 200% 200%;
-        background-position: left;
-
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .content {
-        padding: 40px 30px;
-        color: #f8fafc;
-        line-height: 1.6;
-        font-size: 16px;
-      }
-      .content h1 {
-        margin: 0;
-        color: #e6be77;
-        font-size: 22px;
-        font-weight: 500;
-      }
-      .order-number {
-        margin-top: 24px;
-        background: rgba(147, 164, 181, 0.25);
-        border: 1px solid #93a4b5;
-        border-radius: 8px;
-        backdrop-filter: blur(10px);
-        padding: 12px 20px;
-        text-align: center;
-        margin-bottom: 24px;
-      }
-      .order-number span {
-        font-size: 14px;
-        color: #d1d1d1;
-      }
-      .order-number strong {
-        display: block;
-        font-size: 20px;
-        color: #e6be77;
-        margin-top: 2px;
-      }
-      .section-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: #f8fafc;
-        margin-top: 24px !important;
-        margin: 0 0 16px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #d1d1d1;
-      }
-      .book-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 16px;
-        margin-bottom: 16px;
-        padding-bottom: 16px;
-        border-bottom: 1px solid #d1d1d1;
-      }
-      .book-item:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-        padding-bottom: 0;
-      }
-      .book-cover {
-        width: 56px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 4px;
-        flex-shrink: 0;
-      }
-      .book-info {
-        flex: 1;
-      }
-      .book-title {
-        font-weight: 600;
-        color: #e6be77;
-        margin: 0 0 4px;
-      }
-      .book-author {
-        font-size: 13px;
-        color: #d1d1d1;
-        margin: 0 0 6px;
-      }
-      .book-price {
-        font-weight: 700;
-        color: #e6be77;
-        margin: 0;
-      }
-      .book-format {
-        font-size: 11px;
-        font-weight: 600;
-        background: rgba(224, 84, 112, 0.2);
-        color: rgba(224, 84, 112, 1);
-        border: 1px solid rgba(224, 84, 112, 0.3);
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin: 0 0 6px;
-      }
-      .summary-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 12px;
-        padding-top: 12px;
-        border-top: 1px solid #334155;
-      }
-      .summary-label {
-        font-size: 14px;
-        color: #d1d1d1;
-      }
-      .summary-value {
-        font-size: 14px;
-        color: #f8fafc;
-      }
-      .discount-amount {
-        color: #14b8a6; /* green — savings feel good */
-      }
-      .total-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-        padding-top: 16px;
-        border-top: 2px solid #d1d1d1;
-      }
-      .total-label {
-        font-size: 16px;
-        font-weight: 600;
-        color: #f8fafc;
-      }
-      .total-amount {
-        font-size: 22px;
-        font-weight: 700;
-        color: #e6be77;
-      }
-      .button {
-        display: inline-block;
-        background: #e6be77;
-        color: #000 !important;
-        padding: 14px 32px;
-        text-decoration: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: 600;
-        margin: 24px 0 8px;
-      }
-      .button-center {
-        margin-top: 14px;
-        text-align: center;
-      }
-      .notice {
-        font-size: 13px;
-        color: #d1d1d1;
-        text-align: center;
-        margin-top: 8px;
-      }
-      .footer {
-        background: rgba(10, 22, 40, 0.5);
-        padding: 20px;
-        text-align: center;
-        font-size: 13px;
-        color: #d1d1d1;
-      }
-      .footer a {
-        color: #e6be77;
-        text-decoration: none;
-      }
-    </style>
   </head>
-  <body>
-    <div class="container">
-      <!-- Header -->
-      <div class="header">
-        <div to="/" class="logo-image_wrapper">
-          <img src="{{logoUrl}}" alt="Logo" class="logo-image" />
-          <span class="logo-image_text">
-            un
-            <span class="logo-image_span">Bookshop</span>
-          </span>
-        </div>
-      </div>
+  <body
+    style="margin:0;padding:0;background-color:#0f172a;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;"
+  >
 
-      <!-- Body -->
-      <div class="content">
-        <h1>Your order is confirmed!</h1>
+    <!-- Outer wrapper -->
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="background-color:#0f172a;"
+    >
+      <tr>
+        <td align="center" style="padding:20px 0;">
 
-        <!-- Order number badge -->
-        <div class="order-number">
-          <span>Order Number</span>
-          <strong>{{orderNumber}}</strong>
-        </div>
+          <!-- Main container -->
+          <table
+            width="600"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="max-width:600px;width:100%;background-color:#1e293b;border-radius:12px;overflow:hidden;"
+          >
 
-        <p>
-          Thank you for your purchase! Your books are now available in your
-          library and ready to read or download anytime.
-        </p>
+            <!-- Header -->
+            <tr>
+              <td
+                style="background-color:#0d1f38;padding:30px 20px;text-align:center;"
+              >
+                <!-- Logo row using table instead of flex -->
+                <table
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="margin:0 auto;"
+                >
+                  <tr>
+                    <td style="vertical-align:middle;padding-right:8px;">
+                      <!-- Logo image -->
+                      <img
+                        src="{{logoUrl}}"
+                        alt="Logo"
+                        width="38"
+                        height="38"
+                        style="display:block;width:38px;height:38px;object-fit:cover;"
+                      />
+                    </td>
+                    <td style="vertical-align:middle;">
+                      <!-- Logo text — plain gold color, no gradient (Gmail strips it) -->
+                      <span
+                        style="font-size:28px;font-weight:500;color:#e6be77;font-family:Georgia,serif;"
+                      >un Bookshop</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
 
-        <!-- Book list -->
-        <p class="section-title">Your Books</p>
+            <!-- Body -->
+            <tr>
+              <td
+                style="padding:40px 30px;color:#f8fafc;font-size:16px;line-height:1.6;"
+              >
 
-        {{#each items}}
-          <div class="book-item">
-            <img
-              src="{{this.coverImage}}"
-              alt="{{this.title}}"
-              class="book-cover"
-            />
-            <div class="book-info">
-              <p class="book-title">{{this.title}}</p>
-              <p class="book-author">{{this.author}}</p>
-              <p class="book-format">{{this.fileType}}</p>
-              <p class="book-price">${{this.price}}</p>
-            </div>
-          </div>
-        {{/each}}
+                <!-- Title -->
+                <p
+                  style="margin:0 0 24px;color:#e6be77;font-size:22px;font-weight:500;"
+                >Your order is confirmed!</p>
 
-        <!-- Subtotal + optional discount + total -->
-        {{#if hasDiscount}}
-          <div class="summary-row">
-            <span class="summary-label">Subtotal</span>
-            <span class="summary-value">${{subtotal}}</span>
-          </div>
-          <div class="summary-row discount-row">
-            <span class="summary-label">Discount ({{couponCode}})</span>
-            <span class="summary-value discount-amount">−${{discount}}</span>
-          </div>
-        {{/if}}
-        <div class="total-row">
-          <span class="total-label">Total Paid</span>
-          <span class="total-amount">${{total}}</span>
-        </div>
+                <!-- Order number badge -->
+                <table
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="margin-bottom:24px;"
+                >
+                  <tr>
+                    <td
+                      style="background-color:#2d3f55;border:1px solid #93a4b5;border-radius:8px;padding:12px 20px;text-align:center;"
+                    >
+                      <span
+                        style="font-size:14px;color:#d1d1d1;display:block;"
+                      >Order Number</span>
+                      <strong
+                        style="font-size:20px;color:#e6be77;display:block;margin-top:2px;"
+                      >{{orderNumber}}</strong>
+                    </td>
+                  </tr>
+                </table>
 
-        <!-- CTA -->
-        <div class="button-center">
-          <a href="{{libraryUrl}}" class="button">Go to My Library</a>
-          <p class="notice">
-            Your download links are available in your library at any time.
-          </p>
-        </div>
-      </div>
+                <!-- Intro text -->
+                <p style="margin:0 0 24px;color:#f8fafc;">
+                  Thank you for your purchase! Your books are now available in
+                  your library and ready to read or download anytime.
+                </p>
 
-      <!-- Footer -->
-      <div class="footer">
-        <p>© 2026 Kun Bookshop. All rights reserved.</p>
-        <p>
-          <a href="{{supportUrl}}">Contact Support</a>
-        </p>
-      </div>
-    </div>
+                <!-- Section title -->
+                <p
+                  style="font-size:18px;font-weight:600;color:#f8fafc;margin:0 0 16px;padding-bottom:8px;border-bottom:2px solid #d1d1d1;"
+                >Your Books</p>
+
+                <!-- Book list -->
+                {{#each items}}
+                  <table
+                    width="100%"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #334155;"
+                  >
+                    <tr>
+                      <!-- Book cover -->
+                      <td
+                        width="58"
+                        style="vertical-align:top;padding-right:16px;"
+                      >
+                        <img
+                          src="{{this.coverImage}}"
+                          alt="{{this.title}}"
+                          width="58"
+                          style="display:block;width:58px;height:82px;object-fit:cover;border-radius:4px;"
+                        />
+                      </td>
+                      <!-- Book info -->
+                      <td style="vertical-align:top;">
+                        <p
+                          style="margin:0 0 4px;font-weight:600;color:#e6be77;"
+                        >{{this.title}}</p>
+                        <p
+                          style="margin:0 0 6px;font-size:13px;color:#d1d1d1;"
+                        >{{this.author}}</p>
+                        <!-- Format badge — inline table to simulate inline-block -->
+                        <table
+                          cellpadding="0"
+                          cellspacing="0"
+                          border="0"
+                          style="margin-bottom:6px;"
+                        >
+                          <tr>
+                            <td
+                              style="font-size:11px;font-weight:600;background-color:#3d1520;color:#e05470;border:1px solid #5a1e2e;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em;"
+                            >{{this.fileType}}</td>
+                          </tr>
+                        </table>
+                        <p
+                          style="margin:0;font-weight:700;color:#e6be77;"
+                        >${{this.price}}</p>
+                      </td>
+                    </tr>
+                  </table>
+                {{/each}}
+
+                <!-- Subtotal + discount (only if discount applied) -->
+                {{#if hasDiscount}}
+                  <table
+                    width="100%"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    style="margin-top:12px;padding-top:12px;border-top:1px solid #334155;"
+                  >
+                    <tr>
+                      <td style="font-size:14px;color:#d1d1d1;">Subtotal</td>
+                      <td
+                        align="right"
+                        style="font-size:14px;color:#f8fafc;"
+                      >${{subtotal}}</td>
+                    </tr>
+                  </table>
+                  <table
+                    width="100%"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    style="margin-top:12px;padding-top:12px;border-top:1px solid #334155;"
+                  >
+                    <tr>
+                      <td style="font-size:14px;color:#d1d1d1;">Discount ({{couponCode}})</td>
+                      <td
+                        align="right"
+                        style="font-size:14px;color:#14b8a6;"
+                      >−${{discount}}</td>
+                    </tr>
+                  </table>
+                {{/if}}
+
+                <!-- Total -->
+                <table
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="margin-top:20px;padding-top:16px;border-top:2px solid #d1d1d1;"
+                >
+                  <tr>
+                    <td
+                      style="font-size:16px;font-weight:600;color:#f8fafc;"
+                    >Total Paid</td>
+                    <td
+                      align="right"
+                      style="font-size:22px;font-weight:700;color:#e6be77;"
+                    >${{total}}</td>
+                  </tr>
+                </table>
+
+                <!-- CTA button -->
+                <table
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="margin-top:24px;"
+                >
+                  <tr>
+                    <td align="center">
+                      <a
+                        href="{{libraryUrl}}"
+                        style="display:inline-block;background-color:#e6be77;color:#000000;padding:14px 32px;text-decoration:none;border-radius:8px;font-size:16px;font-weight:600;"
+                      >Go to My Library</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      align="center"
+                      style="padding-top:8px;font-size:13px;color:#d1d1d1;"
+                    >
+                      Your download links are available in your library at any
+                      time.
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                style="background-color:#0a1628;padding:20px;text-align:center;font-size:13px;color:#d1d1d1;"
+              >
+                <p style="margin:0 0 8px;">© 2026 Kun Bookshop. All rights
+                  reserved.</p>
+                <p style="margin:0;"><a
+                    href="{{supportUrl}}"
+                    style="color:#e6be77;text-decoration:none;"
+                  >Contact Support</a></p>
+              </td>
+            </tr>
+
+          </table>
+          <!-- /Main container -->
+
+        </td>
+      </tr>
+    </table>
+    <!-- /Outer wrapper -->
+
   </body>
 </html>

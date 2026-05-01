@@ -3,139 +3,70 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Verify your email</title>
-    <style>
-      /* Simple inline-friendly styles — email clients don't support external CSS */
-      body {
-        font-family:
-          "Inter",
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          sans-serif;
-        background-color: #0f172a;
-        margin: 0;
-        padding: 0;
-      }
-      .container {
-        max-width: 600px;
-        margin: 20px auto;
-        background: #1e293b;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .header {
-        background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
-        color: white;
-        padding: 30px 20px;
-        text-align: center;
-      }
-      .logo-image_wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .logo-image_wrapper .logo-image {
-        width: 38px;
-        height: 38px;
-        object-fit: cover;
-      }
-      .logo-image_wrapper .logo-image_text {
-        font-family: "Cinzel", serif;
-        font-size: 28px;
-        font-weight: 500;
-        background: linear-gradient(
-          135deg,
-          #f8fafc 0%,
-          #e6be77 50%,
-          #f8fafc 100%
-        );
-        background-size: 200% 200%;
-        background-position: left;
-
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .content {
-        padding: 40px 30px;
-        color: #f8fafc;
-        line-height: 1.6;
-        font-size: 16px;
-      }
-      .content h1 {
-        margin: 0;
-        color: #e6be77;
-        font-size: 22px;
-        font-weight: 500;
-      }
-      .content .warning {
-        margin: 0;
-        color: #ef4444;
-        font-size: 14px;
-      }
-      .btn {
-        display: inline-block;
-        background: #e6be77;
-        color: #000 !important;
-        padding: 14px 32px;
-        text-decoration: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: 600;
-        margin: 24px 0 8px;
-      }
-      .footer {
-        background: rgba(10, 22, 40, 0.5);
-        padding: 20px;
-        text-align: center;
-        font-size: 13px;
-        color: #d1d1d1;
-      }
-      .footer a {
-        color: #e6be77;
-        text-decoration: none;
-      }
-    </style>
   </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <div
-          to="/"
-          class="logo-image_wrapper"
-        >
-          <img 
-            src="{{logoUrl}}"
-            alt="Logo"
-            class="logo-image"
-          />
-          <span class="logo-image_text">
-            un <span class="logo-image_span">Bookshop</span>
-          </span>
-        </div>
-      </div>
-      <div class="content">
-        <h1>Verify your email address</h1>
-        <p>Thanks for signing up! Click the button below to verify your email
-          address and activate your account.</p>
-        <p class="warning">This link expires in <strong>24 hours</strong>.</p>
+  <body style="margin:0;padding:0;background-color:#0f172a;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
 
-        <!-- {{ verificationUrl }} is replaced by Handlebars with the real URL -->
-        <a href="{{verificationUrl}}" class="btn">Verify My Email</a>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f172a;">
+      <tr>
+        <td align="center" style="padding:20px 0;">
 
-        <p>If the button doesn't work, copy and paste this link into your
-          browser:</p>
-        <p
-          style="word-break: break-all; color: #e6be77;"
-        >{{verificationUrl}}</p>
-        <p>If you didn't create an account, you can safely ignore this email.</p>
-      </div>
-      <div class="footer">
-        <p>© 2026 Kun Bookshop. All rights reserved.</p>
-        <p>
-          <a href="{{supportUrl}}">Contact Support</a>
-        </p>
-      </div>
-    </div>
+          <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#1e293b;border-radius:12px;overflow:hidden;">
+
+            <!-- Header -->
+            <tr>
+              <td style="background-color:#0d1f38;padding:30px 20px;text-align:center;">
+                <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                  <tr>
+                    <td style="vertical-align:middle;padding-right:8px;">
+                      <img src="{{logoUrl}}" alt="Logo" width="38" height="38" style="display:block;width:38px;height:38px;object-fit:cover;" />
+                    </td>
+                    <td style="vertical-align:middle;">
+                      <span style="font-size:28px;font-weight:500;color:#e6be77;font-family:Georgia,serif;">un Bookshop</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding:40px 30px;color:#f8fafc;font-size:16px;line-height:1.6;">
+
+                <p style="margin:0 0 16px;color:#e6be77;font-size:22px;font-weight:500;">Verify your email address</p>
+
+                <p style="margin:0 0 16px;color:#f8fafc;">Thanks for signing up! Click the button below to verify your email address and activate your account.</p>
+
+                <p style="margin:0 0 16px;color:#ef4444;font-size:14px;">This link expires in <strong>24 hours</strong>.</p>
+
+                <!-- CTA button -->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0 8px;">
+                  <tr>
+                    <td>
+                      <a href="{{verificationUrl}}" style="display:inline-block;background-color:#e6be77;color:#000000;padding:14px 32px;text-decoration:none;border-radius:8px;font-size:16px;font-weight:600;">Verify My Email</a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:0 0 8px;color:#f8fafc;">If the button doesn't work, copy and paste this link into your browser:</p>
+                <p style="margin:0 0 16px;word-break:break-all;color:#e6be77;">{{verificationUrl}}</p>
+                <p style="margin:0;color:#f8fafc;">If you didn't create an account, you can safely ignore this email.</p>
+
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background-color:#0a1628;padding:20px;text-align:center;font-size:13px;color:#d1d1d1;">
+                <p style="margin:0 0 8px;">© 2026 Kun Bookshop. All rights reserved.</p>
+                <p style="margin:0;"><a href="{{supportUrl}}" style="color:#e6be77;text-decoration:none;">Contact Support</a></p>
+              </td>
+            </tr>
+
+          </table>
+
+        </td>
+      </tr>
+    </table>
+
   </body>
 </html>
