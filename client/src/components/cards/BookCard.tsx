@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
-import type { IBook } from "../types/book";
+import type { IBook } from "../../types/book";
 
 interface BookCardProps {
   book: IBook;

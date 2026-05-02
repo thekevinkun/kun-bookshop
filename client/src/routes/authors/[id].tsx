@@ -13,7 +13,7 @@ import SEO from "../../components/common/SEO";
 import api from "../../lib/api";
 
 // Import BookCard to display the author's books in a grid
-import { BookCard } from "../../cards";
+import { BookCard } from "../../components/cards";
 
 import type { IBook } from "../../types/book";
 

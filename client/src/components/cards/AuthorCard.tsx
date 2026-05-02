@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 
 // Import our author type
-import type { IAuthor } from "../types/book";
+import type { IAuthor } from "../../types/book";
 
 // Extend IAuthor locally to include bookCount — added by the backend getAuthors response
 interface AuthorCardProps {

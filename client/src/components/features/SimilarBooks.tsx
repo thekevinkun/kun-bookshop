@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { BookCardCompact } from "../../cards";
+import { BookCardCompact } from "../../components/cards";
 import type { IBook } from "../../types/book";
 
 interface SimilarBooksProps {

@@ -1,5 +1,5 @@
 import { useAllAuthors } from "../../hooks/useAuthors";
-import { AuthorCard } from "../../cards";
+import { AuthorCard } from "../../components/cards";
 import type { IAuthor } from "../../types/book";
 import { AuthorsCarousel } from "../features";
 

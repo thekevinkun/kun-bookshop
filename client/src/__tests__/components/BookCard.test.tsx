@@ -6,7 +6,7 @@ import { describe, it, expect } from "vitest";
 import type { IBook } from "../../types/book";
 
 // BookCard uses a default export
-import { BookCard } from "../../cards";
+import { BookCard } from "../../components/cards";
 
 // Build a mock book that satisfies every required field in IBook
 const mockBook: IBook = {

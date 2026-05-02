@@ -1,5 +1,5 @@
 import { useBooks } from "../../hooks/useBooks";
-import { BookCardCompact } from "../../cards";
+import { BookCardCompact } from "../../components/cards";
 
 const NewArrivalsSection = () => {
   const { data, isLoading } = useBooks({

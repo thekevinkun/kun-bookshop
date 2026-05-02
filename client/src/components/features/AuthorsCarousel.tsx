@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { AuthorCard } from "../../cards";
+import { AuthorCard } from "../../components/cards";
 import type { IAuthor } from "../../types/book";
 
 interface AuthorsCarouselProps {

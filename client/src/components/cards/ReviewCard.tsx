@@ -4,12 +4,12 @@ import { useState } from "react";
 import { Star, ThumbsUp, Pencil, Trash2 } from "lucide-react";
 
 // Import all our review hooks
-import { useDeleteReview, useMarkHelpful } from "../hooks/useReviews";
+import { useDeleteReview, useMarkHelpful } from "../../hooks/useReviews";
 
-import { ReviewForm } from "../components/forms";
+import { ReviewForm } from "../../components/forms";
 
 // Import type for review
-import type { IReview } from "../types/book";
+import type { IReview } from "../../types/book";
 
 // ReviewCard — single review row 7
 interface ReviewCardProps {
@@ -141,7 +141,7 @@ const ReviewCard = ({
             Helpful ({review.helpfulCount})
           </button>
         )}
-        
+
         {/* Edit + Delete — only for the review owner or an admin */}
         {(isOwner || isAdmin) && (
           <div className="flex items-center gap-2">

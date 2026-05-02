@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { BookCard } from "../../cards";
+import { BookCard } from "../../components/cards";
 import type { IBook } from "../../types/book";
 
 const carouselItemClassName = `shrink-0 snap-start basis-[calc(27.333%-0.35rem)] min-[30rem]:basis-[calc(21.666%-0.475rem)] 

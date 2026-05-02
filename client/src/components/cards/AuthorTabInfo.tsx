@@ -1,5 +1,5 @@
 import { User } from "lucide-react";
-import type { IBook } from "../types/book";
+import type { IBook } from "../../types/book";
 
 interface AuthorTabInfoProps {
   book: IBook;

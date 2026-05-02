@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { BookCard } from "../../cards";
+import { BookCard } from "../../components/cards";
 import type { IBook } from "../../types/book";
 
 interface RecommendedCarouselProps {

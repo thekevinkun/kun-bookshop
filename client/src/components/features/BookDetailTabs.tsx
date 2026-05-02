@@ -25,7 +25,7 @@ import { useAuthStore } from "../../store/auth";
 import { useLibrary } from "../../hooks/useLibrary";
 
 import { ReviewForm } from "../forms";
-import { AuthorTabInfo, ReviewCard } from "../../cards";
+import { AuthorTabInfo, ReviewCard } from "../../components/cards";
 
 // Import all our review hooks
 import { useBookReviews } from "../../hooks/useReviews";

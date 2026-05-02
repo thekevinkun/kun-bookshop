@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { IBook } from "../types/book";
+import type { IBook } from "../../types/book";
 
 interface BookCardCompactProps {
   book: IBook;
