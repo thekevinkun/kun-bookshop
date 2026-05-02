@@ -136,19 +136,32 @@ export default function ProfilePage() {
                 {/* Avatar — overlaps the banner by pulling it up with negative margin */}
                 <div className="px-6 pb-6">
                   <div className="z-20 relative flex items-end justify-between -mt-10 mb-4">
-                    {/* Avatar circle with initials */}
-                    <div
-                      className="w-20 h-20 rounded-2xl bg-[linear-gradient(135deg,#f8fafc_0%,#e6be77_100%)]
-                      flex items-center justify-center text-black font-bold 
-                      text-2xl border-4 border-dark shadow-xl"
-                    >
-                      {initials}
-                    </div>
+                    {/* Avatar or initials */}
+                    {user?.avatar ? (
+                      <div
+                        className="w-22 h-22 rounded-2xl
+                        border-4 border-dark shadow-xl"
+                      >
+                        <img
+                          src={user.avatar}
+                          alt={user.firstName}
+                          className="w-full h-full rounded-lg object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="w-22 h-22 rounded-2xl bg-[linear-gradient(135deg,#f8fafc_0%,#e6be77_100%)]
+                        flex items-center justify-center text-black font-bold 
+                        text-2xl border-4 border-dark shadow-xl"
+                      >
+                        {initials}
+                      </div>
+                    )}
 
                     {/* Role badge — top right of avatar row */}
                     <div
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full 
-                    bg-golden/20 border border-golden text-golden/80 text-xs font-medium capitalize"
+                    bg-golden/21 border border-golden text-golden/85 text-xs font-medium capitalize"
                     >
                       <BadgeCheck size={13} />
                       {user.role}

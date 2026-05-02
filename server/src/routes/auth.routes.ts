@@ -18,10 +18,16 @@ import {
   getMe,
   updateProfile,
   changePassword,
+  uploadAvatar,
+  removeAvatar,
 } from "../controllers/auth.controller";
 
 // Import our middleware
 import { authenticate } from "../middleware/auth.middleware";
+import {
+  uploadAvatarFile,
+  verifyFileTypes,
+} from "../middleware/upload.middleware";
 import {
   forgotPasswordLimiter,
   loginLimiter,
@@ -112,6 +118,22 @@ router.post(
 
 // GET /api/auth/me — get the currently logged-in user's profile
 router.get("/me", authenticate, getMe);
+
+// POST /api/auth/upload-avatar — upload and crop a new profile avatar
+// uploadAvatarFile: multer reads the multipart file into memory
+// verifyFileTypes: magic byte check confirms it's a real image
+// authenticate: must be logged in
+router.post(
+  "/upload-avatar",
+  authenticate,
+  uploadAvatarFile,
+  verifyFileTypes,
+  uploadAvatar,
+);
+
+// DELETE /api/auth/avatar — remove the user's profile avatar
+// Deletes from Cloudinary and clears avatar fields — falls back to initials
+router.delete("/avatar", authenticate, removeAvatar);
 
 // PUT /api/auth/update-profile — update name or avatar
 router.put("/update-profile", authenticate, updateProfile);

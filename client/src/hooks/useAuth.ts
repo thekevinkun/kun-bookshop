@@ -49,3 +49,47 @@ export const useChangePassword = () => {
     // No cache invalidation needed — password change doesn't affect any cached query data
   });
 };
+
+// Upload avatar mutation
+// Calls POST /api/auth/upload-avatar — sends a cropped image as FormData
+// The blob comes from the frontend canvas after the user finishes cropping
+export const useUploadAvatar = () => {
+  return useMutation({
+    mutationFn: async (croppedBlob: Blob) => {
+      // Wrap the blob in FormData — multipart/form-data is required for file uploads
+      // Field name must be 'avatar' — matches the multer field name on the backend
+      const formData = new FormData();
+      formData.append("avatar", croppedBlob, "avatar.jpg"); // Filename is cosmetic for multer
+
+      // Content-Type must be set explicitly — axios sometimes drops the multipart boundary
+      // when it auto-detects FormData, causing multer to see an empty req.files
+      const response = await api.post("/auth/upload-avatar", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data as { user: User; message: string };
+    },
+    onSuccess: (data) => {
+      // Merge the new avatar URL into Zustand — Navbar re-renders instantly
+      useAuthStore.getState().updateUser({ avatar: data.user.avatar });
+    },
+  });
+};
+
+// Remove avatar mutation
+// Calls DELETE /api/auth/avatar — clears avatar from Cloudinary and the user document
+// After success, Zustand is updated to null so the navbar falls back to initials
+export const useRemoveAvatar = () => {
+  return useMutation({
+    mutationFn: async () => {
+      // Simple DELETE — no body needed, user is identified by their auth cookie
+      const response = await api.delete("/auth/avatar");
+      return response.data as { message: string };
+    },
+    onSuccess: () => {
+      // Clear avatar from Zustand — navbar and edit page both re-render to initials
+      useAuthStore.getState().updateUser({ avatar: undefined });
+    },
+  });
+};

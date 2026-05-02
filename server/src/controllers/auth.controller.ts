@@ -4,6 +4,9 @@ import { Request, Response } from "express";
 // Import crypto for generating secure random tokens (email verification, password reset)
 import crypto from "crypto";
 
+// Import Cloudinary for avatar upload and deletion
+import cloudinary from "../config/cloudinary";
+
 // Import our User and RefreshToken models
 import { User } from "../models/User";
 import { RefreshToken } from "../models/RefreshToken";
@@ -617,6 +620,163 @@ export const changePassword = async (
     });
   } catch (error) {
     logger.error("Change password error:", error);
+    res.status(500).json({ error: "Something went wrong. Please try again." });
+  }
+};
+
+// UPLOAD AVATAR
+// POST /api/auth/upload-avatar
+// Accepts a cropped image buffer (already cropped on the frontend via canvas),
+// uploads it to Cloudinary, deletes the previous avatar if one existed,
+// and returns the updated user object.
+export const uploadAvatar = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    // req.files is populated by the uploadAvatarFile multer middleware
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+    console.log(
+      "files received:",
+      JSON.stringify(Object.keys(req.files || {})),
+    );
+    console.log(
+      "avatar file:",
+      (req.files as any)?.avatar?.[0]?.mimetype,
+      (req.files as any)?.avatar?.[0]?.size,
+    );
+
+    // Ensure a file was actually uploaded — multer won't throw for missing optional files
+    if (!files?.avatar?.[0]) {
+      res.status(400).json({ error: "Avatar image is required." });
+      return;
+    }
+
+    // Fetch the current user so we can read their existing avatarPublicId
+    const user = await User.findById(req.user!.userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found." });
+      return;
+    }
+
+    // If the user already has an avatar, delete it from Cloudinary before uploading the new one
+    // This prevents orphaned images accumulating in our Cloudinary account
+    if (user.avatarPublicId) {
+      try {
+        await cloudinary.uploader.destroy(user.avatarPublicId, {
+          resource_type: "image", // Avatars are always images
+        });
+      } catch (deleteError) {
+        // Log but don't abort — a failed delete shouldn't block the upload
+        logger.warn("Failed to delete old avatar from Cloudinary", {
+          avatarPublicId: user.avatarPublicId,
+          deleteError,
+        });
+      }
+    }
+
+    // Upload the new avatar buffer to Cloudinary
+    // The buffer contains the already-cropped image from the frontend canvas
+    const avatarBuffer = files.avatar[0].buffer;
+
+    const uploadResult = await new Promise<{ url: string; publicId: string }>(
+      (resolve, reject) => {
+        // upload_stream accepts a buffer and streams it directly to Cloudinary
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "kun-bookshop/avatars", // Organized under our project folder
+            resource_type: "image", // Avatars are always images
+            transformation: [
+              {
+                width: 400,
+                height: 400,
+                crop: "fill", // Server-side safety crop — frontend already cropped it
+                gravity: "face", // Center on face if detected
+              },
+            ],
+          },
+          (error, result) => {
+            if (error || !result) {
+              reject(error || new Error("Cloudinary upload failed"));
+            } else {
+              resolve({ url: result.secure_url, publicId: result.public_id });
+            }
+          },
+        );
+        stream.end(avatarBuffer); // Send the buffer into the stream
+      },
+    );
+
+    // Save the new avatar URL and publicId to the user document
+    user.avatar = uploadResult.url;
+    user.avatarPublicId = uploadResult.publicId;
+    await user.save();
+
+    logger.info("Avatar uploaded successfully", { userId: user._id });
+
+    // Return the updated user (without password) so the frontend can update Zustand immediately
+    const updatedUser = await User.findById(user._id).select("-password");
+
+    res.json({
+      message: "Avatar updated successfully.",
+      user: updatedUser,
+    });
+  } catch (error) {
+    logger.error("Upload avatar error:", error);
+    res.status(500).json({ error: "Something went wrong. Please try again." });
+  }
+};
+
+// REMOVE AVATAR
+// DELETE /api/auth/avatar
+// Deletes the user's avatar from Cloudinary and clears the avatar fields on their profile.
+// After this, the frontend falls back to showing initials in the navbar and profile.
+export const removeAvatar = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    // Fetch the full user document so we can read avatarPublicId
+    const user = await User.findById(req.user!.userId);
+
+    if (!user) {
+      res.status(404).json({ error: "User not found." });
+      return;
+    }
+
+    // If there's no avatar to remove, just return success — idempotent
+    if (!user.avatar && !user.avatarPublicId) {
+      res.json({ message: "No avatar to remove." });
+      return;
+    }
+
+    // Delete from Cloudinary if we have the public ID stored
+    if (user.avatarPublicId) {
+      try {
+        await cloudinary.uploader.destroy(user.avatarPublicId, {
+          resource_type: "image", // Avatars are always images
+        });
+      } catch (deleteError) {
+        // Log but continue — if Cloudinary delete fails, we still clear the DB fields
+        // An orphaned image is better than leaving the user stuck with an avatar they can't remove
+        logger.warn("Failed to delete avatar from Cloudinary during removal", {
+          avatarPublicId: user.avatarPublicId,
+          deleteError,
+        });
+      }
+    }
+
+    // Clear both avatar fields on the user document
+    user.avatar = undefined;
+    user.avatarPublicId = undefined;
+    await user.save();
+
+    logger.info("Avatar removed", { userId: user._id });
+
+    res.json({ message: "Avatar removed successfully." });
+  } catch (error) {
+    logger.error("Remove avatar error:", error);
     res.status(500).json({ error: "Something went wrong. Please try again." });
   }
 };

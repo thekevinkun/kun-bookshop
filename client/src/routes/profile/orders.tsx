@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { BookOpen, Calendar, Hash, Loader2, AlertCircle } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { ArrowLeft, BookOpen, Calendar, Hash, Loader2, AlertCircle } from "lucide-react";
 import { useOrders } from "../../hooks/useOrders";
 import { format } from "date-fns";
 
@@ -21,9 +21,11 @@ const statusBadge = (status: string) => {
 };
 
 export default function OrdersPage() {
+  const navigate = useNavigate();
+  
   // Fetch the user's order history from the backend
   const { data, isLoading, isError } = useOrders();
-
+  
   const orders = data?.orders ?? []; // Default to empty array while loading
 
   // Loading state
@@ -58,7 +60,7 @@ export default function OrdersPage() {
           url="/profile/orders"
           noIndex={true}
         />
-        <div className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+        <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
           <div className="max-w-sm w-full text-center flex flex-col items-center gap-6">
             {/* Receipt illustration — pure CSS */}
             <div className="relative w-24 mx-auto">
@@ -112,7 +114,7 @@ export default function OrdersPage() {
               Check your library instead
             </Link>
           </div>
-        </div>
+        </main>
       </>
     );
   }
@@ -127,17 +129,26 @@ export default function OrdersPage() {
         noIndex={true}
       />
 
-      <section className="min-h-screen">
+      <main className="min-h-screen">
         <div className="container-page py-12">
           {/* Page header */}
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="text-text-light">Order History</h2>
-            <span className="text-xs text-golden/85">
-              {orders.length} order{orders.length !== 1 ? "s" : ""}{" "}
-              {/* Pluralise correctly */}
-            </span>
-          </div>
+          <div className="flex flex-col">
+            <button
+              className="btn-ghost btn-sm flex items-center gap-1 self-start mb-4"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeft size={15} /> Back
+            </button>
 
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="text-text-light">Order History</h2>
+              <span className="text-xs text-golden/85">
+                {orders.length} order{orders.length !== 1 ? "s" : ""}{" "}
+                {/* Pluralise correctly */}
+              </span>
+            </div>
+          </div>
+          
           {/* One card per order */}
           <div className="space-y-6">
             {orders.map((order: IOrder) => (
@@ -248,7 +259,7 @@ export default function OrdersPage() {
             ))}
           </div>
         </div>
-      </section>
+      </main>
     </>
   );
 }

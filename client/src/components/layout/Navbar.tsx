@@ -185,7 +185,7 @@ const Navbar = () => {
                 <DropdownMenu.Trigger asChild>
                   <button
                     className="flex h-9 w-9 items-center justify-center rounded-full
-                      text-text-light transition-colors hover:border-golden/35 
+                      text-text-light transition-colors group hover:border-golden/35 
                       hover:bg-text-light/[0.06] focus-visible:border-white cursor-pointer"
                     aria-label="Open account menu"
                   >
@@ -194,11 +194,11 @@ const Navbar = () => {
                       <img
                         src={user.avatar}
                         alt={user.firstName}
-                        className="h-8.5 w-8.5 rounded-full object-cover"
+                        className="h-9 w-9 rounded-full object-cover group-hover:opacity-90 transition-opacity duration-200"
                       />
                     ) : (
                       <div
-                        className="flex h-8.5 w-8.5 items-center justify-center rounded-full 
+                        className="flex h-9 w-9 items-center justify-center rounded-full 
                           backdrop-blur-md border-2 border-golden/80
                           text-[11px] font-bold tracking-[0.08em] text-text-light"
                       >
@@ -217,7 +217,7 @@ const Navbar = () => {
                         forceMount
                         align="end"
                         sideOffset={8}
-                        className="min-w-48 bg-card border border-bg-hover rounded-xl shadow-2xl p-1.5 z-50"
+                        className="min-w-48 bg-card border border-bg-hover rounded-xl shadow-2xl px-1.5 py-2 z-50"
                         asChild
                       >
                         <motion.div
@@ -250,14 +250,33 @@ const Navbar = () => {
                           }}
                         >
                           {/* User info header */}
-                          <div className="px-3 py-2 mb-1">
-                            <p className="text-text-light text-sm font-semibold">
-                              {user?.firstName} {user?.lastName}
-                            </p>
-                            <p className="text-text-muted text-xs">
-                              {user?.email}
-                            </p>
-                          </div>
+                          {user?.avatar ? (
+                            <div className="flex items-center gap-3 px-3 py-2 mb-1">
+                              <img
+                                src={user.avatar}
+                                alt={user.firstName}
+                                className="h-13.5 w-13.5 rounded-full object-cover"
+                              />
+
+                              <div>
+                                <p className="text-text-light text-sm font-semibold">
+                                  {user?.firstName} {user?.lastName}
+                                </p>
+                                <p className="text-text-muted text-xs">
+                                  {user?.email}
+                                </p>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="px-3 py-2 mb-1">
+                              <p className="text-text-light text-sm font-semibold">
+                                {user?.firstName} {user?.lastName}
+                              </p>
+                              <p className="text-text-muted text-xs">
+                                {user?.email}
+                              </p>
+                            </div>
+                          )}
 
                           <DropdownMenu.Separator className="h-px bg-bg-hover my-1" />
 
@@ -266,9 +285,9 @@ const Navbar = () => {
                             <Link
                               to="/library"
                               className="flex items-center gap-2 px-3 py-2 text-sm
-                            text-text-muted rounded-lg cursor-pointer hover:bg-bg-hover
-                            hover:text-golden focus:outline-none focus:bg-bg-hover focus:text-golden
-                            transition-colors duration-150"
+                              text-text-muted rounded-lg cursor-pointer hover:bg-bg-hover
+                              hover:text-golden focus:outline-none focus:bg-bg-hover focus:text-golden
+                              transition-colors duration-150"
                             >
                               <Library size={15} />
                               My Library
@@ -280,9 +299,9 @@ const Navbar = () => {
                             <Link
                               to="/profile"
                               className="flex items-center gap-2 px-3 py-2 text-sm
-                            text-text-muted rounded-lg cursor-pointer
-                            hover:bg-bg-hover hover:text-golden focus:outline-none focus:bg-bg-hover 
-                            focus:text-golden transition-colors duration-150"
+                              text-text-muted rounded-lg cursor-pointer
+                              hover:bg-bg-hover hover:text-golden focus:outline-none focus:bg-bg-hover 
+                              focus:text-golden transition-colors duration-150"
                             >
                               <User size={15} />
                               Profile
@@ -295,10 +314,10 @@ const Navbar = () => {
                               <Link
                                 to="/admin"
                                 className="flex items-center gap-2 px-3 py-2 text-sm
-                            text-text-muted rounded-lg cursor-pointer
-                            hover:bg-bg-hover hover:text-golden
-                              focus:outline-none focus:bg-bg-hover focus:text-golden
-                              transition-colors duration-150"
+                              text-text-muted rounded-lg cursor-pointer
+                              hover:bg-bg-hover hover:text-golden
+                                focus:outline-none focus:bg-bg-hover focus:text-golden
+                                transition-colors duration-150"
                               >
                                 <LayoutDashboard size={15} />
                                 Admin Dashboard
@@ -312,8 +331,8 @@ const Navbar = () => {
                           <DropdownMenu.Item
                             onSelect={handleLogout}
                             className="flex items-center gap-2 px-3 py-2 text-sm
-                          text-error rounded-lg cursor-pointer hover:bg-bg-hover 
-                          focus:outline-none focus:bg-bg-hover transition-colors duration-150"
+                            text-error rounded-lg cursor-pointer hover:bg-bg-hover 
+                            focus:outline-none focus:bg-bg-hover transition-colors duration-150"
                           >
                             <LogOut size={15} />
                             Log out
@@ -372,11 +391,7 @@ const Navbar = () => {
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
-            {mobileOpen ? (
-              <X size={20} />
-            ) : (
-              <Menu size={20} />
-            )}
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
@@ -404,7 +419,12 @@ const Navbar = () => {
               transition={{ duration: 0.2, ease: "easeOut" }}
               className={`fixed left-0 w-full md:hidden z-[46] bg-navy border-t border-golden/55
                 px-4 py-4 flex flex-col justify-center items-center gap-3
-                ${location.pathname === "/" ? "top-25" : "top-16"}`}
+                ${
+                  location.pathname === "/" ||
+                  location.pathname.startsWith("/books/")
+                    ? "top-25"
+                    : "top-16"
+                }`}
             >
               <Link
                 to="/books"

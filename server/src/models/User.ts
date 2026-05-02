@@ -1,5 +1,5 @@
 // Import mongoose and the tools we need to define a schema with TypeScript support
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Import the IUser interface we defined in our types — this ensures our schema matches our TypeScript definitions
 import type { IUser } from "../types/auth";
@@ -44,6 +44,13 @@ const UserSchema = new Schema<IUser>(
 
     // Cloudinary URL for profile picture — optional, can be null
     avatar: {
+      type: String,
+      default: null,
+    },
+
+    // Cloudinary public ID for the avatar — stored so we can delete the old one when uploading a new avatar
+    // Without this, old avatars would pile up in Cloudinary and waste storage
+    avatarPublicId: {
       type: String,
       default: null,
     },

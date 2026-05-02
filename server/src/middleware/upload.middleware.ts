@@ -151,3 +151,14 @@ export const verifyFileTypes = async (
   // All checks passed — move on to the controller
   next();
 };
+
+// MULTER INSTANCE FOR USER AVATARS
+// Separate instance for profile avatar uploads — same 5MB limit as author avatars
+// Field name is 'avatar' — must match what the frontend sends in FormData
+export const uploadAvatarFile = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: MAX_IMAGE_SIZE }, // 5MB — profile photos don't need more
+}).fields([
+  { name: "avatar", maxCount: 1 }, // Single avatar image
+]);
