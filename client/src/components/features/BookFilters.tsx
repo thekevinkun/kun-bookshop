@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 
 // Import React Router hook to read URL query params
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -32,6 +32,8 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
   // Read URL search params so we can initialize filters from the URL
   // e.g. /books?sortBy=purchaseCount&sortOrder=desc sets the sort dropdown correctly
   const [searchParams] = useSearchParams();
+
+  const navigate = useNavigate();
 
   // Local search input — raw value before debounce
   const [searchInput, setSearchInput] = useState(
@@ -211,8 +213,8 @@ const BookFiltersComponent = ({ filters, onChange }: BookFiltersProps) => {
                     className="w-full flex items-center gap-3 px-4 py-2 hover:bg-bg-hover
                       text-left transition-colors duration-150"
                     onClick={() => {
-                      setSearchInput(book.title);
-                      applySearch(book.title);
+                      setShowSuggestions(false);
+                      navigate(`/books/${book._id}`);
                     }}
                   >
                     <img

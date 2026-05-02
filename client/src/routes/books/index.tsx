@@ -54,7 +54,7 @@ export default function BooksPage() {
   });
 
   // Fetch books from the real API with the current filters
-  const { data, isLoading } = useBooks(filters);
+  const { data, isLoading, isFetching } = useBooks(filters);
 
   const books = data?.books ?? [];
   const totalPages = data?.totalPages ?? 1;
@@ -187,8 +187,7 @@ export default function BooksPage() {
               <div className="w-10 h-1 bg-golden rounded-full mt-2" />
             </div>
 
-            {/* Loading state — skeleton grid */}
-            {isLoading && (
+            {isFetching && (
               <BookGrid
                 books={[]}
                 isLoading={true}
@@ -247,7 +246,7 @@ export default function BooksPage() {
               )}
 
             {/* Book grid — only when we have results */}
-            {!isLoading && books.length > 0 && (
+            {!isFetching && books.length > 0 && (
               <BookGrid
                 books={books}
                 isLoading={false}
