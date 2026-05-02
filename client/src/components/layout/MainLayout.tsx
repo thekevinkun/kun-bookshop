@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
-import { Navbar, Footer } from "./";
+
+import { Navbar, BottomNav, Footer } from "./";
 import ChatWidget from "../chat/ChatWidget";
 import { GlobalToaster } from "../ui";
 
@@ -9,7 +10,13 @@ const MainLayout = () => {
       <Navbar />
       <Outlet />
       <Footer />
+
+      {/* Mobile bottom tab bar — only visible below 768px */}
+      <BottomNav />
+
+      {/* Desktop floating chat bubble — hidden on mobile, BottomNav has KUN tab */}
       <ChatWidget />
+
       <GlobalToaster />
     </>
   );

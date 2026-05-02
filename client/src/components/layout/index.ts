@@ -1,6 +1,7 @@
 import MainLayout from "./MainLayout";
 import AuthLayout from "./AuthLayout";
 import Navbar from "./Navbar";
+import BottomNav from "./BottomNav";
 import Hero from "./Hero";
 import CouponBanner from "./CouponBanner";
 import RecommendedSection from "./RecommendedSection";
@@ -15,6 +16,7 @@ export {
   MainLayout,
   AuthLayout,
   Navbar,
+  BottomNav,
   Hero,
   CouponBanner,
   RecommendedSection,

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion"; // Add Framer Motion
+import { motion, AnimatePresence } from "framer-motion";
 
 import { X, ChevronUp } from "lucide-react";
 
@@ -12,31 +12,21 @@ import ChatPanel from "./ChatPanel";
 import { panelVariants } from "../../lib/animations";
 
 const ChatWidget = () => {
-  // Pull user from auth store to personalize the greeting
   const { isHydrated } = useAuthStore();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [isLayoutOnMobile, setIsLayoutOnMobile] = useState(false);
   const { pathname } = useLocation();
-  const { messages, isLoading, sendMessage, clearMessages } =
-    useChat();
+  const { messages, isLoading, sendMessage, clearMessages } = useChat();
 
   const handleClose = () => {
     setIsOpen(false);
-    setIsLayoutOnMobile(false);
     clearMessages();
   };
 
-  const handleLayoutOnMobile = () => {
-    if (window.innerWidth < 768) {
-      setIsLayoutOnMobile((prev) => !prev);
-    }
-  };
-
+  // Lock body scroll when the chat panel is open on desktop too (prevents
+  // the page scrolling behind the overlay on shorter viewports)
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-
-    if (isOpen && isMobile) {
+    if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -47,19 +37,20 @@ const ChatWidget = () => {
     };
   }, [isOpen]);
 
-  // Don't render widget on contact page since it has its own embedded chatbot
+  // Don't render widget on the contact page — it has its own embedded chatbot
   if (pathname === "/contact") return null;
 
-  // Don't render widget at all until auth store is hydrated from localStorage
-  // Prevents sending messages with null userContext before auth is ready
+  // Wait until auth is ready — prevents null userContext on first message
   if (!isHydrated) return null;
 
   return (
-    <div
-      className={`fixed z-50 flex flex-col items-end gap-3
-      ${isLayoutOnMobile ? "inset-0 w-full" : "bottom-6 right-6"}`}
-    >
-      {/* Animated Chat panel with AnimatePresence */}
+    // The entire widget is fixed bottom-right on DESKTOP only.
+    // On mobile, this component renders nothing visible — BottomNav handles it.
+    <div className="fixed z-50 bottom-6 right-6 flex flex-col items-end gap-3">
+      {/* Chat panel — desktop only
+          On mobile the panel is rendered by BottomNav.tsx, not here.
+          We use hidden md:block so this panel never shows on small screens.
+      */}
       <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
@@ -69,15 +60,14 @@ const ChatWidget = () => {
             animate="visible"
             exit="exit"
             style={{
-              originX: 1, // Right edge
-              originY: 1, // Bottom edge
+              originX: 1, // Scale from right edge
+              originY: 1, // Scale from bottom edge
             }}
             className="
-              !w-[100vw] md:!w-98 h-[100dvh] 
-              md:max-h-[min(675px,85vh)] md:h-[min(675px,calc(100vh-3.5rem))]
-              md:rounded-2xl overflow-hidden border border-white/10 
-              flex flex-col bg-navy shadow-2xl shadow-black/50
-              
+              hidden md:flex
+              w-98 max-h-[min(675px,85vh)] h-[min(675px,calc(100vh-3.5rem))]
+              rounded-2xl overflow-hidden border border-white/10 
+              flex-col bg-navy shadow-2xl shadow-black/50
             "
           >
             {/* Panel header */}
@@ -87,7 +77,7 @@ const ChatWidget = () => {
               bg-[#deb368] border-b border-white/15 flex-shrink-0
             "
             >
-              <div className="">
+              <div>
                 <p className="text-text-dark text-sm font-bold leading-none">
                   Talk with KUN!
                 </p>
@@ -113,48 +103,43 @@ const ChatWidget = () => {
         )}
       </AnimatePresence>
 
-      {/* Floating bubble button */}
-      {!isLayoutOnMobile && (
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => {
-            setIsOpen((prev) => !prev);
-            handleLayoutOnMobile();
-          }}
-          className="
+      {/* Floating bubble button — DESKTOP ONLY
+          hidden on mobile (md:flex) — BottomNav has the KUN tab there.
+      */}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="
+          hidden md:flex
           w-14 h-14 rounded-full bg-gradient-to-br from-[#173e82] to-[#123573] 
           hover:bg-gradient-to-tr hover:from-[#102347] hover:to-[#173B7A] 
-          shadow-sm shadow-golden/20 flex items-center justify-center 
+          shadow-sm shadow-golden/20 items-center justify-center 
           transition-all duration-100 cursor-pointer relative overflow-hidden
         "
+      >
+        {/* Icon rotates between KUN logo and chevron-up based on open state */}
+        <motion.div
+          className="w-8 h-8 flex items-center justify-center rounded-full"
+          animate={{ rotate: isOpen ? -180 : 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 20,
+            duration: 0.4,
+          }}
         >
-          {/* Animated Icon Container */}
-          <motion.div
-            className="w-8 h-8 flex items-center justify-center rounded-full"
-            // Rotate 90° clockwise when closing, -90° counterclockwise when opening
-            animate={{
-              rotate: isOpen ? -180 : 0,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 20,
-              duration: 0.4,
-            }}
-          >
-            {isOpen ? (
-              <ChevronUp className="w-6 h-6 text-golden drop-shadow-sm" />
-            ) : (
-              <img
-                src="/images/kun-chatbot-golden.webp"
-                alt="KUN Chatbot"
-                className="w-full h-full rounded-full object-contain"
-              />
-            )}
-          </motion.div>
-        </motion.button>
-      )}
+          {isOpen ? (
+            <ChevronUp className="w-6 h-6 text-golden drop-shadow-sm" />
+          ) : (
+            <img
+              src="/images/kun-chatbot-golden.webp"
+              alt="KUN Chatbot"
+              className="w-full h-full rounded-full object-contain"
+            />
+          )}
+        </motion.div>
+      </motion.button>
     </div>
   );
 };

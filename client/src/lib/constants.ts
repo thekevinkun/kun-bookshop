@@ -27,6 +27,63 @@ export const SORT_OPTIONS = [
   { label: "Bestselling", value: "purchaseCount", order: "desc" },
 ];
 
+// Bottom nav item shape
+// "id" is used as a stable React key and for active-state matching.
+// "to" is the route path — undefined means the item triggers an action (chat).
+// "authRequired" gates items that only appear when logged in.
+export interface BottomNavItem {
+  id: string;
+  label: string;
+  to?: string; // undefined → action item (e.g. open chat)
+  authRequired: boolean; // true → only shown when authenticated
+  guestVisible: boolean; // true → also shown when logged out
+}
+
+// Bottom nav items list
+// Logged-in order:  Home · Browse · Library · KUN · Profile
+// Logged-out order: Home · Browse · KUN · Sign In
+//
+// "KUN" and "Profile / Sign In" are handled specially in BottomNav.tsx
+// because they render custom icons (KUN logo image, user avatar).
+// Every other item renders a Lucide icon looked up by id.
+export const BOTTOM_NAV_ITEMS: BottomNavItem[] = [
+  {
+    id: "home",
+    label: "Home",
+    to: "/",
+    authRequired: false, // shown to everyone
+    guestVisible: true,
+  },
+  {
+    id: "browse",
+    label: "Browse",
+    to: "/books",
+    authRequired: false,
+    guestVisible: true,
+  },
+  {
+    id: "library",
+    label: "Library",
+    to: "/library",
+    authRequired: true, // only logged-in users
+    guestVisible: false,
+  },
+  {
+    id: "chat",
+    label: "KUN",
+    to: undefined, // action item — opens chat panel, no navigation
+    authRequired: false,
+    guestVisible: true,
+  },
+  {
+    id: "profile",
+    label: "Profile",
+    to: "/profile",
+    authRequired: true, // logged-in → /profile with avatar
+    guestVisible: false,
+  },
+];
+
 export const FOOTER_NAV_LINKS = [
   { label: "Browse Books", to: "/books" },
   { label: "New Arrivals", to: "/books?sortBy=createdAt" },

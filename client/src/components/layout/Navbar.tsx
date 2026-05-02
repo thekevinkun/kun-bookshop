@@ -12,8 +12,6 @@ import {
   LogOut,
   LayoutDashboard,
   Library,
-  Menu,
-  X,
 } from "lucide-react";
 
 import { useCartStore } from "../../store/cart";
@@ -29,9 +27,7 @@ const Navbar = () => {
   const queryClient = useQueryClient();
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuthStore();
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   // Tracks whether the avatar dropdown is open — needed to drive the exit animation
@@ -70,37 +66,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close on route change
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [location.pathname]);
-
-  // Handle click outside element and touch on mobile screen
-  useEffect(() => {
-    const handlePointer = (event: PointerEvent) => {
-      if (mobileOpen) {
-        const navbar = document.querySelector("nav");
-        const hamburger = document.querySelector('[aria-label="Toggle menu"]');
-        const logo = document.querySelector('a[href="/"]');
-
-        const target = event.target as Node;
-        if (
-          navbar?.contains(target) ||
-          hamburger?.contains(target) ||
-          logo?.contains(target)
-        ) {
-          return; // Keep menu open
-        }
-
-        setMobileOpen(false);
-      }
-    };
-
-    document.addEventListener("pointerdown", handlePointer, true); // 👈 Capture phase
-    return () =>
-      document.removeEventListener("pointerdown", handlePointer, true);
-  }, [mobileOpen]);
-
   return (
     <nav
       className={`sticky top-0 z-40 w-full transition-all duration-300 ${
@@ -113,6 +78,7 @@ const Navbar = () => {
       <CouponBanner />
 
       <div className="relative container-page py-0 h-16 flex items-center justify-between">
+        {/* Background texture on home and book detail pages */}
         {location.pathname === "/" ||
         location.pathname.startsWith("/books/") ? (
           <div
@@ -125,7 +91,10 @@ const Navbar = () => {
           />
         ) : null}
 
-        {/* Logo */}
+        {/* Logo
+            Visible on ALL screen sizes. On mobile this is justify-between
+            with just the cart, so it naturally sits on the left.
+        */}
         <Link to="/" className="flex items-center">
           <img
             src="/images/logo.webp"
@@ -137,7 +106,7 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Desktop nav links */}
+        {/* Desktop nav links (hidden on mobile) */}
         <div className="hidden md:flex items-center gap-6">
           <Link
             to="/books"
@@ -155,11 +124,11 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Desktop right side */}
+        {/* Desktop right-side controls (avatar dropdown + cart + auth buttons) */}
         <div className="hidden md:flex items-center gap-3">
           {isAuthenticated ? (
             <>
-              {/* Cart button */}
+              {/* Cart button — desktop only */}
               <button
                 onClick={() => setIsCartOpen(true)}
                 className="relative inline-flex h-9 items-center justify-center pr-1 
@@ -189,7 +158,7 @@ const Navbar = () => {
                       hover:bg-text-light/[0.06] focus-visible:border-white cursor-pointer"
                     aria-label="Open account menu"
                   >
-                    {/* Avatar or initials */}
+                    {/* Avatar image or initials fallback */}
                     {user?.avatar ? (
                       <img
                         src={user.avatar}
@@ -257,7 +226,6 @@ const Navbar = () => {
                                 alt={user.firstName}
                                 className="h-13.5 w-13.5 rounded-full object-cover"
                               />
-
                               <div>
                                 <p className="text-text-light text-sm font-semibold">
                                   {user?.firstName} {user?.lastName}
@@ -345,6 +313,7 @@ const Navbar = () => {
               </DropdownMenu.Root>
             </>
           ) : (
+            /* Not authenticated — show Login / Sign up buttons */
             <>
               <button
                 className="btn-ghost btn-sm"
@@ -362,9 +331,13 @@ const Navbar = () => {
           )}
         </div>
 
-        <div className="md:hidden flex items-center gap-4 md:gap-3">
-          {/* Cart button on mobile */}
-          {isAuthenticated && (
+        {/* Mobile right side — cart icon only
+            Below 768px the hamburger is GONE. The cart sits here on the right.
+            Navigation is handled entirely by BottomNav.tsx.
+            Cart is only shown when authenticated (guests have no cart).
+        */}
+        {isAuthenticated ? (
+          <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsCartOpen(true)}
               className="relative inline-flex h-9 items-center justify-center pr-1 
@@ -372,7 +345,7 @@ const Navbar = () => {
               aria-label="Open cart"
             >
               <ShoppingCart size={20} strokeWidth={2.1} />
-              {/* Badge showing how many books are in the cart */}
+              {/* Cart item count badge */}
               {itemCount() > 0 && (
                 <span
                   className="absolute -top-1 -right-1.5 min-w-4.5 h-4.5 px-1 bg-burgundy 
@@ -383,116 +356,20 @@ const Navbar = () => {
                 </span>
               )}
             </button>
-          )}
-
-          {/* Mobile hamburger */}
-          <button
-            className="btn-ghost btn-sm !border-golden/80 !px-3"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
+          </div>
+        ) : (
+          <div className="md:hidden">
+            <button
+              className="btn-ghost btn-sm"
+              onClick={() => navigate("/login")}
+            >
+              Log in
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Mobile menu — plain list, no Radix needed here */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            {/* Invisible overlay - blocks ALL clicks */}
-            {/* <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="fixed inset-0 z-[45] md:hidden bg-black"
-              style={{ pointerEvents: "auto" }}
-              onClick={() => setMobileOpen(false)}
-            /> */}
-
-            {/* FIXED: position: fixed + SAME exact styling */}
-            <motion.div
-              initial={{ opacity: 0, y: -12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className={`fixed left-0 w-full md:hidden z-[46] bg-navy border-t border-golden/55
-                px-4 py-4 flex flex-col justify-center items-center gap-3
-                ${
-                  location.pathname === "/" ||
-                  location.pathname.startsWith("/books/")
-                    ? "top-25"
-                    : "top-16"
-                }`}
-            >
-              <Link
-                to="/books"
-                className="text-text-muted hover:text-golden font-medium py-2 w-full text-center"
-                onClick={() => setMobileOpen(false)}
-              >
-                Browse
-              </Link>
-
-              {isAuthenticated ? (
-                <>
-                  <Link
-                    to="/library"
-                    className="text-text-muted hover:text-golden font-medium py-2 w-full text-center"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    My Library
-                  </Link>
-                  <Link
-                    to="/profile"
-                    className="text-text-muted hover:text-golden font-medium py-2 w-full text-center"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                  {user?.role === "admin" && (
-                    <Link
-                      to="/admin"
-                      className="text-text-muted hover:text-golden font-medium py-2 w-full text-center"
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      Admin Dashboard
-                    </Link>
-                  )}
-                  <button
-                    className="text-error font-medium py-2 w-full text-center"
-                    onClick={handleLogout}
-                  >
-                    Log out
-                  </button>
-                </>
-              ) : (
-                <div className="flex w-full gap-3 pt-5">
-                  <button
-                    className="w-full btn-ghost btn-sm flex-1"
-                    onClick={() => {
-                      navigate("/login");
-                      setMobileOpen(false);
-                    }}
-                  >
-                    Log in
-                  </button>
-                  <button
-                    className="w-full btn-primary btn-sm flex-1"
-                    onClick={() => {
-                      navigate("/register");
-                      setMobileOpen(false);
-                    }}
-                  >
-                    Sign up
-                  </button>
-                </div>
-              )}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
+      {/* CartDrawer — shared between mobile and desktop */}
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </nav>
   );

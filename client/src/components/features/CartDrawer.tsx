@@ -123,13 +123,13 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
       {/* Portal renders outside the DOM tree so z-index issues are impossible */}
       <Dialog.Portal>
         {/* Dark overlay behind the drawer */}
-        <Dialog.Overlay className="cart-overlay fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" />
+        <Dialog.Overlay className="cart-overlay fixed inset-0 z-70 bg-black/60 backdrop-blur-sm" />
 
         {/* The drawer panel itself — slides in from the right */}
         <Dialog.Content
           onInteractOutside={(e) => e.preventDefault()}
           onEscapeKeyDown={(e) => e.preventDefault()}
-          className="cart-drawer fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-card shadow-2xl"
+          className="cart-drawer fixed right-0 top-0 z-80 flex h-full w-full max-w-md flex-col bg-card shadow-2xl"
           style={{ borderLeft: "1px solid rgba(51,65,85,0.5)" }}
         >
           {/* HEADER */}
