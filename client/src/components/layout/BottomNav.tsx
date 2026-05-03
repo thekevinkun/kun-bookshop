@@ -126,10 +126,8 @@ const BottomNav = () => {
       */}
       <nav
         className="
-          fixed bottom-0 left-0 right-0 z-50 md:hidden
-          h-16 pb-safe
-          bg-navy/95 backdrop-blur-xl
-          border-t border-golden/15
+          fixed bottom-0 left-0 right-0 z-50 md:hidden h-14 pb-safe
+          bg-navy/95 backdrop-blur-xl border-t border-golden/15
           flex items-center justify-around px-1
         "
         aria-label="Mobile navigation"
@@ -142,17 +140,17 @@ const BottomNav = () => {
                 key={item.id}
                 onClick={handleChatToggle}
                 aria-label="Open KUN chat"
-                className="flex flex-col items-center justify-center gap-1 flex-1 py-2 cursor-pointer"
+                className="flex flex-col items-center justify-center gap-0.5 flex-1 py-1 cursor-pointer"
               >
                 {/* KUN logo image — same asset as the floating bubble */}
-                <div className="min-h-[1.7rem] relative flex items-center justify-center">
+                <div className="min-h-[27px] relative flex items-center justify-center">
                   <div
                     className={`
-                        w-6.5 h-6.5 rounded-full flex items-center justify-center
+                        w-6 h-6 rounded-full flex items-center justify-center
                         transition-all duration-200
                         ${
                           chatOpen
-                            ? "ring-2 ring-golden/60 bg-golden/10 scale-110"
+                            ? "border border-golden/80 bg-golden/10 scale-110"
                             : "opacity-75 hover:opacity-100"
                         }
                     `}
@@ -182,19 +180,19 @@ const BottomNav = () => {
               <Link
                 key={item.id}
                 to={item.to!}
-                className="flex flex-col items-center justify-center gap-1 flex-1 py-2"
+                className="flex flex-col items-center justify-center gap-0.5 flex-1 py-1"
                 aria-label="Profile"
               >
                 {user?.avatar ? (
                   // Real avatar image — ring highlights when active
-                  <div className="min-h-[1.7rem] relative flex items-center justify-center">
+                  <div className="min-h-[27px] relative flex items-center justify-center">
                     <div
                       className={`
-                            w-6.5 h-6.5 rounded-full flex items-center justify-center
-                            transition-all duration-200
+                            w-6 h-6 rounded-full flex items-center justify-center
+                            border border-golden/80 hover:border-golden transition-all duration-200
                             ${
-                              chatOpen
-                                ? "ring-2 ring-golden/60 bg-golden/10 scale-110"
+                              active
+                                ? "border-golden bg-golden/10 scale-110"
                                 : "opacity-100 hover:opacity-80"
                             }
                         `}
@@ -208,16 +206,17 @@ const BottomNav = () => {
                   </div>
                 ) : (
                   // Initials fallback — matches desktop Navbar style
-                  <div className="min-h-[1.7rem] relative flex items-center justify-center">
+                  <div className="min-h-[27px] relative flex items-center justify-center">
                     <div
                       className={`
-                            w-6.5 h-6.5 rounded-full flex items-center justify-center
-                            border-2 text-[9px] font-bold tracking-wide
+                            w-6 h-6 rounded-full flex items-center justify-center
+                            border border-golden/80 hover:border-golden 
+                            text-[8px] font-bold tracking-wide
                             transition-all duration-200
                         ${
                           active
                             ? "border-golden text-golden scale-110"
-                            : "border-golden/40 text-text-muted"
+                            : "text-text-muted"
                         }
                         `}
                     >
@@ -248,28 +247,21 @@ const BottomNav = () => {
             <Link
               key={item.id}
               to={item.to}
-              className="flex flex-col items-center justify-center gap-1 flex-1 py-2"
+              className="flex flex-col items-center justify-center gap-0.5 flex-1 py-1"
               aria-label={item.label}
             >
               {/* Active indicator dot above the icon */}
-              <div className="min-h-[25px] relative flex items-center justify-center">
-                {active && (
-                  <motion.span
-                    layoutId="bottom-nav-active-dot"
-                    className="absolute -top-1 w-1 h-1 rounded-full bg-golden"
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                )}
+              <div className="min-h-[26px] relative flex items-center justify-center">
                 <span
-                  className={`transition-colors duration-200 ${
-                    active ? "text-golden" : "text-text-muted"
+                  className={`transition-all duration-200 ${
+                    active ? "text-golden scale-110" : "text-text-muted"
                   }`}
                 >
                   {icon}
                 </span>
               </div>
               <span
-                className={`text-[10px] font-medium transition-colors duration-200 ${
+                className={`text-[10px] font-medium transition-all duration-200 ${
                   active ? "text-golden" : "text-text-muted"
                 }`}
               >

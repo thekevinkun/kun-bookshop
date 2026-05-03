@@ -154,8 +154,8 @@ const Navbar = () => {
                 <DropdownMenu.Trigger asChild>
                   <button
                     className="flex h-9 w-9 items-center justify-center rounded-full
-                      text-text-light transition-colors group hover:border-golden/35 
-                      hover:bg-text-light/[0.06] focus-visible:border-white cursor-pointer"
+                      text-text-light group hover:border-golden/35 hover:bg-text-light/[0.06] 
+                      focus-visible:border-white cursor-pointer transition-colors duration-150"
                     aria-label="Open account menu"
                   >
                     {/* Avatar image or initials fallback */}
@@ -163,7 +163,8 @@ const Navbar = () => {
                       <img
                         src={user.avatar}
                         alt={user.firstName}
-                        className="h-9 w-9 rounded-full object-cover group-hover:opacity-90 transition-opacity duration-200"
+                        className="h-9 w-9 rounded-full border-2 border-golden/80 object-cover 
+                          group-hover:opacity-90 group-hover:border-golden transition-all duration-150"
                       />
                     ) : (
                       <div
