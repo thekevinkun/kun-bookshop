@@ -77,7 +77,7 @@ export default function CheckoutSuccessPage() {
   // LOADING STATE
   if (status === "loading") {
     return (
-      <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+      <main className="min-h-[85vh] md:min-h-[95vh] bg-bg-dark flex items-center justify-center px-4">
         <div className="max-w-lg w-full text-center flex flex-col items-center gap-6">
           <Loader2 size={48} className="text-golden animate-spin" />
           <p className="text-text-muted text-lg">Confirming your payment...</p>
@@ -100,7 +100,7 @@ export default function CheckoutSuccessPage() {
           noIndex={true}
         />
 
-        <main className="min-h-screen bg-bg-dark flex items-center justify-center px-4">
+        <main className="min-h-[85vh] md:min-h-[95vh] bg-bg-dark flex items-center justify-center px-4">
           <div className="max-w-md w-full text-center flex flex-col items-center gap-6">
             <p className="text-5xl mb-2">❌</p>
             <p className="text-2xl font-bold text-text-light">

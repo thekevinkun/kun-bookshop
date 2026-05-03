@@ -32,7 +32,7 @@ export default function OrdersPage() {
   if (isLoading) {
     return (
       // Full-page centered spinner while we wait for the library to load
-      <main className="container-page min-h-screen flex items-center justify-center">
+      <main className="container-page min-h-[85vh] md:min-h-[95vh] flex items-center justify-center">
         <Loader2 className="animate-spin text-golden/75" size={40} />
       </main>
     );
@@ -41,7 +41,7 @@ export default function OrdersPage() {
   // Error state
   if (isError) {
     return (
-      <main className="container-page min-h-screen flex flex-col items-center justify-center">
+      <main className="container-page min-h-[85vh] md:min-h-[95vh] flex flex-col items-center justify-center">
         <AlertCircle className="text-rose-400" size={40} />
         <p className="text-sm">
           Failed to load orders. Please try again later.

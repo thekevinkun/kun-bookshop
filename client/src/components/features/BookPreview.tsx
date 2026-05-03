@@ -365,7 +365,7 @@ const BookPreview = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
       <div
         className="relative bg-navy rounded-2xl w-full h-[95dvh] max-h-[900px] 
         flex flex-col overflow-hidden max-w-7xl"
