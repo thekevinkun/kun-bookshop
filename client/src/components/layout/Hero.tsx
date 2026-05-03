@@ -59,7 +59,7 @@ const Hero = ({
   // Clean autoplay — next and isPaused are both stable now so this never resets
   useEffect(() => {
     if (isPaused) return;
-    const timer = setInterval(next, 6000);
+    const timer = setInterval(next, 10000);
     return () => clearInterval(timer);
   }, [isPaused, next]);
 

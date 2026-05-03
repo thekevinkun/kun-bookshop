@@ -139,7 +139,7 @@ const ReviewForm = ({ bookId, existingReview, onCancel }: ReviewFormProps) => {
         onChange={(e) => setComment(e.target.value)}
         rows={4}
         placeholder="Share your thoughts about this book... (min 10 characters)"
-        className="input-field resize-none text-sm"
+        className="input-field resize-none text-base"
       />
 
       {/* Error message */}
