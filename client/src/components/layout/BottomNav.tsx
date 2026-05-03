@@ -36,15 +36,46 @@ const BottomNav = () => {
     setChatOpen((prev) => !prev);
   };
 
-  // Lock body scroll when chat panel is open — prevents page scrolling behind the overlay
   useEffect(() => {
     if (chatOpen) {
+      // Save current scroll position before locking
+      const scrollY = window.scrollY;
+
+      // Fix the body in place at the current scroll position —
+      // this is the only reliable cross-browser way to prevent the
+      // background page from scrolling or showing through on mobile
+      // when the virtual keyboard opens
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
       document.body.style.overflow = "hidden";
+      document.body.style.backgroundColor = "#0a1628";
+      document.documentElement.style.backgroundColor = "#0a1628";
     } else {
+      // Restore scroll position when unlocking
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
       document.body.style.overflow = "";
+      document.body.style.backgroundColor = "";
+      document.documentElement.style.backgroundColor = "";
+
+      // Jump back to where the user was before the chat opened
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
     }
     return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
       document.body.style.overflow = "";
+      document.body.style.backgroundColor = "";
+      document.documentElement.style.backgroundColor = "";
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
     };
   }, [chatOpen]);
 
