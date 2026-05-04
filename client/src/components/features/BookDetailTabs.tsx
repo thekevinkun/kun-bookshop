@@ -21,14 +21,14 @@ import { useNavigate } from "react-router-dom";
 // Import auth store — we need to know who is logged in to show the review form
 import { useAuthStore } from "../../store/auth";
 
-// Import the library hook from Phase 5 — to check if the user owns this book
 import { useLibrary } from "../../hooks/useLibrary";
+import { useBookReviews } from "../../hooks/useReviews";
 
 import { ReviewForm } from "../forms";
+import { StarRating } from "../ui";
 import { AuthorTabInfo, ReviewCard } from "../../components/cards";
 
 // Import all our review hooks
-import { useBookReviews } from "../../hooks/useReviews";
 
 // Import our book and review type
 import type { IBook, IReview } from "../../types/book";
@@ -162,21 +162,23 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
           </p>
 
           <div className="sm:hidden space-y-2">
-            <p 
+            <p
               className={`text-slate-400 leading-relaxed text-sm transition-all duration-200 ${
-                showFullDescription ? 'max-h-none' : 'line-clamp-3 max-h-[4.5rem]'
+                showFullDescription
+                  ? "max-h-none"
+                  : "line-clamp-3 max-h-[4.5rem]"
               }`}
             >
               {book.description}
             </p>
-            
+
             {/* Show toggle button ONLY on mobile <640px */}
             <button
               onClick={() => setShowFullDescription(!showFullDescription)}
               className="text-golden/80 hover:text-golden text-xs font-medium underline 
                 block sm:hidden transition-colors"
             >
-              {showFullDescription ? 'Read Less' : 'Read More'}
+              {showFullDescription ? "Read Less" : "Read More"}
             </button>
           </div>
 
@@ -221,17 +223,7 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
                 {(reviewsData?.avgRating ?? book.rating ?? 0).toFixed(1)}
               </p>
               <div className="flex gap-0.5 justify-center mt-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    size={12}
-                    className={
-                      i < Math.round(reviewsData?.avgRating ?? book.rating ?? 0)
-                        ? "text-amber-400 fill-amber-400"
-                        : "text-bg-hover fill-bg-hover"
-                    }
-                  />
-                ))}
+                <StarRating rating={book.rating} size={12} />
               </div>
               <p className="text-text-muted text-xs mt-1">
                 {/* reviewsData.total is the full count across all pages — accurate after submission */}
@@ -266,7 +258,9 @@ const BookDetailTabs = ({ book }: BookDetailTabsProps) => {
 
                   return (
                     <div key={star} className="flex items-center gap-2">
-                      <span className="text-text-muted text-xs w-3">{star}</span>
+                      <span className="text-text-muted text-xs w-3">
+                        {star}
+                      </span>
                       <div className="flex-1 bg-slate-700 rounded-full h-1.5 overflow-hidden">
                         {/* Only render the bar if there are actual reviews — no fake placeholder bars */}
                         {total > 0 ? (

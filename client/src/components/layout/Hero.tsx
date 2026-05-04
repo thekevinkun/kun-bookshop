@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Star, ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { SkeletonHero } from "../ui";
+import { SkeletonHero, StarRating } from "../ui";
 import type { IBook } from "../../types/book";
 
 const Hero = ({
@@ -183,17 +183,7 @@ const Hero = ({
 
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          size={16}
-                          className={
-                            i < Math.round(activeBook.rating)
-                              ? "text-warning fill-warning"
-                              : "text-bg-hover fill-bg-hover"
-                          }
-                        />
-                      ))}
+                      <StarRating rating={activeBook.rating} size={16} />
                     </div>
                     <span className="text-text-muted text-sm">
                       {activeBook.rating.toFixed(1)} · {activeBook.reviewCount}{" "}

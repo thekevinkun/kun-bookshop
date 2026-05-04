@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star } from "lucide-react";
+import { StarRating } from "../ui";
 import type { IBook } from "../../types/book";
 
 interface BookCardProps {
@@ -69,17 +69,7 @@ const BookCard = ({ book }: BookCardProps) => {
 
         {/* Rating — compact, only shows stars + number */}
         <div className="flex items-center gap-1 mt-0.5">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star
-              key={i}
-              size={10}
-              className={
-                i < Math.round(book.rating)
-                  ? "text-warning fill-warning"
-                  : "text-bg-hover fill-bg-hover"
-              }
-            />
-          ))}
+          <StarRating rating={book.rating} size={10} />
           <span className="text-text-muted text-xs ml-1">
             {book.rating.toFixed(1)}
           </span>

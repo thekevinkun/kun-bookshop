@@ -13,7 +13,6 @@ import { useActiveCoupons } from "../../hooks/useCoupons";
 import { toast } from "sonner";
 import {
   Users,
-  Star,
   ShoppingCart,
   Heart,
   Download,
@@ -22,6 +21,8 @@ import {
   Calendar,
   CheckCircle, // Used for the "Owned" badge icon
 } from "lucide-react";
+
+import { StarRating } from "../ui";
 
 import type { IBook } from "../../types/book";
 
@@ -216,17 +217,7 @@ const BookDetailHero = ({ book, isAuthenticated }: BookDetailHeroProps) => {
             {book.rating > 0 && (
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      size={16}
-                      className={
-                        i < Math.round(book.rating)
-                          ? "text-amber-400 fill-amber-400"
-                          : "text-bg-hover fill-bg-hover"
-                      }
-                    />
-                  ))}
+                  <StarRating rating={book.rating} size={16} />
                 </div>
 
                 <span className="text-text-muted text-sm">
