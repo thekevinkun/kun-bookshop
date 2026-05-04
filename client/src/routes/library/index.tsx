@@ -93,7 +93,7 @@ export default function LibraryPage() {
       // Full-page centered spinner while we wait for the library to load
       <main
         style={{ backgroundColor: "#0a1628" }}
-        className="min-h-[85vh] md:min-h-[95vh] flex items-center justify-center"
+        className="min-h-[85vh] md:min-h-[92vh] flex items-center justify-center"
       >
         <img 
           src="/images/logo.webp"
@@ -107,7 +107,7 @@ export default function LibraryPage() {
   // Error State
   if (isError) {
     return (
-      <main className="container-page min-h-[85vh] md:min-h-[95vh] flex flex-col items-center justify-center gap-4 text-center px-4">
+      <main className="container-page min-h-[85vh] md:min-h-[92vh] flex flex-col items-center justify-center gap-4 text-center px-4">
         {/* Error icon */}
         <AlertCircle className="text-red-400" size={48} />
         <h2 className="text-xl font-semibold text-text-light">
