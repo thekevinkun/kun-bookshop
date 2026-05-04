@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import Cropper from "react-easy-crop"; // The crop library
 import { ArrowLeft, Camera, Loader2, Save, Trash2, X } from "lucide-react";
@@ -13,6 +12,10 @@ import {
 } from "../../hooks/useAuth";
 import SEO from "../../components/common/SEO";
 import { toast } from "sonner";
+import {
+  editProfileSchema,
+  type EditProfileForm,
+} from "../../validators/auth.validator";
 
 // Shape of the crop area returned by react-easy-crop after user adjusts
 interface CropArea {
@@ -21,23 +24,6 @@ interface CropArea {
   width: number; // Width of the cropped region in pixels
   height: number; // Height of the cropped region in pixels
 }
-
-// Zod schema
-const requiredString = (field: string) =>
-  z.string().min(1, `${field} is required`);
-
-const editProfileSchema = z.object({
-  firstName: requiredString("First name"),
-  lastName: requiredString("Last name"),
-  emailPreferences: z.object({
-    marketing: z.boolean(),
-    orderUpdates: z.boolean(),
-    newReleases: z.boolean(),
-    priceDrops: z.boolean(),
-  }),
-});
-
-type EditProfileForm = z.infer<typeof editProfileSchema>;
 
 const EMAIL_PREFERENCES = [
   {
@@ -152,12 +138,14 @@ export default function EditProfilePage() {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<EditProfileForm>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
       firstName: user?.firstName ?? "",
       lastName: user?.lastName ?? "",
+      about: user?.about ?? "",
       emailPreferences: {
         marketing: user?.emailPreferences?.marketing ?? true,
         orderUpdates: user?.emailPreferences?.orderUpdates ?? true,
@@ -339,7 +327,7 @@ export default function EditProfilePage() {
                   border-2 border-golden/40 hover:border-golden/80
                   transition-all duration-200 cursor-pointer focus:outline-none
                   focus-visible:ring-2 focus-visible:ring-golden/60"
-                            aria-label="Change profile photo"
+                aria-label="Change profile photo"
               >
                 {displayAvatar ? (
                   <img
@@ -406,6 +394,7 @@ export default function EditProfilePage() {
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col gap-5"
             >
+              {/* Name fields side by side on desktop, stacked on mobile */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-medium text-text-muted">
@@ -439,6 +428,36 @@ export default function EditProfilePage() {
                 </div>
               </div>
 
+              {/* About me */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-text-muted">
+                  About Me
+                  <span className="text-text-muted/50 font-normal ml-1">
+                    (optional)
+                  </span>
+                </label>
+                <div className="relative">
+                  <textarea
+                    {...register("about")}
+                    rows={3}
+                    maxLength={150}
+                    placeholder="A short bio visible on your profile..."
+                    className="w-full px-3 py-2 rounded-lg border border-[#d1d1d1] bg-navy text-sm
+                      text-text-light focus:outline-none focus:ring-2 focus:ring-golden/80 resize-none"
+                  />
+                  {/* Live character counter */}
+                  <span className="absolute bottom-2 right-3 text-[10px] text-text-muted/60">
+                    {(watch("about") ?? "").length}/150
+                  </span>
+                </div>
+                {errors.about && (
+                  <p className="text-xs text-rose-400">
+                    {errors.about.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Email preferences */}
               <div className="flex flex-col gap-3">
                 <p className="text-xs font-medium text-text-muted">
                   Email Preferences

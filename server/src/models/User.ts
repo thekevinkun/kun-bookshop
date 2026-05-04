@@ -55,6 +55,14 @@ const UserSchema = new Schema<IUser>(
       default: null,
     },
 
+    // Short bio the user can write about themselves — optional, max 150 characters
+    about: {
+      type: String,
+      default: null,
+      maxlength: [150, "About me must be 150 characters or less"],
+      trim: true,
+    },
+
     // Array of Book ObjectIds the user has bought — populated when viewing the library
     library: [
       {

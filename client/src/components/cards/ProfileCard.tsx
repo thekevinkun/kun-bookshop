@@ -83,7 +83,13 @@ const ProfileCard = ({
           <h2 className="text-text-light leading-tight">
             {user.firstName} {user.lastName}
           </h2>
-          <p className="text-gray-400 text-sm mt-0.5">{user.email}</p>
+
+          {/* About me — only shown when the user has filled it in */}
+          {user.about && (
+            <p className="text-gray-400 text-sm mt-1.5 leading-relaxed">
+              {user.about}
+            </p>
+          )}
 
           <div className="border-t border-text-light/10 my-5" />
 

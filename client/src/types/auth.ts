@@ -8,6 +8,7 @@ export interface User {
   role: "user" | "admin";
   isVerified: boolean;
   avatar?: string;
+  about?: string;
   emailPreferences?: {
     marketing: boolean;
     orderUpdates: boolean;

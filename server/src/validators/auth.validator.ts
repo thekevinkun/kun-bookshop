@@ -88,9 +88,29 @@ export const changePasswordSchema = z
     path: ["newPassword"],
   });
 
+// UPDATE PROFILE SCHEMA
+export const updateProfileSchema = z.object({
+  firstName: requiredString("First name").trim(),
+  lastName: requiredString("Last name").trim(),
+  about: z
+    .string()
+    .max(150, "About me must be 150 characters or less")
+    .trim()
+    .optional(),
+  emailPreferences: z
+    .object({
+      marketing: z.boolean(),
+      orderUpdates: z.boolean(),
+      newReleases: z.boolean(),
+      priceDrops: z.boolean(),
+    })
+    .optional(),
+});
+
 // TYPES
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;

@@ -17,6 +17,7 @@ export const useUpdateProfile = () => {
     mutationFn: async (data: {
       firstName?: string;
       lastName?: string;
+      about?: string;
       emailPreferences?: {
         marketing: boolean;
         orderUpdates: boolean;

@@ -28,6 +28,7 @@ import {
   ForgotPasswordInput,
   ResetPasswordInput,
   ChangePasswordInput,
+  UpdateProfileInput,
 } from "../validators/auth.validator";
 
 // Import our Winston logger — we never use console.log in this project
@@ -541,15 +542,16 @@ export const updateProfile = async (
 ): Promise<void> => {
   try {
     // Only allow these specific fields to be updated — never let users update role or password here
-    const { firstName, lastName, avatar } = req.body;
+    const { firstName, lastName, about, emailPreferences } =
+      req.body as UpdateProfileInput;
 
     // Find the user and update only the allowed fields
     // { new: true } returns the updated document instead of the old one
     // .select('-password') excludes the password hash from the response
     const user = await User.findByIdAndUpdate(
       req.user!.userId,
-      { firstName, lastName, avatar },
-      { new: true, runValidators: true }, // runValidators re-runs Mongoose schema validation
+      { firstName, lastName, about, emailPreferences },
+      { new: true, runValidators: true },
     ).select("-password");
 
     if (!user) {

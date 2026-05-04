@@ -53,7 +53,7 @@ const passwordString = (field = "Password") =>
     }
   });
 
-// --- REGISTER SCHEMA ---
+// REGISTER SCHEMA
 export const registerSchema = z
   .object({
     email: emailString(),
@@ -71,19 +71,19 @@ export const registerSchema = z
     path: ["confirmPassword"],
   });
 
-// --- LOGIN SCHEMA ---
+// LOGIN SCHEMA
 export const loginSchema = z.object({
   email: emailString(),
 
   password: requiredString("Password"),
 });
 
-// --- FORGOT PASSWORD SCHEMA ---
+// FORGOT PASSWORD SCHEMA
 export const forgotPasswordSchema = z.object({
   email: emailString(),
 });
 
-// --- RESET PASSWORD SCHEMA ---
+// RESET PASSWORD SCHEMA
 export const resetPasswordSchema = z
   .object({
     password: passwordString(),
@@ -95,7 +95,7 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
-// --- CHANGE PASSWORD SCHEMA ---
+// CHANGE PASSWORD SCHEMA
 export const changePasswordSchema = z
   .object({
     currentPassword: requiredString("Current password"),
@@ -113,9 +113,27 @@ export const changePasswordSchema = z
     path: ["newPassword"],
   });
 
-// --- TYPES ---
+// EDIT PROFILE SCHEMA
+export const editProfileSchema = z.object({
+  firstName: requiredString("First name"),
+  lastName: requiredString("Last name"),
+  about: z
+    .string()
+    .max(150, "About me must be 150 characters or less")
+    .trim()
+    .optional(),
+  emailPreferences: z.object({
+    marketing: z.boolean(),
+    orderUpdates: z.boolean(),
+    newReleases: z.boolean(),
+    priceDrops: z.boolean(),
+  }),
+});
+
+// TYPES
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+export type EditProfileForm = z.infer<typeof editProfileSchema>;

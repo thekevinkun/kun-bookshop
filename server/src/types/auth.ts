@@ -11,6 +11,7 @@ export interface IUser extends Document {
   role: "user" | "admin"; // Only two possible roles in our system
   avatar?: string; // Optional Cloudinary URL for profile picture
   avatarPublicId?: string; // Optional Cloudinary public ID for the avatar
+  about?: string; // Optional short bio — max 150 characters
   library: mongoose.Types.ObjectId[]; // Books the user has purchased
   wishlist: mongoose.Types.ObjectId[]; // Books the user has wishlisted
   isVerified: boolean; // True after the user clicks the email verification link
