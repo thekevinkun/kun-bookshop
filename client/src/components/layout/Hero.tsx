@@ -167,16 +167,18 @@ const Hero = ({
                     <p className="text-text-muted italic">
                       {activeBook.publisher}
                     </p>
-                    <div className="flex items-center gap-1">
-                      <p className="text-text-muted italic text-xs">
-                        #{activeBook.tags[0]}
-                      </p>
-                      {activeBook.tags.length > 1 && (
+                    {activeBook.tags && activeBook.tags.length > 0 && (
+                      <div className="flex items-center gap-1">
                         <p className="text-text-muted italic text-xs">
-                          #{activeBook.tags[1]}
+                          #{activeBook.tags[0]}
                         </p>
-                      )}
-                    </div>
+                        {activeBook.tags.length > 1 && (
+                          <p className="text-text-muted italic text-xs">
+                            #{activeBook.tags[1]}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-3">
