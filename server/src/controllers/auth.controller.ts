@@ -109,6 +109,9 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         lastName: user.lastName,
         role: user.role,
         isVerified: user.isVerified,
+        avatar: user.avatar,
+        about: user.about ?? null,
+        emailPreferences: user.emailPreferences,
       },
     });
   } catch (error) {
@@ -245,6 +248,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         role: user.role,
         isVerified: user.isVerified,
         avatar: user.avatar,
+        about: user.about ?? null,
+        emailPreferences: user.emailPreferences,
       },
     });
   } catch (error) {

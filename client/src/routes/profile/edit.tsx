@@ -160,6 +160,7 @@ export default function EditProfilePage() {
       reset({
         firstName: user.firstName ?? "",
         lastName: user.lastName ?? "",
+        about: user.about ?? "",
         emailPreferences: {
           marketing: user.emailPreferences?.marketing ?? true,
           orderUpdates: user.emailPreferences?.orderUpdates ?? true,
