@@ -333,6 +333,10 @@ Both surfaces use the same `ChatPanel` component and the same `useChat` hook. Th
 
 Set `CHAT_MODE=mock` in `server/.env` for zero-cost development and testing. The mock controller pattern-matches keywords and streams scripted responses — the full UI and SSE pipeline are exercised without any OpenAI calls. Flip to `CHAT_MODE=openai` when ready.
 
+<br />
+<img width="1920" height="1080" alt="5  KUN AI Preview" src="https://github.com/user-attachments/assets/453941fa-78ac-4898-90da-9bb136dca32f" />
+
+
 ---
 
 ## 🔐 Security
@@ -618,7 +622,7 @@ The compose file runs MongoDB + Express backend + nginx-served React frontend wi
 
 > Book Detail Page
 
-<img width="1920" height="2810" alt="kun-bookshop-book-detail-page_1984" src="https://github.com/user-attachments/assets/d3a0ccda-3e96-4444-92e3-a0b441e78fc8" />
+<img width="1920" height="2681" alt="kun-bookshop-book-detail-page_ikigai" src="https://github.com/user-attachments/assets/2fa9f839-a948-4289-a142-760ec8af8691" />
 <br />
 
 > Library Page
@@ -631,10 +635,14 @@ The compose file runs MongoDB + Express backend + nginx-served React frontend wi
 <img width="1920" height="1303" alt="kun-bookshop-profile-page_2" src="https://github.com/user-attachments/assets/438424c1-aa9a-4c02-888b-8133fa790af8" />
 <br />
 
+> Mobile Version
+
+<img width="616" height="990" alt="6  kun-bookshop-mobile-version" src="https://github.com/user-attachments/assets/f625182d-23ba-48d6-8f27-d6e5754aabe7" />
+<br />
+
 > Contact Page
 
 <img width="1920" height="2610" alt="kun-bookshop-contact-page" src="https://github.com/user-attachments/assets/f7966bee-7744-4644-843e-8539778e18e2" />
-<br />
 
 ---
 
