@@ -23,6 +23,7 @@ import {
   getMyLibrary,
   getMyOrders,
   addToWishlist,
+  removeFromWishlist,
 } from "./chatTools.service";
 
 // OpenAI client
@@ -257,6 +258,25 @@ const TOOL_DEFINITIONS: OpenAI.Chat.ChatCompletionTool[] = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "removeFromWishlist",
+      description:
+        "Remove a book from the user's wishlist. Use this when the user asks to remove, unsave, or delete a book from their wishlist.",
+      parameters: {
+        type: "object",
+        properties: {
+          bookId: {
+            type: "string",
+            description:
+              "The MongoDB ObjectId of the book to remove from wishlist",
+          },
+        },
+        required: ["bookId"],
+      },
+    },
+  },
 ];
 
 // System prompt builder
@@ -312,9 +332,12 @@ Tool usage rules:
 - For action tools (addToCart, removeFromCart, addToWishlist): if the user names a specific book and there is only ONE match, add it immediately without asking for confirmation. Only ask for confirmation if multiple books match the request and you cannot determine which one the user wants.
 - If the user has already confirmed a book in the same conversation, do not ask again — just call the tool.
 - Keep responses short. Do not re-describe a book the user just asked to add. Just add it and confirm in one sentence.
+- Only skip getBookDetails and respond with pure prose when the user explicitly uses the word "story" (e.g. "tell me the story of", "what's the story behind", "tell me a story about"). In ALL other cases — "tell me about", "details", "info", "what is", "lil bit about", "a bit about" — always call getBookDetails and include price, format, rating, and all store information.
 - If a tool returns requiresAuth: true, tell the user they need to log in first
 - If a tool returns alreadyInCart: true, tell the user the book is already in their cart
 - If a tool returns alreadyOwned: true, tell the user they already own this book in their library
+- If a tool returns alreadyInWishlist: true, use the message field from the tool result directly. Say exactly that — the book is already in their wishlist. Never say "unavailable".
+- For action tools (addToWishlist, removeFromWishlist): if the user names a specific book and there is only ONE match, act immediately without confirmation.
 - If a tool returns an error, give a friendly human-readable response — never expose raw error messages
 - When the user greets you (hello, hi, hey, etc.), always start your response with your chosen greeting + their name + the time-appropriate phrase. Example: "Hey Rhayana! Good Evening." or "Hello Rhayana! You're up late!"
 - Never render images or markdown image syntax. Never include URLs in your responses. Describe books in text only.
@@ -382,6 +405,9 @@ const executeTool = async (
 
     case "addToWishlist":
       return addToWishlist(args.bookId as string, userId);
+
+    case "removeFromWishlist":
+      return removeFromWishlist(args.bookId as string, userId);
 
     default:
       // Unknown tool — return a clean error so the LLM can handle it gracefully

@@ -33,6 +33,10 @@ const ChatPanel = ({
   // inputValue — controlled input state for the message text field
   const [inputValue, setInputValue] = useState("");
 
+  // Compute once on mount — useState initializer only runs on first render
+  // Unlike calling getGreetingPhrase() directly in render, this never re-runs
+  const [greetingPhrase] = useState<string>(() => getGreetingPhrase());
+
   // messagesEndRef — a hidden div at the bottom of the message list
   // We scroll to it whenever new messages arrive
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -82,9 +86,6 @@ const ChatPanel = ({
     // Shift+Enter falls through and adds a newline naturally
   };
 
-  // Compute once when ChatPanel renders — fresh each time widget opens
-  const greetingPhrase = getGreetingPhrase();
-
   // Build the personalized greeting — mirrors KUN's backend greeting logic exactly
   // Shows in the empty state UI before any conversation starts
   const greetingHelpText =
@@ -119,7 +120,8 @@ const ChatPanel = ({
                   : `Hi! ${greetingPhrase}`}
               </p>
               <p className="mt-1 text-slate-400 text-xs max-w-xs">
-                I'm KUN. Your Kun Bookshop assistant. <br />{greetingHelpText}
+                I'm KUN. Your Kun Bookshop assistant. <br />
+                {greetingHelpText}
               </p>
               <p className="text-slate-400 text-xs max-w-xs">
                 What can I do for you?

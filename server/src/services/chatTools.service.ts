@@ -29,6 +29,15 @@ const alreadyInCart = () => ({ success: false, alreadyInCart: true });
 // Already owned — special signal so LLM says "you already own this book"
 const alreadyOwned = () => ({ success: false, alreadyOwned: true });
 
+// Already in wishlist — special signal so LLM says "it's already in your wishlist"
+const alreadyInWishlist = (title?: string) => ({
+  success: false,
+  alreadyInWishlist: true,
+  message: title
+    ? `"${title}" is already in your wishlist.`
+    : "That book is already in your wishlist.",
+});
+
 // PUBLIC TOOLS
 // No auth required — guests and logged-in users can both call these
 
@@ -781,12 +790,11 @@ export const getMyOrders = async (userId: string | null) => {
 // addToWishlist — adds a book to the user's wishlist
 export const addToWishlist = async (bookId: string, userId: string | null) => {
   try {
-    if (!userId) return requiresAuth(); // Auth boundary
+    if (!userId) return requiresAuth();
 
     if (!mongoose.Types.ObjectId.isValid(bookId))
       return fail("Invalid book ID.");
 
-    // Verify the book exists and is active
     const book = await Book.findOne(
       { _id: bookId, isActive: true },
       { title: 1 },
@@ -794,11 +802,18 @@ export const addToWishlist = async (bookId: string, userId: string | null) => {
     if (!book)
       return fail("That book doesn't exist or is no longer available.");
 
-    // Add to wishlist only if not already there — $addToSet prevents duplicates
-    await User.findByIdAndUpdate(
-      userId,
-      { $addToSet: { wishlist: new mongoose.Types.ObjectId(bookId) } }, // addToSet = no duplicates
+    // Check if the book is already in the wishlist before attempting to add
+    // $addToSet silently succeeds even on duplicates — we need an explicit check
+    const user = await User.findById(userId, { wishlist: 1 }).lean();
+    const alreadyWishlisted = user?.wishlist?.some(
+      (id) => id.toString() === bookId, // Compare ObjectId strings
     );
+    if (alreadyWishlisted) return alreadyInWishlist(book.title); // Return dedicated signal
+
+    // Safe to add — book is not in wishlist yet
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { wishlist: new mongoose.Types.ObjectId(bookId) },
+    });
 
     return ok({
       message: `"${book.title}" has been added to your wishlist! 💛`,
@@ -806,5 +821,44 @@ export const addToWishlist = async (bookId: string, userId: string | null) => {
   } catch (error) {
     logger.error("[Tool] addToWishlist error:", error);
     return fail("Could not add that book to your wishlist right now.");
+  }
+};
+
+// removeFromWishlist — removes a book from the user's wishlist
+// Mirrors removeFromCart but operates on User.wishlist instead of Cart.items
+export const removeFromWishlist = async (
+  bookId: string,
+  userId: string | null,
+) => {
+  try {
+    if (!userId) return requiresAuth(); // Auth boundary
+
+    if (!mongoose.Types.ObjectId.isValid(bookId))
+      return fail("Invalid book ID.");
+
+    // Verify the book exists so we can use its title in the response
+    const book = await Book.findOne(
+      { _id: bookId, isActive: true },
+      { title: 1 },
+    ).lean();
+    if (!book)
+      return fail("That book doesn't exist or is no longer available.");
+
+    // Check it's actually in the wishlist before pulling
+    const user = await User.findById(userId, { wishlist: 1 }).lean();
+    const isWishlisted = user?.wishlist?.some((id) => id.toString() === bookId);
+    if (!isWishlisted) return fail("That book is not in your wishlist.");
+
+    // Remove the book from the wishlist using $pull
+    await User.findByIdAndUpdate(userId, {
+      $pull: { wishlist: new mongoose.Types.ObjectId(bookId) },
+    });
+
+    return ok({
+      message: `"${book.title}" has been removed from your wishlist.`,
+    });
+  } catch (error) {
+    logger.error("[Tool] removeFromWishlist error:", error);
+    return fail("Could not remove that book from your wishlist right now.");
   }
 };
