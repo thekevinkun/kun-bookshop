@@ -107,17 +107,54 @@ const ChatWidget = () => {
           hidden on mobile (md:flex) — BottomNav has the KUN tab there.
       */}
       <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={
+          isOpen
+            ? { scale: 1.02 }
+            : {
+                scale: 1.08,
+                y: -10,
+                rotate: 2,
+                background: "linear-gradient(45deg, #102347, #173B7A)",
+              }
+        }
+        whileTap={{ scale: 0.95, y: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 17,
+          duration: 0.3,
+        }}
         onClick={() => setIsOpen((prev) => !prev)}
         className="
           hidden md:flex
           w-14 h-14 rounded-full bg-gradient-to-br from-[#173e82] to-[#123573] 
-          hover:bg-gradient-to-tr hover:from-[#102347] hover:to-[#173B7A] 
           shadow-sm shadow-golden/20 items-center justify-center 
-          transition-all duration-100 cursor-pointer relative overflow-hidden
+          cursor-pointer relative overflow-hidden
         "
       >
+        {/* Shimmer overlay */}
+        {!isOpen && (
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0"
+            animate={{
+              opacity: 1,
+              x: ["-100%", "100%"], // Left to right sweep!
+            }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              repeatDelay: 2,
+            }}
+            style={{
+              background:
+                "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.15) 100%)",
+              mask: "radial-gradient(circle at 30% 30%, white 10%, transparent 50%)",
+              WebkitMask:
+                "radial-gradient(circle at 30% 30%, white 10%, transparent 50%)",
+            }}
+          />
+        )}
+
         {/* Icon rotates between KUN logo and chevron-up based on open state */}
         <motion.div
           className="w-8 h-8 flex items-center justify-center rounded-full"
