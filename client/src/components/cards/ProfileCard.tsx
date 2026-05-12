@@ -52,11 +52,28 @@ const ProfileCard = ({
           {/* Avatar — overlaps the banner via negative margin */}
           <div className="z-20 relative flex items-end justify-between -mt-10 mb-4">
             {user?.avatar ? (
-              <div className="w-22 h-22 rounded-2xl border-4 border-dark shadow-xl">
+              <div className="relative group w-22 h-22 rounded-2xl border-4 border-dark shadow-xl overflow-hidden">
                 <img
                   src={user.avatar}
                   alt={user.firstName}
                   className="w-full h-full rounded-lg object-cover"
+                />
+
+                <div
+                  className="
+                    absolute inset-0 pointer-events-none bg-[length:600%_100%]
+                    bg-gradient-to-r 
+                    from-transparent 
+                    via-amber-400/70 via-yellow-400/60 via-amber-500/50 
+                    to-transparent
+                    opacity-0 group-hover:opacity-100 
+                    -translate-x-full group-hover:translate-x-[120%]
+                    group-hover:[animation:shimmer_1.5s_ease-in-out]
+                    shadow-2xl ring-2 ring-amber-400/60 ring-offset-2
+                    rounded-md z-10
+                    [mask-image:radial-gradient(circle_40px_at_20%_20%,white_0%,transparent_65%)]
+                    [-webkit-mask-image:radial-gradient(circle_40px_at_20%_20%,white_0%,transparent_65%)]
+                  "
                 />
               </div>
             ) : (

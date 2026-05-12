@@ -153,12 +153,13 @@ const Navbar = () => {
                 {/* The button that opens the dropdown */}
                 <DropdownMenu.Trigger asChild>
                   <button
-                    className="flex h-9 w-9 items-center justify-center rounded-full
-                      text-text-light group hover:border-golden/35 hover:bg-text-light/[0.06] 
-                      focus-visible:border-white cursor-pointer transition-colors duration-150"
+                    className="relative flex h-9 w-9 items-center justify-center rounded-full
+                    text-text-light group hover:border-golden/35 hover:bg-text-light/[0.06] 
+                    focus-visible:border-white cursor-pointer transition-colors duration-150
+                    overflow-hidden"
                     aria-label="Open account menu"
                   >
-                    {/* Avatar image or initials fallback */}
+                    {/* Avatar image or initials */}
                     {user?.avatar ? (
                       <img
                         src={user.avatar}
@@ -176,6 +177,23 @@ const Navbar = () => {
                         {user?.lastName?.[0]}
                       </div>
                     )}
+
+                    <div
+                      className="
+                        absolute inset-0 pointer-events-none bg-[length:600%_100%]
+                        bg-gradient-to-r 
+                        from-transparent 
+                        via-amber-400/70 via-yellow-400/60 via-amber-500/50 
+                        to-transparent
+                        opacity-0 group-hover:opacity-100 
+                        -translate-x-full group-hover:translate-x-[120%]
+                        group-hover:[animation:shimmer_1.5s_ease-in-out]
+                        shadow-2xl ring-2 ring-amber-400/60 ring-offset-2
+                        rounded-md z-10
+                        [mask-image:radial-gradient(circle_40px_at_20%_20%,white_0%,transparent_65%)]
+                        [-webkit-mask-image:radial-gradient(circle_40px_at_20%_20%,white_0%,transparent_65%)]
+                      "
+                    />
                   </button>
                 </DropdownMenu.Trigger>
 
