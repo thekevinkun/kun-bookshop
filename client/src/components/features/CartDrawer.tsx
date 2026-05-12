@@ -39,6 +39,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
     items,
     removeItem,
     total,
+    originalTotal,
     itemCount,
     appliedCoupon,
     applyCoupon,
@@ -265,7 +266,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                   <span className="text-text-muted">
                     {itemCount()} {itemCount() === 1 ? "book" : "books"}
                   </span>
-                  <span className="text-sm">${total().toFixed(2)}</span>
+                  <span className="text-sm">${originalTotal().toFixed(2)}</span>
                 </div>
 
                 {/* Discount row — animates in when coupon is applied, out when removed */}

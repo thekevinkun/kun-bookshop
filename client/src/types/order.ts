@@ -67,11 +67,12 @@ export interface CartState {
   loadCart: () => Promise<void>; // Reloads cart items from localStorage for the current user
   applyCoupon: (coupon: IAppliedCoupon) => Promise<void>; // Save validated coupon to store + localStorage
   removeCoupon: () => Promise<void>; // Clear the coupon
-  
+
   isInCart: (bookId: string) => boolean; // Check if a book is already in the cart
-  
+
   // Computed helpers — derived from items array
   total: () => number; // Sum of all item prices
+  originalTotal: () => number; // Sum of all item prices
   itemCount: () => number; // How many books are in the cart
 }
 

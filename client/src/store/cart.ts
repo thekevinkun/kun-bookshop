@@ -87,5 +87,10 @@ export const useCartStore = create<CartState>()((set, get) => ({
     return items.reduce((sum, item) => sum + item.price, 0); // Raw sum
   },
 
+  originalTotal: () => {
+    const { items } = get();
+    return items.reduce((sum, item) => sum + item.price, 0); // Raw sum
+  },
+
   itemCount: () => get().items.length, // Badge count for Navbar cart icon
 }));
