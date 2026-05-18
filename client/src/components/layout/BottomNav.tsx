@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Home, BookOpen, Library, LogIn, X } from "lucide-react";
+import { Home, BookOpen, ChevronDown, Library, LogIn, X } from "lucide-react";
 
 import { useAuthStore } from "../../store/auth";
 import { useChat } from "../../hooks/useChat";
@@ -128,14 +128,24 @@ const BottomNav = () => {
               </div>
 
               {/* Close button collapses the panel */}
-              <button
-                onClick={handleChatToggle}
-                className="w-7 h-7 rounded-lg flex items-center justify-center
-                  text-text-dark hover:bg-slate-200/20 transition-colors cursor-pointer"
-                aria-label="Close chat"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setChatOpen((prev) => !prev)}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-text-dark 
+                    hover:bg-slate-200/20 transition-colors cursor-pointer"
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={handleChatToggle}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center
+                    text-text-dark hover:bg-slate-200/20 transition-colors cursor-pointer"
+                  aria-label="Close chat"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             {/* Chat messages + input — fills remaining height */}
