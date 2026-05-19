@@ -3,6 +3,7 @@
 // Used by ChatPanel on both the floating widget and /contact page
 
 import { useState, useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Zustand auth store — get user info
 import { useAuthStore } from "../store/auth";
@@ -24,6 +25,9 @@ const generateId = () =>
 const API_URL = import.meta.env.VITE_API_URL as string;
 
 export const useChat = () => {
+  // React Query client — used to refresh wishlist data after KUN changes it
+  const queryClient = useQueryClient();
+
   // messages — the full conversation history shown in the UI
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
@@ -162,10 +166,14 @@ export const useChat = () => {
                   ),
                 );
 
-                // Re-sync cart only if authenticated — guests have no cart
-                // and calling loadCart as guest triggers a 401 which redirects to login
+                // Re-sync cart and wishlist only if authenticated
+                // Guests have no saved data, and these calls would 401
                 if (isAuthenticated) {
                   await loadCart();
+                  // Refresh the wishlist query so profile and book pages update immediately
+                  await queryClient.invalidateQueries({
+                    queryKey: ["wishlist"],
+                  });
                 }
 
                 break; // Exit the line-processing loop
@@ -215,7 +223,7 @@ export const useChat = () => {
         );
       }
     },
-    [messages],
+    [messages, queryClient],
   );
 
   // clearMessages — resets the conversation (called when widget closes/reopens)
